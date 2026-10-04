@@ -29,3 +29,4 @@ jobs:
             git commit -m "Refine wallet logo rendering"
             git push origin main
           fi
+# retry after robust per-brand override patch

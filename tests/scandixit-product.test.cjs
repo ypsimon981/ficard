@@ -16,7 +16,8 @@ const product={code:'4006381333931',product_name:'Crema demo',brands:'Marca demo
 const context={document:{getElementById:get,querySelectorAll:()=>tabs,createElement:tag=>makeNode(tag)},ScanDixit:{normalizeBarcode:x=>/^4006381333931$/.test(x)?x:null},encodeURIComponent,fetch:async url=>{urls.push(url);if(catalogMode==='offline')throw Error('offline');return {ok:true,json:async()=>url.includes('openbeautyfacts.org')&&catalogMode==='hit'?{status:'success',product}:{status:'failure'}}},URL:{},setTimeout,clearTimeout,console};
 context.window=context;vm.createContext(context);vm.runInContext(inline,context);
 (async()=>{
- get('codeInput').value='4006381333931';await get('lookupCode').listeners.click();await new Promise(setImmediate);
+ get('scanStatus').textContent='Nessun codice valido trovato. Prova una foto più nitida o inserisci le cifre.';get('codeInput').value='4006381333931';await get('lookupCode').listeners.click();await new Promise(setImmediate);
+ assert.equal(get('scanStatus').textContent,'');
  assert.equal(get('amazonSearch').href,'https://www.amazon.it/s?k=4006381333931');
  assert.equal(get('sheetTitle').textContent,'Crema demo');assert.equal(get('sheetBrand').textContent,'Marca demo');
  assert(get('sheetFields').children.some(x=>x.children[0].textContent==='Ingredienti'&&x.children[1].textContent==='Aqua, Glycerin'));

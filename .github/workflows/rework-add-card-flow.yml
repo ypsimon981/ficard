@@ -1,0 +1,174 @@
+name: Rework add card flow
+
+on:
+  push:
+    paths:
+      - '.github/workflows/rework-add-card-flow.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Rework add-card acquisition flow
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          p = Path('index.html')
+          text = p.read_text()
+
+          old_modal = '''<div id="addModal" class="modal"><div class="sheet">
+  <div class="grab"></div><div class="sheetHead"><h2>Aggiungi una carta</h2><button class="close" data-close="addModal">×</button></div>
+  <label for="brandSearch">Cerca marchio</label><input id="brandSearch" class="field" type="search" placeholder="Es. Conad, IKEA, farmacia…"><div id="brandResults" class="brandResults"></div>
+  <label for="addBrand">Marchio</label><select id="addBrand" class="field"></select>
+  <button class="primary" id="scanBtn">▣ Scansiona codice</button>
+  <button class="secondary" id="imageScanBtn">Importa foto o screenshot</button><input id="imageFiles" type="file" accept="image/*" multiple hidden><p class="hint">Seleziona più immagini: controlla ogni codice e scegli il marchio prima di salvare.</p>
+  <div id="scanner" class="scanner"><div id="reader"></div></div>
+  <label>Categoria</label><select id="addCategory" class="field">
+    <option value="supermercati">Supermercati</option>
+    <option value="sport">Articoli sportivi</option>
+    <option value="abbigliamento">Abbigliamento e calzature</option>
+    <option value="petstore">Pet store</option>
+    <option value="casa">Casa e bricolage</option>
+    <option value="beauty">Beauty e cura persona</option>
+    <option value="farmacia">Farmacie e parafarmacie</option>
+    <option value="elettronica">Elettronica</option>
+    <option value="ristorazione">Ristorazione</option>
+    <option value="carburanti">Carburanti</option>
+    <option value="altro">Altro</option>
+  </select>
+  <label>Nome negozio / carta</label><input id="addName" class="field" placeholder="Es. Esselunga">
+  <label>Numero / contenuto barcode</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123">
+  <div class="row"><div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div><div><label>Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px"></div></div>
+  <button class="primary" id="saveCard">Salva carta</button>
+  <p class="hint">La carta resta sul telefono. Per il prototipo non viene inviata a nessun server.</p>
+</div></div>'''
+
+          new_modal = '''<div id="addModal" class="modal"><div class="sheet addCardSheet">
+  <div class="grab"></div><div class="sheetHead"><h2>Aggiungi una carta</h2><button class="close" data-close="addModal">×</button></div>
+  <section class="captureStep" id="captureStep">
+    <div class="captureActions">
+      <button type="button" class="captureAction captureScan" id="scanBtn"><span class="captureIcon" aria-hidden="true">▣</span><span><b>Scansiona carta</b><small>Usa la fotocamera</small></span></button>
+      <button type="button" class="captureAction captureImport" id="imageScanBtn"><span class="captureIcon" aria-hidden="true">▧</span><span><b>Importa immagine</b><small>Foto o screenshot</small></span></button>
+    </div>
+    <input id="imageFiles" type="file" accept="image/*" multiple hidden>
+    <div id="scanner" class="scanner addCardScanner"><div id="reader"></div></div>
+    <p class="captureHint" id="captureHint">Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.</p>
+    <button type="button" class="manualEntryBtn" id="manualEntryBtn">Inserisci i dati manualmente</button>
+  </section>
+  <section id="cardFormFields" class="cardFormFields" hidden>
+    <div class="formStepHead"><b>Completa i dati</b><small>Controlla ciò che Fi-Card ha acquisito e salva la carta.</small></div>
+    <label for="brandSearch">Cerca marchio</label><input id="brandSearch" class="field" type="search" placeholder="Es. Conad, IKEA, farmacia…"><div id="brandResults" class="brandResults"></div>
+    <label for="addBrand">Marchio</label><select id="addBrand" class="field"></select>
+    <label>Categoria</label><select id="addCategory" class="field">
+      <option value="supermercati">Supermercati</option>
+      <option value="sport">Articoli sportivi</option>
+      <option value="abbigliamento">Abbigliamento e calzature</option>
+      <option value="petstore">Pet store</option>
+      <option value="casa">Casa e bricolage</option>
+      <option value="beauty">Beauty e cura persona</option>
+      <option value="farmacia">Farmacie e parafarmacie</option>
+      <option value="elettronica">Elettronica</option>
+      <option value="ristorazione">Ristorazione</option>
+      <option value="carburanti">Carburanti</option>
+      <option value="altro">Altro</option>
+    </select>
+    <label>Nome negozio / carta</label><input id="addName" class="field" placeholder="Es. Esselunga">
+    <label>Numero / contenuto barcode</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123">
+    <div class="row"><div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div><div><label>Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px"></div></div>
+    <button class="primary" id="saveCard">Salva carta</button>
+    <p class="hint">La carta resta sul telefono. Per il prototipo non viene inviata a nessun server.</p>
+  </section>
+</div></div>'''
+
+          if old_modal not in text:
+              raise SystemExit('addModal block not found')
+          text = text.replace(old_modal, new_modal, 1)
+
+          css = '''
+/* v0.9.60 · Acquisition-first add-card flow */
+.addCardSheet{scroll-behavior:smooth}
+.captureStep{padding:2px 0 4px}
+.captureActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:2px 0 10px}
+.captureAction{min-width:0;min-height:102px;border:0;border-radius:20px;padding:15px 12px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;text-align:left;font:inherit;cursor:pointer}
+.captureAction span:last-child{min-width:0}.captureAction b{display:block;font-size:15px;line-height:1.18}.captureAction small{display:block;margin-top:4px;font-size:11px;line-height:1.2;opacity:.86}.captureIcon{font-size:27px;line-height:1}
+.captureScan{background:linear-gradient(145deg,var(--violet),#794CFF);color:#fff;box-shadow:0 9px 22px rgba(91,61,245,.2)}
+.captureImport{background:#E4FAF7;color:#107C73;border:1px solid #BFEFE8}
+.captureHint{margin:9px 2px 2px;color:var(--muted);font-size:12px;line-height:1.35}
+.manualEntryBtn{display:block;margin:7px auto 0;padding:9px 12px;border:0;background:transparent;color:var(--violet);font-size:12px;font-weight:800}
+.addCardScanner{margin:10px 0 6px;min-height:0;border-radius:20px;background:#0B0D10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.addCardScanner.show{min-height:240px}
+.addCardScanner #reader{width:100%;min-height:240px;border:0!important}
+.addCardScanner #reader video{display:block!important;width:100%!important;max-height:38dvh!important;min-height:240px;object-fit:cover;border-radius:20px}
+.addCardScanner #reader__scan_region{min-height:240px}
+.addCardScanner #reader__dashboard{padding:8px!important;background:#fff}
+.cardFormFields[hidden]{display:none!important}
+.cardFormFields{margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}
+.formStepHead{margin:0 2px 4px}.formStepHead b{display:block;font-size:16px}.formStepHead small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:3px}
+@media(max-width:350px){.captureActions{gap:8px}.captureAction{min-height:92px;padding:12px 10px}.captureAction b{font-size:14px}.addCardScanner.show,.addCardScanner #reader,.addCardScanner #reader__scan_region{min-height:210px}.addCardScanner #reader video{min-height:210px}}
+'''
+          if '/* v0.9.60 · Acquisition-first add-card flow */' not in text:
+              text = text.replace('</style>', css + '</style>', 1)
+
+          old_addfab = 'document.getElementById("addFab").onclick=()=>showModal("addModal");'
+          new_addfab = '''function revealAddCardFields(scroll=true){
+ const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;
+ if(scroll)requestAnimationFrame(()=>fields.scrollIntoView({behavior:"smooth",block:"start"}))
+}
+function resetAddCardFlow(){
+ const fields=document.getElementById("cardFormFields"),sheet=document.querySelector("#addModal .sheet");if(fields)fields.hidden=true;
+ const hint=document.getElementById("captureHint");if(hint)hint.textContent="Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.";
+ if(sheet)sheet.scrollTop=0;stopScan()
+}
+document.getElementById("addFab").onclick=()=>{resetAddCardFlow();showModal("addModal")};
+document.getElementById("manualEntryBtn").onclick=()=>revealAddCardFields(true);'''
+          if old_addfab not in text:
+              raise SystemExit('addFab handler not found')
+          text = text.replace(old_addfab, new_addfab, 1)
+
+          old_scan_success = '''     toast("Codice letto · "+formatLabel(pendingScanFormat));
+     stopScan()'''
+          new_scan_success = '''     toast("Codice letto · "+formatLabel(pendingScanFormat));
+     const hint=document.getElementById("captureHint");if(hint)hint.textContent="Codice acquisito. Completa i dati della carta qui sotto.";
+     stopScan().then(()=>revealAddCardFields(true))'''
+          if old_scan_success not in text:
+              raise SystemExit('scan success block not found')
+          text = text.replace(old_scan_success, new_scan_success, 1)
+
+          old_scan_start = '''document.getElementById("scanBtn").onclick=async()=>{
+ const wrap=document.getElementById("scanner");wrap.classList.add("show");'''
+          new_scan_start = '''document.getElementById("scanBtn").onclick=async()=>{
+ const wrap=document.getElementById("scanner"),sheet=document.querySelector("#addModal .sheet");wrap.classList.add("show");
+ document.getElementById("cardFormFields").hidden=true;if(sheet)sheet.scrollTop=0;'''
+          if old_scan_start not in text:
+              raise SystemExit('scan start block not found')
+          text = text.replace(old_scan_start, new_scan_start, 1)
+
+          text = text.replace("document.getElementById('scanBtn').scrollIntoView({behavior:'smooth',block:'center'})", "document.getElementById('addName').scrollIntoView({behavior:'smooth',block:'center'})")
+
+          text = text.replace('04/10/2026 · 07:48 · v0.9.59', '04/10/2026 · 18:20 · v0.9.60')
+          text = text.replace('const RELEASE="2026.10.04-0748-v0.9.59";', 'const RELEASE="2026.10.04-1820-v0.9.60";')
+
+          p.write_text(text)
+
+          sw = Path('sw.js')
+          sw_text = sw.read_text().replace('ficard-2026.10.04-0748-v0.9.59', 'ficard-2026.10.04-1820-v0.9.60')
+          sw.write_text(sw_text)
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          git commit -m "Put card acquisition first in add flow"
+          git push origin main

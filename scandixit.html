@@ -99,21 +99,27 @@ async function loadProductSheet(code){
  const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent="Cerco il prodotto nel catalogo…";$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";
  try{
   const fields="code,product_name,product_name_en,generic_name,brands,quantity,product_type,categories,ingredients_text,allergens,labels,countries,origins,manufacturing_places,packaging,stores,created_t,last_modified_t";
-  const url="https://world.openfoodfacts.org/api/v3/product/"+encodeURIComponent(code)+".json?product_type=all&fields="+encodeURIComponent(fields);
-  const response=await fetch(url,{headers:{Accept:"application/json"}});
-  if(!response.ok)throw Error("HTTP "+response.status);
-  const data=await response.json(),product=data.product;
+  const hosts=["world.openbeautyfacts.org","world.openfoodfacts.org","world.openpetfoodfacts.org","world.openproductsfacts.org"];
+  const checks=await Promise.allSettled(hosts.map(async host=>{
+   const url="https://"+host+"/api/v3/product/"+encodeURIComponent(code)+".json?fields="+encodeURIComponent(fields);
+   const response=await fetch(url,{headers:{Accept:"application/json"}});
+   if(!response.ok)throw Error("HTTP "+response.status+" from "+host);
+   return {host,data:await response.json()};
+  }));
+  const results=checks.filter(result=>result.status==="fulfilled").map(result=>result.value);
+  // API v2/v0 uses numeric status=1; v3 uses textual status="success".
+  const found=results.find(result=>(result.data.status===1||result.data.status==="success")&&result.data.product&&String(result.data.product.code)===code);
+  const product=found?.data.product,data=found?.data;
   if(lookup!==productLookupId)return;
-  if(data.status!==1||!product||String(product.code)!==code){$("sheetTitle").textContent="Scheda non trovata nel catalogo";$("sheetBrand").textContent="Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.";sheetField("Codice",code);$("sheetSource").textContent="Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.";return}
+  if(!found){if(!results.length)throw Error("Cataloghi non raggiungibili");$("sheetTitle").textContent="Scheda non trovata nel catalogo";$("sheetBrand").textContent="Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.";sheetField("Codice",code);$("sheetSource").textContent="Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.";return}
   const name=product.product_name||product.product_name_en||product.generic_name||"Prodotto identificato";
   $("sheetTitle").textContent=name;$("sheetBrand").textContent=product.brands||"Marca non indicata";
   sheetField("Codice EAN/UPC",product.code||code);sheetField("Formato",product.quantity);sheetField("Categoria",product.categories);sheetField("Tipo",product.product_type);
   sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Etichette",product.labels);sheetField("Origine",product.origins||product.countries);sheetField("Confezione",product.packaging);
   const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString("it-IT"):"non indicato";
-  const hosts={beauty:"world.openbeautyfacts.org",petfood:"world.openpetfoodfacts.org",product:"world.openproductsfacts.org",food:"world.openfoodfacts.org"};
   const source=document.createElement("span");source.textContent="Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: "+stamp+". Fonte: ";
-  const link=document.createElement("a");link.href="https://"+(hosts[product.product_type]||hosts.food)+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
- }catch(e){if(lookup!==productLookupId)return;$("sheetTitle").textContent="Scheda tecnica temporaneamente non disponibile";$("sheetBrand").textContent="Controlla la connessione e riprova. Il link Amazon resta disponibile.";$("sheetSource").textContent="Il catalogo esterno non ha risposto."}
+  const link=document.createElement("a");link.href="https://"+found.host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
+ }catch(e){if(lookup!==productLookupId)return;$("sheetTitle").textContent="Catalogo non raggiungibile";$("sheetBrand").textContent="Non sono riuscito a contattare i cataloghi. Riprova tra poco; la ricerca Amazon resta disponibile.";$("sheetSource").textContent="Il codice è stato verificato, ma non è stato possibile completare la ricerca."}
 }
 function showCode(value,source){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa.":"Codice letto con cifra di controllo valida.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");if(source!=="ocr")loadProductSheet(code);else $("productSheet").classList.remove("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
 $("lookupCode").addEventListener("click",()=>showCode($("codeInput").value,"barcode"));
@@ -121,6 +127,6 @@ $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.curr
 $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
 
 </script>
-<script src="./scandixit-scanner.js?v=1.0.3"></script>
+<script src="./scandixit-scanner.js?v=1.0.4"></script>
 </body>
 </html>

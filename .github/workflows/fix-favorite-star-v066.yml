@@ -1,0 +1,70 @@
+name: Refine active favorite star v0.9.66
+
+on:
+  push:
+    paths:
+      - '.github/workflows/fix-favorite-star-v066.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Refine active favorite star
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          import re
+
+          p=Path('index.html')
+          text=p.read_text()
+
+          old=".cardFavorite.isFavorite .cardFavoriteIcon{width:38px;height:38px;filter:drop-shadow(0 3px 4px rgba(30,20,75,.48));transform:translateY(-1px)}"
+          new=".cardFavorite.isFavorite .cardFavoriteIcon{width:34px;height:34px;filter:drop-shadow(0 3px 4px rgba(30,20,75,.42));transform:translateY(-1px)}"
+          if old in text:
+              text=text.replace(old,new,1)
+          elif new not in text:
+              raise SystemExit('active favorite size rule not found')
+
+          old_js="const stroke=selected?'rgba(41,27,104,.94)':'url(#'+gradientId+')';\n const strokeWidth=selected?'0.9':'1.65';"
+          new_js="const stroke=selected?'#FFFFFF':'url(#'+gradientId+')';\n const strokeWidth=selected?'1.55':'1.65';"
+          if old_js in text:
+              text=text.replace(old_js,new_js,1)
+          elif new_js not in text:
+              raise SystemExit('favorite star stroke logic not found')
+
+          now=datetime.now(ZoneInfo('Europe/Rome'))
+          human=now.strftime('%d/%m/%Y · %H:%M · v0.9.66')
+          release_id=now.strftime('%Y.%m.%d-%H%M-v0.9.66')
+          text=re.sub(r'<div class="release">[^<]+</div>','<div class="release">'+human+'</div>',text,count=1)
+          text=re.sub(r'const RELEASE="[^"]+";','const RELEASE="'+release_id+'";',text,count=1)
+          if '<span class="changeVersion">v0.9.66</span>' not in text:
+              entry='<details class="changeEntry" open><summary><span class="changeVersion">v0.9.66</span><span class="changeTitle">Preferito attivo più pulito</span><time>'+now.strftime('%d/%m/%Y · %H:%M')+'</time></summary><ul><li>Stellina preferita attiva ridotta di circa il 10%.</li><li>Contorno della stellina attiva portato al bianco per migliorarne il contrasto.</li></ul></details>'
+              text=text.replace('<div class="changeList">','<div class="changeList">'+entry,1)
+          p.write_text(text)
+
+          sw=Path('sw.js')
+          sw_text=sw.read_text()
+          sw_text=re.sub(r'const CACHE="ficard-[^"]+";','const CACHE="ficard-'+release_id+'";',sw_text,count=1)
+          sw.write_text(sw_text)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Refine active favorite star"
+            git push origin main
+          fi

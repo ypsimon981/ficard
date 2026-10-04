@@ -9,7 +9,7 @@
 <script src="./vendor/html5-qrcode.min.js"></script>
 <style>
 :root{--violet:#5B3DF5;--violet2:#7C5CFF;--teal:#2DD4BF;--bg:#F8F9FC;--surface:#fff;--text:#1F2937;--muted:#6B7280;--line:#E7EAF0;--shadow:0 12px 32px rgba(31,41,55,.09)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.app{max-width:580px;min-height:100dvh;margin:auto;padding:env(safe-area-inset-top) 16px calc(28px + env(safe-area-inset-bottom))}
+[hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.app{max-width:580px;min-height:100dvh;margin:auto;padding:env(safe-area-inset-top) 16px calc(28px + env(safe-area-inset-bottom))}
 header{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 20px}.back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:21px;color:var(--violet);box-shadow:var(--shadow)}.lockup{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:-.5px}.lockup .fi{color:var(--violet)}.lockup .dash{color:var(--teal)}.lockup small{display:block;color:var(--muted);font-size:10px;letter-spacing:.4px;text-align:right;margin-top:2px}
 .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#5B3DF5 0%,#7658F7 54%,#39CFC2 130%);border-radius:28px;padding:23px 21px 22px;color:#fff;box-shadow:0 16px 34px rgba(91,61,245,.19)}
 .hero:after{content:"";position:absolute;width:180px;height:180px;right:-73px;top:-83px;border-radius:50%;background:rgba(255,255,255,.13)}
@@ -17,7 +17,7 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 .card{background:#fff;border:1px solid var(--line);border-radius:22px;padding:17px;margin-top:15px;box-shadow:0 7px 22px rgba(31,41,55,.045)}
 .tabs{display:grid;grid-template-columns:1fr 1fr;background:#F1F2F8;padding:4px;border-radius:15px;gap:4px}.tab{border:0;border-radius:12px;background:transparent;color:var(--muted);padding:11px 8px;font-weight:800;font-size:13px}.tab.active{background:#fff;color:var(--violet);box-shadow:0 2px 8px rgba(31,41,55,.08)}
 .mode{display:none}.mode.active{display:block}.scanHeading{font-size:16px;font-weight:850;margin:17px 0 4px}.sub{color:var(--muted);font-size:13px;line-height:1.45;margin:0}
-.scanFrame{height:220px;margin-top:14px;border-radius:18px;background:#161B2A;overflow:hidden;position:relative;display:none}.scanFrame.show{display:block}#reader{width:100%;height:100%}#reader video{object-fit:cover;border-radius:18px}#reader__dashboard_section_csr button,#reader button{border:0!important;border-radius:10px!important;padding:8px 12px!important;font-weight:800!important;background:#fff!important;color:var(--violet)!important}#reader__dashboard_section_swaplink{color:white!important}.scanLine{position:absolute;left:9%;right:9%;top:50%;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);box-shadow:0 0 12px var(--teal);pointer-events:none;z-index:2}
+.scanFrame{min-height:220px;margin-top:14px;border-radius:18px;background:#161B2A;overflow:hidden;position:relative;display:none}.scanFrame.show{display:block}#reader{width:100%;height:100%}#reader video{object-fit:contain;border-radius:18px}#reader__dashboard_section_csr button,#reader button{border:0!important;border-radius:10px!important;padding:8px 12px!important;font-weight:800!important;background:#fff!important;color:var(--violet)!important}#reader__dashboard_section_swaplink{color:white!important}.scanLine{position:absolute;left:9%;right:9%;top:50%;height:2px;background:linear-gradient(90deg,transparent,var(--teal),transparent);box-shadow:0 0 12px var(--teal);pointer-events:none;z-index:2}
 .primary,.secondary,.amazon{width:100%;border:0;border-radius:15px;padding:14px 16px;font-weight:850;font-size:14px;margin-top:12px}.primary{background:var(--violet);color:#fff;box-shadow:0 8px 17px rgba(91,61,245,.2)}.secondary{background:#EEEAFE;color:var(--violet)}.amazon{background:#172033;color:#fff;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px}.amazon .a{font-weight:950;color:#FFB84D;font-size:18px}.field{width:100%;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:#fff;color:var(--text);outline:none;margin-top:12px}.field:focus{border-color:#B8AEFF;box-shadow:0 0 0 3px rgba(91,61,245,.09)}.manual{display:flex;gap:8px}.manual .field{min-width:0}.manual button{flex:0 0 108px;border:0;border-radius:14px;margin-top:12px;background:#EEEAFE;color:var(--violet);font-weight:850}.separator{display:flex;align-items:center;gap:10px;color:#9AA1AD;font-size:11px;margin:13px 0}.separator:before,.separator:after{content:"";height:1px;background:var(--line);flex:1}
 .hint{font-size:11px;color:var(--muted);line-height:1.45;margin:11px 2px 0}.fileLabel{display:block;margin-top:12px;padding:13px;border:1px dashed #CFC9FF;border-radius:14px;text-align:center;color:var(--violet);font-weight:800;font-size:13px}.fileLabel input{display:none}.ocrStatus{font-size:12px;color:var(--muted);margin-top:9px}
 .result{display:none}.result.show{display:block}.resultKicker{color:var(--violet);font-size:11px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}.productTitle{font-size:21px;letter-spacing:-.5px;margin:7px 0 4px}.productSub{color:var(--muted);font-size:13px}.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.spec{background:#F7F8FB;border-radius:13px;padding:11px}.spec small{display:block;color:var(--muted);font-size:10px}.spec b{display:block;font-size:12px;margin-top:3px}.demoTag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 9px;background:#FFF4D8;color:#8A5A00;font-size:10px;font-weight:900;margin-top:11px}
@@ -48,17 +48,24 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 <p class="sub">Tieni tutto il codice nell’inquadratura e muovi il telefono lentamente; evita riflessi sulla confezione.</p>
 <button class="primary" id="startCamera">Apri la fotocamera</button>
 <div class="scanFrame" id="scanFrame"><div id="reader"></div><div class="scanLine"></div></div>
+<button class="secondary" id="stopCamera" hidden>Chiudi fotocamera</button>
+<button class="secondary" id="torch" hidden>Accendi / spegni torcia</button>
+<label id="zoomControl" hidden>Zoom <input id="zoom" type="range" aria-label="Zoom fotocamera"></label>
+<label class="fileLabel">＋ Scegli o scatta una foto del codice<input id="barcodePhoto" type="file" accept="image/*"></label>
 <div class="separator">oppure inserisci il codice</div>
 <div class="manual"><input class="field" id="codeInput" inputmode="numeric" autocomplete="off" placeholder="EAN / UPC"><button id="lookupCode">Cerca codice</button></div>
 </div>
 <div class="mode" id="ocrMode">
 <h2 class="scanHeading">Leggi l’etichetta</h2>
 <p class="sub">Fotografa la targhetta o il retro della confezione: l’OCR legge marca e modello per restringere la ricerca.</p>
-<label class="fileLabel">＋ &nbsp; Scatta o scegli una foto<input id="labelPhoto" type="file" accept="image/*" capture="environment"></label>
+<label class="fileLabel">＋ &nbsp; Scatta o scegli una foto<input id="labelPhoto" type="file" accept="image/*"></label>
 <div class="ocrStatus" id="ocrStatus">L’elaborazione avviene qui nel prototipo. Controlla il testo riconosciuto prima di cercare.</div>
 <textarea class="field" id="ocrText" rows="3" placeholder="Il testo riconosciuto comparirà qui; puoi correggere marca o modello."></textarea>
 <button class="secondary" id="lookupModel">Cerca marca e modello</button>
 </div>
+<div class="ocrStatus" id="scanStatus" role="status" aria-live="polite">Lettura delle barre con recupero automatico delle cifre tramite OCR.</div>
+<button class="secondary" id="cancelScan" hidden>Annulla analisi</button>
+<div id="ocrConfirm" hidden><p class="hint">Codice ricavato dal testo: confronta tutte le cifre con quelle sotto le barre. Il controllo numerico non garantisce una lettura esatta.</p><div id="ocrCandidates"></div></div>
 <p class="hint">Prototipo: la scansione è reale; il catalogo automatico e i link affiliati devono ancora essere collegati. I risultati demo sono indicati chiaramente.</p>
 </section>
 
@@ -86,24 +93,21 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 <p class="hint" style="text-align:center">Il prodotto fisico resta al centro. ScanDixit aggiunge le informazioni che aiutano a scegliere.</p>
 </div>
 <div class="toast" id="toast"></div>
+<div id="photoReader" aria-hidden="true" style="position:absolute;left:-10000px;width:1800px"></div>
 <script>
 const $=id=>document.getElementById(id);
-let scanner=null,activeTab="barcode",toastTimer;
+let activeTab="barcode",toastTimer;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
 function setTab(tab){activeTab=tab;document.querySelectorAll(".tab").forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle("active",on);b.setAttribute("aria-selected",String(on))});$("barcodeMode").classList.toggle("active",tab==="barcode");$("ocrMode").classList.toggle("active",tab==="ocr")}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
-function showCode(value,source){const code=String(value||"").trim();if(!code)return toast("Inserisci o scansiona un codice");$("demoResult").classList.remove("show");$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Il collegamento al catalogo identificherà il prodotto e la variante esatta.":"Il codice è stato letto. Nel prototipo il catalogo prodotti non è ancora collegato: puoi già provare la ricerca su Amazon.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
-async function startCamera(){if(!window.Html5Qrcode)return toast("Scanner non disponibile in questo momento");$("scanFrame").classList.add("show");$("startCamera").textContent="Inquadra il codice…";$("startCamera").disabled=true;try{scanner=new Html5Qrcode("reader",{formatsToSupport:[Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E],useBarCodeDetectorIfSupported:false,verbose:false});await scanner.start({facingMode:"environment"},{fps:18,qrbox:(w,h)=>({width:Math.max(1,Math.floor(w*.94)),height:Math.max(1,Math.floor(h*.80))})},async text=>{await stopCamera();$("codeInput").value=text;showCode(text,"barcode")},()=>{})}catch(e){$("startCamera").disabled=false;$("startCamera").textContent="Riprova ad aprire la fotocamera";toast("Consenti l’accesso alla fotocamera e riprova")}}
-async function stopCamera(){if(scanner){try{if(scanner.isScanning)await scanner.stop()}catch(e){}try{scanner.clear()}catch(e){}scanner=null}$("startCamera").disabled=false;$("startCamera").textContent="Apri la fotocamera"}
-$("startCamera").addEventListener("click",startCamera);
+function showCode(value,source){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("demoResult").classList.remove("show");$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Il collegamento al catalogo identificherà il prodotto e la variante esatta.":"Il codice è stato letto. Nel prototipo il catalogo prodotti non è ancora collegato: puoi già provare la ricerca su Amazon.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
 $("lookupCode").addEventListener("click",()=>showCode($("codeInput").value,"barcode"));
 $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.currentTarget.value,"barcode")});
 $("showDemo").addEventListener("click",()=>{$("codeResult").classList.remove("show");$("demoResult").classList.add("show");$("demoResult").scrollIntoView({behavior:"smooth",block:"nearest"})});
 $("demoAmazon").href="https://www.amazon.it/s?k="+encodeURIComponent("piastra per capelli");
-let ocrWorker=null;
-$("labelPhoto").addEventListener("change",async e=>{const file=e.target.files&&e.target.files[0];if(!file)return;$("ocrStatus").textContent="Carico il lettore OCR…";try{if(!window.Tesseract){await new Promise((resolve,reject)=>{const s=document.createElement("script");s.src="https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js";s.onload=resolve;s.onerror=reject;document.head.appendChild(s)})}if(!ocrWorker)ocrWorker=await Tesseract.createWorker("eng");$("ocrStatus").textContent="Leggo l’etichetta…";const out=await ocrWorker.recognize(file);$("ocrText").value=out.data.text.trim();$("ocrStatus").textContent="Testo riconosciuto. Verifica il modello e avvia la ricerca.";const match=out.data.text.match(/[A-Z0-9][A-Z0-9._/-]{4,}/i);if(match&&!$("ocrText").value.trim())$("ocrText").value=match[0]}catch(err){$("ocrStatus").textContent="OCR non disponibile: puoi inserire marca e modello a mano."}});
 $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
-window.addEventListener("pagehide",()=>{if(scanner)stopCamera();if(ocrWorker)ocrWorker.terminate()});
+
 </script>
+<script src="./scandixit-scanner.js?v=1.0.0"></script>
 </body>
 </html>

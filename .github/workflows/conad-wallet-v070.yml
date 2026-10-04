@@ -1,0 +1,31 @@
+name: Fix Conad wallet logo v0.9.70
+
+on:
+  push:
+    paths:
+      - '.github/workflows/conad-wallet-v070.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply Conad wallet variant
+        run: python .github/scripts/conad_wallet_variant_v070.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js logos-hq/conad-light.svg
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Add Conad light wallet variant"
+            git push origin main
+          fi

@@ -26,12 +26,18 @@ function ocrCodes(text){
  return [...found];
 }
 function consensus(maxGap=6000){let last='',count=0,time=0;return (code,now=Date.now())=>{count=code===last&&now-time<maxGap?count+1:1;last=code;time=now;return count>=2;};}
-const api={validGTIN,expandUPCE,normalizeBarcode,ocrCodes,consensus};
+function initialZoom(caps){
+ const min=Number(caps.min),max=Number(caps.max),step=Number(caps.step)||.1;
+ const target=Math.min(max,Math.max(min,2));
+ return Math.min(max,Math.max(min,min+Math.round((target-min)/step)*step));
+}
+const api={initialZoom,validGTIN,expandUPCE,normalizeBarcode,ocrCodes,consensus};
 if(typeof module!=='undefined')module.exports=api;
 root.ScanDixit=api;
 if(typeof document==='undefined')return;
 const $=id=>document.getElementById(id);
 let camera=null,starting=null,epoch=0,live=false,photoBusy=false,timer,worker=null,loading=null,ocrBusy=false,nativePromise=null,finishing=false;
+let cropPass=0,decoderSerial=0;
 let barcodeVote=consensus(),ocrVote=consensus(30000),lastOcr=0,ocrUnavailable=false;
 const status=msg=>{$('scanStatus').textContent=msg;};
 const options=()=>({formatsToSupport:['EAN_13','EAN_8','UPC_A','UPC_E'].map(k=>Html5QrcodeSupportedFormats[k]),useBarCodeDetectorIfSupported:false,verbose:false});
@@ -88,11 +94,26 @@ function offerCodes(codes){
  for(const code of codes){const b=document.createElement('button');b.className='secondary';b.textContent='Conferma '+code;b.onclick=async()=>{await stop();resetCandidate();$('codeInput').value=code;showCode(code,'ocr-code');};$('ocrCandidates').append(b);}
 }
 async function accept(code,token){if(token!==epoch||finishing)return;finishing=true;await stop();$('codeInput').value=code;resetCandidate();showCode(code,'barcode');status('Codice letto e cifra di controllo verificata.');finishing=false;}
+async function scanLiveCrop(video,token){
+ // Each job owns its decoder: stopping/restarting cannot reuse an in-flight canvas.
+ const pass=cropPass++,full=canvasFrom(video,0,null,false,1600),band=bandCrop(full);
+ const fraction=[.75,.5,.35][pass%3];
+ const crop=band||{x:full.width*(1-fraction)/2,y:full.height*(1-fraction)/2,w:full.width*fraction,h:full.height*fraction};
+ const host=document.createElement('div');host.id='live-crop-'+(++decoderSerial);host.setAttribute('aria-hidden','true');host.style.cssText='position:absolute;left:-10000px;width:1200px';document.body.append(host);
+ let decoder;
+ try{decoder=new Html5Qrcode(host.id,options());
+  const c=canvasFrom(full,pass%2?90:0,crop,pass%3===2,1200);
+  if(token!==epoch)return null;
+  return await decodeCanvas(c,decoder);
+ }catch(e){return null;}finally{try{decoder?.clear();}catch(e){}host.remove();}
+}
 async function tick(token){
  if(!live||token!==epoch)return;
  try{const video=$('reader').querySelector('video');if(!video?.videoWidth)return;
   const detector=await nativeDetector();if(token!==epoch)return;
   if(detector){const results=await detector.detect(video);if(token!==epoch)return;const codes=[...new Set(results.map(r=>normalizeBarcode(r.rawValue,r.format)).filter(Boolean))];if(codes.length===1&&barcodeVote(codes[0]))return accept(codes[0],token);}
+  const cropResult=await scanLiveCrop(video,token);if(token!==epoch)return;
+  if(cropResult?.code&&barcodeVote(cropResult.code))return accept(cropResult.code,token);
   if(!ocrUnavailable&&!ocrBusy&&Date.now()-lastOcr>4500){lastOcr=Date.now();const c=canvasFrom(video,0,null,false,1400);const crop=bandCrop(c);status('Cerco il barcode e, in alternativa, le cifre stampate…');const result=await recognize(crop?canvasFrom(c,0,crop,false,1600):c);if(token!==epoch)return;
    const codes=ocrCodes(result?.text);if(codes.length===1&&ocrVote(codes[0])){offerCodes(codes);status('Cifre lette due volte: confrontale con la confezione e conferma.');}else if(codes.length>1){offerCodes(codes);status('Più codici possibili: scegli quello sotto le barre.');}
   }
@@ -101,14 +122,18 @@ async function tick(token){
 }
 async function start(){
  if(starting||live||photoBusy)return;if(!window.Html5Qrcode)return status('Lettore non disponibile. Ricarica la pagina.');
- const token=++epoch;$('codeResult').classList.remove('show');resetCandidate();barcodeVote=consensus();ocrVote=consensus(30000);ocrUnavailable=false;lastOcr=Date.now();$('scanFrame').classList.add('show');$('startCamera').disabled=true;$('stopCamera').hidden=false;status('Apertura fotocamera…');
+ const token=++epoch;$('codeResult').classList.remove('show');resetCandidate();barcodeVote=consensus();ocrVote=consensus(30000);ocrUnavailable=false;cropPass=0;lastOcr=Date.now();$('scanFrame').classList.add('show');$('startCamera').disabled=true;$('stopCamera').hidden=false;status('Apertura fotocamera…');
  camera=new Html5Qrcode('reader',options());const current=camera;
  starting=current.start({facingMode:'environment'},{fps:15,disableFlip:true,videoConstraints:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}}},(text,result)=>{if(token!==epoch)return;const code=normalizeBarcode(text,result?.result?.format?.formatName);if(code&&barcodeVote(code))accept(code,token);},()=>{});
  try{await starting;if(token!==epoch)return;live=true;status('Inquadra barre e cifre. Non serve centrare la linea.');const video=$('reader').querySelector('video'),track=video?.srcObject?.getVideoTracks()[0];const caps=track?.getCapabilities?.()||{};
   if(caps.focusMode?.includes('continuous'))await track.applyConstraints({advanced:[{focusMode:'continuous'}]}).catch(()=>{});
   if(token!==epoch)return;
   $('torch').hidden=!caps.torch;$('torch').onclick=async()=>{try{await track.applyConstraints({advanced:[{torch:!track.getSettings().torch}]});}catch(e){status('Torcia non disponibile.');}};
-  $('zoomControl').hidden=!caps.zoom;if(caps.zoom){const z=$('zoom');z.min=caps.zoom.min;z.max=Math.min(caps.zoom.max,4);z.step=caps.zoom.step||.1;z.value=track.getSettings().zoom||caps.zoom.min;z.oninput=()=>track.applyConstraints({advanced:[{zoom:Number(z.value)}]}).catch(()=>{});}
+  $('zoomControl').hidden=!caps.zoom;if(caps.zoom){const z=$('zoom');z.min=caps.zoom.min;z.max=Math.max(caps.zoom.min,Math.min(caps.zoom.max,4));z.step=caps.zoom.step||.1;
+   await track.applyConstraints({advanced:[{zoom:initialZoom(caps.zoom)}]}).catch(()=>{});if(token!==epoch)return;
+   z.value=track.getSettings().zoom??caps.zoom.min;
+   z.oninput=()=>track.applyConstraints({advanced:[{zoom:Number(z.value)}]}).catch(()=>{});
+  }
   timer=setTimeout(()=>tick(token),800);
  }catch(e){if(token===epoch){status('Fotocamera non disponibile: verifica il permesso oppure scegli una foto.');$('startCamera').disabled=false;$('stopCamera').hidden=true;$('scanFrame').classList.remove('show');}}
  finally{starting=null;}

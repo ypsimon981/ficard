@@ -11,3 +11,9 @@ assert.deepEqual(ocrCodes('O4006381333931\n4006381333931X\n9994006381333931'),[]
 assert.deepEqual(ocrCodes('4006381333931\n036000291452'),['4006381333931','036000291452']);
 const vote=consensus();assert(!vote('a',1));assert(vote('a',2));assert(!vote('b',3));assert(!vote('b',7000));assert(vote('b',7100));
 console.log('GTIN, UPC-E, OCR extraction and live consensus: passed');
+
+const {initialZoom}=require('../scandixit-scanner.js');
+assert.equal(initialZoom({min:1,max:4,step:.1}),2);
+assert.equal(initialZoom({min:1,max:1.5,step:.1}),1.5);
+assert.equal(initialZoom({min:3,max:6,step:.1}),3);
+assert.equal(initialZoom({min:1,max:4,step:.6}),2.2);

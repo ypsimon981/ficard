@@ -1,0 +1,60 @@
+name: Apply FiCard v0.9.64 card layout
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-card-ratio-v064.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply two-column classic card layout
+        shell: bash
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          from datetime import datetime
+          from zoneinfo import ZoneInfo
+          import re
+
+          p=Path('index.html')
+          text=p.read_text()
+          marker='/* v0.9.64 · Two columns with classic card proportions */'
+          css='''\n/* v0.9.64 · Two columns with classic card proportions */\n.cardShelf{grid-template-columns:repeat(2,minmax(0,1fr))!important}\n.cardShelf .card{aspect-ratio:85.6/53.98!important;min-height:0!important;height:auto!important;padding:0!important}\n.cardItem .cardOpen{height:100%;padding:7px 7px 10px;display:flex;flex-direction:column;align-items:stretch}\n.cardItem .cardOpen .brandMark{width:100%;height:auto;flex:0 0 56%;min-height:0;padding:8px 10px;border-radius:14px;margin:0;background:#fff}\n.cardItem .cardOpen .brandMark .brandLogo{width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}\n.cardItem .cardOpen .name{margin:7px 0 0;padding:0;font-size:clamp(12px,3.6vw,15px);line-height:1.12;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n.cardItem .cardOpen .type{margin-top:3px;padding:0 25px 0 0;font-size:clamp(10px,2.8vw,12px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}\n@media(min-width:540px){.cardShelf{grid-template-columns:repeat(2,minmax(0,1fr))!important}.cardShelf .card{min-height:0!important}.cardItem .cardOpen .name{font-size:15px}}\n'''
+          if marker not in text:
+              text=text.replace('</style>',css+'\n</style>',1)
+
+          now=datetime.now(ZoneInfo('Europe/Rome'))
+          human=now.strftime('%d/%m/%Y · %H:%M · v0.9.64')
+          release_id=now.strftime('%Y.%m.%d-%H%M-v0.9.64')
+          text=re.sub(r'<div class="release">[^<]+</div>','<div class="release">'+human+'</div>',text,count=1)
+          text=re.sub(r'const RELEASE="[^"]+";','const RELEASE="'+release_id+'";',text,count=1)
+          if '<span class="changeVersion">v0.9.64</span>' not in text:
+              entry='<details class="changeEntry" open><summary><span class="changeVersion">v0.9.64</span><span class="changeTitle">Carte principali in formato classico</span><time>'+now.strftime('%d/%m/%Y · %H:%M')+'</time></summary><ul><li>Due tessere per riga anche sugli schermi più larghi.</li><li>Proporzioni portate al rapporto di una tessera bancaria classica, circa 1,586:1.</li><li>Riquadro logo mantenuto a 7 px dai bordi e testi riallineati.</li></ul></details>'
+              text=text.replace('<div class="changeList">','<div class="changeList">'+entry,1)
+          p.write_text(text)
+
+          sw=Path('sw.js')
+          sw_text=sw.read_text()
+          sw_text=re.sub(r'const CACHE="ficard-[^"]+";','const CACHE="ficard-'+release_id+'";',sw_text,count=1)
+          sw.write_text(sw_text)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Use two-column classic card proportions"
+            git push origin main
+          fi

@@ -13,7 +13,7 @@ const vote=consensus();assert(!vote('a',1));assert(vote('a',2));assert(!vote('b'
 console.log('GTIN, UPC-E, OCR extraction and live consensus: passed');
 
 const {initialZoom}=require('../scandixit-scanner.js');
-assert.equal(initialZoom({min:1,max:4,step:.1}),2);
+assert.equal(initialZoom({min:1,max:4,step:.1}),3);
 assert.equal(initialZoom({min:1,max:1.5,step:.1}),1.5);
 assert.equal(initialZoom({min:3,max:6,step:.1}),3);
-assert.equal(initialZoom({min:1,max:4,step:.6}),2.2);
+assert.equal(initialZoom({min:1,max:4,step:.6}),2.8);

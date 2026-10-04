@@ -28,7 +28,7 @@ function ocrCodes(text){
 function consensus(maxGap=6000){let last='',count=0,time=0;return (code,now=Date.now())=>{count=code===last&&now-time<maxGap?count+1:1;last=code;time=now;return count>=2;};}
 function initialZoom(caps){
  const min=Number(caps.min),max=Number(caps.max),step=Number(caps.step)||.1;
- const target=Math.min(max,Math.max(min,2));
+ const target=Math.min(max,Math.max(min,3));
  return Math.min(max,Math.max(min,min+Math.round((target-min)/step)*step));
 }
 const api={initialZoom,validGTIN,expandUPCE,normalizeBarcode,ocrCodes,consensus};
@@ -130,8 +130,12 @@ async function start(){
   if(token!==epoch)return;
   $('torch').hidden=!caps.torch;$('torch').onclick=async()=>{try{await track.applyConstraints({advanced:[{torch:!track.getSettings().torch}]});}catch(e){status('Torcia non disponibile.');}};
   $('zoomControl').hidden=!caps.zoom;if(caps.zoom){const z=$('zoom');z.min=caps.zoom.min;z.max=Math.max(caps.zoom.min,Math.min(caps.zoom.max,4));z.step=caps.zoom.step||.1;
-   await track.applyConstraints({advanced:[{zoom:initialZoom(caps.zoom)}]}).catch(()=>{});if(token!==epoch)return;
-   z.value=track.getSettings().zoom??caps.zoom.min;
+   const targetZoom=initialZoom(caps.zoom);
+   try{await track.applyConstraints({zoom:targetZoom});}
+   catch(e){try{await track.applyConstraints({advanced:[{zoom:targetZoom}]});}catch(ignore){}}
+   if(token!==epoch)return;
+   z.value=track.getSettings().zoom??targetZoom;
+   status('Camera pronta: zoom '+Number(z.value).toFixed(1)+'×. Inquadra il codice senza avvicinarti troppo.');
    z.oninput=()=>track.applyConstraints({advanced:[{zoom:Number(z.value)}]}).catch(()=>{});
   }
   timer=setTimeout(()=>tick(token),800);

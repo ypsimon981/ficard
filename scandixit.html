@@ -66,30 +66,23 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 <div class="ocrStatus" id="scanStatus" role="status" aria-live="polite">Lettura delle barre con recupero automatico delle cifre tramite OCR.</div>
 <button class="secondary" id="cancelScan" hidden>Annulla analisi</button>
 <div id="ocrConfirm" hidden><p class="hint">Codice ricavato dal testo: confronta tutte le cifre con quelle sotto le barre. Il controllo numerico non garantisce una lettura esatta.</p><div id="ocrCandidates"></div></div>
-<p class="hint">Prototipo: la scansione è reale; il catalogo automatico e i link affiliati devono ancora essere collegati. I risultati demo sono indicati chiaramente.</p>
+<p class="hint">Il codice identifica la confezione; la scheda riporta soltanto i dati presenti nei cataloghi collegati. I dati mancanti restano esplicitamente tali.</p>
 </section>
 
 <section class="card codeResult" id="codeResult" aria-live="polite">
 <div class="resultKicker">Codice acquisito</div>
 <div class="codeLine" id="resultCode"></div>
 <div class="matchNote" id="matchNote"></div>
+<div class="card result" id="productSheet" aria-live="polite">
+<div class="resultKicker">Scheda prodotto</div>
+<h2 class="productTitle" id="sheetTitle">Cerco il prodotto…</h2>
+<div class="productSub" id="sheetBrand"></div>
+<div class="specs" id="sheetFields"></div>
+<p class="hint" id="sheetSource"></p>
+</div>
 <a class="amazon" id="amazonSearch" target="_blank" rel="noopener noreferrer"><span class="a">a</span><span id="amazonLabel">Cerca questo codice su Amazon</span></a>
 </section>
 
-<section class="card result" id="demoResult" aria-live="polite">
-<div class="resultKicker">Scheda ScanDixit · esempio</div>
-<h2 class="productTitle">Piastra per capelli</h2>
-<div class="productSub">Modello dimostrativo · dati di esempio</div>
-<span class="demoTag">ESEMPIO, NON RISULTATO LIVE</span>
-<div class="specs">
-<div class="spec"><small>Rivestimento</small><b>Ceramica · demo</b></div>
-<div class="spec"><small>Temperatura</small><b>Regolabile · demo</b></div>
-<div class="spec"><small>Uso</small><b>Capelli lisci · demo</b></div>
-<div class="spec"><small>Identificazione</small><b>Da catalogo · demo</b></div>
-</div>
-<a class="amazon" id="demoAmazon" target="_blank" rel="noopener noreferrer"><span class="a">a</span><span>Leggi le recensioni su Amazon</span></a>
-</section>
-<button class="secondary" id="showDemo" style="margin-top:13px">Mostra un esempio di scheda</button>
 <p class="hint" style="text-align:center">Il prodotto fisico resta al centro. ScanDixit aggiunge le informazioni che aiutano a scegliere.</p>
 </div>
 <div class="toast" id="toast"></div>
@@ -100,14 +93,34 @@ let activeTab="barcode",toastTimer;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
 function setTab(tab){activeTab=tab;document.querySelectorAll(".tab").forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle("active",on);b.setAttribute("aria-selected",String(on))});$("barcodeMode").classList.toggle("active",tab==="barcode");$("ocrMode").classList.toggle("active",tab==="ocr")}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
-function showCode(value,source){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("demoResult").classList.remove("show");$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Il collegamento al catalogo identificherà il prodotto e la variante esatta.":"Il codice è stato letto. Nel prototipo il catalogo prodotti non è ancora collegato: puoi già provare la ricerca su Amazon.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
+let productLookupId=0;
+function sheetField(label,value){if(!value)return;const box=document.createElement("div");box.className="spec";const title=document.createElement("small");title.textContent=label;const content=document.createElement("b");content.textContent=Array.isArray(value)?value.filter(Boolean).join(", "):String(value);box.append(title,content);$("sheetFields").append(box)}
+async function loadProductSheet(code){
+ const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent="Cerco il prodotto nel catalogo…";$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";
+ try{
+  const fields="code,product_name,product_name_en,generic_name,brands,quantity,product_type,categories,ingredients_text,allergens,labels,countries,origins,manufacturing_places,packaging,stores,created_t,last_modified_t";
+  const url="https://world.openfoodfacts.org/api/v3/product/"+encodeURIComponent(code)+".json?product_type=all&fields="+encodeURIComponent(fields);
+  const response=await fetch(url,{headers:{Accept:"application/json"}});
+  if(!response.ok)throw Error("HTTP "+response.status);
+  const data=await response.json(),product=data.product;
+  if(lookup!==productLookupId)return;
+  if(data.status!==1||!product||String(product.code)!==code){$("sheetTitle").textContent="Scheda non trovata nel catalogo";$("sheetBrand").textContent="Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.";sheetField("Codice",code);$("sheetSource").textContent="Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.";return}
+  const name=product.product_name||product.product_name_en||product.generic_name||"Prodotto identificato";
+  $("sheetTitle").textContent=name;$("sheetBrand").textContent=product.brands||"Marca non indicata";
+  sheetField("Codice EAN/UPC",product.code||code);sheetField("Formato",product.quantity);sheetField("Categoria",product.categories);sheetField("Tipo",product.product_type);
+  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Etichette",product.labels);sheetField("Origine",product.origins||product.countries);sheetField("Confezione",product.packaging);
+  const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString("it-IT"):"non indicato";
+  const hosts={beauty:"world.openbeautyfacts.org",petfood:"world.openpetfoodfacts.org",product:"world.openproductsfacts.org",food:"world.openfoodfacts.org"};
+  const source=document.createElement("span");source.textContent="Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: "+stamp+". Fonte: ";
+  const link=document.createElement("a");link.href="https://"+(hosts[product.product_type]||hosts.food)+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
+ }catch(e){if(lookup!==productLookupId)return;$("sheetTitle").textContent="Scheda tecnica temporaneamente non disponibile";$("sheetBrand").textContent="Controlla la connessione e riprova. Il link Amazon resta disponibile.";$("sheetSource").textContent="Il catalogo esterno non ha risposto."}
+}
+function showCode(value,source){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa.":"Codice letto con cifra di controllo valida.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");if(source!=="ocr")loadProductSheet(code);else $("productSheet").classList.remove("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
 $("lookupCode").addEventListener("click",()=>showCode($("codeInput").value,"barcode"));
 $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.currentTarget.value,"barcode")});
-$("showDemo").addEventListener("click",()=>{$("codeResult").classList.remove("show");$("demoResult").classList.add("show");$("demoResult").scrollIntoView({behavior:"smooth",block:"nearest"})});
-$("demoAmazon").href="https://www.amazon.it/s?k="+encodeURIComponent("piastra per capelli");
 $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
 
 </script>
-<script src="./scandixit-scanner.js?v=1.0.2"></script>
+<script src="./scandixit-scanner.js?v=1.0.3"></script>
 </body>
 </html>

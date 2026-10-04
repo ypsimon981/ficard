@@ -78,6 +78,27 @@
 .cardFavoriteIcon{display:block;width:27px;height:27px;overflow:visible;filter:drop-shadow(0 1px 1px rgba(30,20,75,.32));transition:width .16s ease,height .16s ease,filter .16s ease,transform .16s ease}
 .cardFavorite.isFavorite .cardFavoriteIcon{width:38px;height:38px;filter:drop-shadow(0 3px 4px rgba(30,20,75,.48));transform:translateY(-1px)}
 @media(prefers-reduced-motion:reduce){.cardFavoriteIcon{transition:none}}
+
+/* v0.9.60 · Acquisition-first add-card flow */
+.addCardSheet{scroll-behavior:smooth}
+.captureStep{padding:2px 0 4px}
+.captureActions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:2px 0 10px}
+.captureAction{min-width:0;min-height:102px;border:0;border-radius:20px;padding:15px 12px;display:flex;flex-direction:column;align-items:flex-start;justify-content:space-between;text-align:left;font:inherit;cursor:pointer}
+.captureAction span:last-child{min-width:0}.captureAction b{display:block;font-size:15px;line-height:1.18}.captureAction small{display:block;margin-top:4px;font-size:11px;line-height:1.2;opacity:.86}.captureIcon{font-size:27px;line-height:1}
+.captureScan{background:linear-gradient(145deg,var(--violet),#794CFF);color:#fff;box-shadow:0 9px 22px rgba(91,61,245,.2)}
+.captureImport{background:#E4FAF7;color:#107C73;border:1px solid #BFEFE8}
+.captureHint{margin:9px 2px 2px;color:var(--muted);font-size:12px;line-height:1.35}
+.manualEntryBtn{display:block;margin:7px auto 0;padding:9px 12px;border:0;background:transparent;color:var(--violet);font-size:12px;font-weight:800}
+.addCardScanner{margin:10px 0 6px;min-height:0;border-radius:20px;background:#0B0D10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
+.addCardScanner.show{min-height:240px}
+.addCardScanner #reader{width:100%;min-height:240px;border:0!important}
+.addCardScanner #reader video{display:block!important;width:100%!important;max-height:38dvh!important;min-height:240px;object-fit:cover;border-radius:20px}
+.addCardScanner #reader__scan_region{min-height:240px}
+.addCardScanner #reader__dashboard{padding:8px!important;background:#fff}
+.cardFormFields[hidden]{display:none!important}
+.cardFormFields{margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}
+.formStepHead{margin:0 2px 4px}.formStepHead b{display:block;font-size:16px}.formStepHead small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:3px}
+@media(max-width:350px){.captureActions{gap:8px}.captureAction{min-height:92px;padding:12px 10px}.captureAction b{font-size:14px}.addCardScanner.show,.addCardScanner #reader,.addCardScanner #reader__scan_region{min-height:210px}.addCardScanner #reader video{min-height:210px}}
 </style>
 </head>
 <body>
@@ -149,31 +170,41 @@
   <button class="nav" data-view="profile"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></span>Profilo</button>
 </nav>
 
-<div id="addModal" class="modal"><div class="sheet">
+<div id="addModal" class="modal"><div class="sheet addCardSheet">
   <div class="grab"></div><div class="sheetHead"><h2>Aggiungi una carta</h2><button class="close" data-close="addModal">×</button></div>
-  <label for="brandSearch">Cerca marchio</label><input id="brandSearch" class="field" type="search" placeholder="Es. Conad, IKEA, farmacia…"><div id="brandResults" class="brandResults"></div>
-  <label for="addBrand">Marchio</label><select id="addBrand" class="field"></select>
-  <button class="primary" id="scanBtn">▣ Scansiona codice</button>
-  <button class="secondary" id="imageScanBtn">Importa foto o screenshot</button><input id="imageFiles" type="file" accept="image/*" multiple hidden><p class="hint">Seleziona più immagini: controlla ogni codice e scegli il marchio prima di salvare.</p>
-  <div id="scanner" class="scanner"><div id="reader"></div></div>
-  <label>Categoria</label><select id="addCategory" class="field">
-    <option value="supermercati">Supermercati</option>
-    <option value="sport">Articoli sportivi</option>
-    <option value="abbigliamento">Abbigliamento e calzature</option>
-    <option value="petstore">Pet store</option>
-    <option value="casa">Casa e bricolage</option>
-    <option value="beauty">Beauty e cura persona</option>
-    <option value="farmacia">Farmacie e parafarmacie</option>
-    <option value="elettronica">Elettronica</option>
-    <option value="ristorazione">Ristorazione</option>
-    <option value="carburanti">Carburanti</option>
-    <option value="altro">Altro</option>
-  </select>
-  <label>Nome negozio / carta</label><input id="addName" class="field" placeholder="Es. Esselunga">
-  <label>Numero / contenuto barcode</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123">
-  <div class="row"><div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div><div><label>Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px"></div></div>
-  <button class="primary" id="saveCard">Salva carta</button>
-  <p class="hint">La carta resta sul telefono. Per il prototipo non viene inviata a nessun server.</p>
+  <section class="captureStep" id="captureStep">
+    <div class="captureActions">
+      <button type="button" class="captureAction captureScan" id="scanBtn"><span class="captureIcon" aria-hidden="true">▣</span><span><b>Scansiona carta</b><small>Usa la fotocamera</small></span></button>
+      <button type="button" class="captureAction captureImport" id="imageScanBtn"><span class="captureIcon" aria-hidden="true">▧</span><span><b>Importa immagine</b><small>Foto o screenshot</small></span></button>
+    </div>
+    <input id="imageFiles" type="file" accept="image/*" multiple hidden>
+    <div id="scanner" class="scanner addCardScanner"><div id="reader"></div></div>
+    <p class="captureHint" id="captureHint">Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.</p>
+    <button type="button" class="manualEntryBtn" id="manualEntryBtn">Inserisci i dati manualmente</button>
+  </section>
+  <section id="cardFormFields" class="cardFormFields" hidden>
+    <div class="formStepHead"><b>Completa i dati</b><small>Controlla ciò che Fi-Card ha acquisito e salva la carta.</small></div>
+    <label for="brandSearch">Cerca marchio</label><input id="brandSearch" class="field" type="search" placeholder="Es. Conad, IKEA, farmacia…"><div id="brandResults" class="brandResults"></div>
+    <label for="addBrand">Marchio</label><select id="addBrand" class="field"></select>
+    <label>Categoria</label><select id="addCategory" class="field">
+      <option value="supermercati">Supermercati</option>
+      <option value="sport">Articoli sportivi</option>
+      <option value="abbigliamento">Abbigliamento e calzature</option>
+      <option value="petstore">Pet store</option>
+      <option value="casa">Casa e bricolage</option>
+      <option value="beauty">Beauty e cura persona</option>
+      <option value="farmacia">Farmacie e parafarmacie</option>
+      <option value="elettronica">Elettronica</option>
+      <option value="ristorazione">Ristorazione</option>
+      <option value="carburanti">Carburanti</option>
+      <option value="altro">Altro</option>
+    </select>
+    <label>Nome negozio / carta</label><input id="addName" class="field" placeholder="Es. Esselunga">
+    <label>Numero / contenuto barcode</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123">
+    <div class="row"><div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div><div><label>Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px"></div></div>
+    <button class="primary" id="saveCard">Salva carta</button>
+    <p class="hint">La carta resta sul telefono. Per il prototipo non viene inviata a nessun server.</p>
+  </section>
 </div></div>
 
 <div id="detailModal" class="modal"><div class="sheet">
@@ -597,7 +628,17 @@ async function refreshPosition(){
 function showModal(id){document.getElementById(id).classList.add("show")}function hideModal(id){document.getElementById(id).classList.remove("show");if(id==="addModal")stopScan()}
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>hideModal(b.dataset.close));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)hideModal(m.id)}));
-document.getElementById("addFab").onclick=()=>showModal("addModal");
+function revealAddCardFields(scroll=true){
+ const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;
+ if(scroll)requestAnimationFrame(()=>fields.scrollIntoView({behavior:"smooth",block:"start"}))
+}
+function resetAddCardFlow(){
+ const fields=document.getElementById("cardFormFields"),sheet=document.querySelector("#addModal .sheet");if(fields)fields.hidden=true;
+ const hint=document.getElementById("captureHint");if(hint)hint.textContent="Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.";
+ if(sheet)sheet.scrollTop=0;stopScan()
+}
+document.getElementById("addFab").onclick=()=>{resetAddCardFlow();showModal("addModal")};
+document.getElementById("manualEntryBtn").onclick=()=>revealAddCardFields(true);
 document.getElementById("search").oninput=renderCards;
 document.getElementById("addFormat").onchange=e=>{pendingScanFormat=e.target.value?normalizeFormat(e.target.value):null;document.getElementById("detectedFormat").textContent=pendingScanFormat?formatLabel(pendingScanFormat):"Automatico"};
 document.getElementById("addCode").addEventListener("input",e=>{const v=e.target.value;document.getElementById("detectedFormat").textContent=v?"Automatico: "+formatLabel(inferManualFormat(v)):"Automatico"});
@@ -620,7 +661,8 @@ document.getElementById("saveCard").onclick=()=>{
 };
 
 document.getElementById("scanBtn").onclick=async()=>{
- const wrap=document.getElementById("scanner");wrap.classList.add("show");
+ const wrap=document.getElementById("scanner"),sheet=document.querySelector("#addModal .sheet");wrap.classList.add("show");
+ document.getElementById("cardFormFields").hidden=true;if(sheet)sheet.scrollTop=0;
  if(!window.Html5Qrcode)return toast("Scanner non disponibile: usa l'inserimento manuale");
  try{
    if(qrScanner)await stopScan();
@@ -631,7 +673,8 @@ document.getElementById("scanBtn").onclick=async()=>{
      pendingScanFormat=normalizeFormat(scanFormatName(result)||inferManualFormat(txt));document.getElementById("addFormat").value=pendingScanFormat;
      document.getElementById("detectedFormat").textContent="Rilevato: "+formatLabel(pendingScanFormat);
      toast("Codice letto · "+formatLabel(pendingScanFormat));
-     stopScan()
+     const hint=document.getElementById("captureHint");if(hint)hint.textContent="Codice acquisito. Completa i dati della carta qui sotto.";
+     stopScan().then(()=>revealAddCardFields(true))
    });
  }catch(e){console.warn("Fi-Card scanner:",e);await stopScan();toast("Fotocamera non disponibile. Controlla i permessi o inserisci il codice manualmente.")}
 };
@@ -656,7 +699,7 @@ function catalogOptions(selected=''){return '<option value="">Carta personalizza
 let imageImportDefaults=null;
 function captureImageImportDefaults(){return {brandKey:document.getElementById('addBrand').value,name:document.getElementById('addName').value.trim(),category:document.getElementById('addCategory').value,color:document.getElementById('addColor').value}}
 function initCatalog(){document.getElementById('addBrand').innerHTML=catalogOptions();document.getElementById('brandSearch').oninput=renderBrandResults;renderBrandResults();document.getElementById('imageScanBtn').onclick=()=>{imageImportDefaults=captureImageImportDefaults();document.getElementById('imageFiles').click()};document.getElementById('importImagesProfile').onclick=()=>{imageImportDefaults=null;document.getElementById('imageFiles').click()};document.getElementById('imageFiles').onchange=importImages;document.getElementById('saveImages').onclick=saveImageDrafts;const date=localStorage.getItem('ficard.lastBackup');if(date)document.getElementById('backupInfo').textContent='Ultimo backup creato: '+new Date(date).toLocaleString('it-IT')+'. Salvalo in File o iCloud Drive.'}
-function renderBrandResults(){const q=document.getElementById('brandSearch').value.toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const popular=['conad','coop','esselunga','tigota','carrefour','ikea','mediaworld','decathlon','lidl','unieuro','acquaesapone','eurospin'];const matches=Object.entries(BRANDS).filter(([k,b])=>(b.name+' '+CATEGORIES[b.category]).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).sort((a,b)=>q?a[1].name.localeCompare(b[1].name,'it'):(popular.includes(a[0])?popular.indexOf(a[0]):99)-(popular.includes(b[0])?popular.indexOf(b[0]):99));const box=document.getElementById('brandResults');box.innerHTML=(q?matches:matches.slice(0,12)).map(([k,b])=>'<button type="button" class="brandPick" data-brand="'+esc(k)+'"><span class="catalogLogo">'+brandLogoHtml(b)+'</span><span>'+esc(b.name)+'</span></button>').join('')||'<p class="hint">Nessun marchio trovato. Puoi creare una carta personalizzata.</p>';box.querySelectorAll('[data-brand]').forEach(btn=>btn.onclick=()=>{const el=document.getElementById('addBrand');el.value=btn.dataset.brand;el.dispatchEvent(new Event('change'));document.getElementById('scanBtn').scrollIntoView({behavior:'smooth',block:'center'})})}
+function renderBrandResults(){const q=document.getElementById('brandSearch').value.toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const popular=['conad','coop','esselunga','tigota','carrefour','ikea','mediaworld','decathlon','lidl','unieuro','acquaesapone','eurospin'];const matches=Object.entries(BRANDS).filter(([k,b])=>(b.name+' '+CATEGORIES[b.category]).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).sort((a,b)=>q?a[1].name.localeCompare(b[1].name,'it'):(popular.includes(a[0])?popular.indexOf(a[0]):99)-(popular.includes(b[0])?popular.indexOf(b[0]):99));const box=document.getElementById('brandResults');box.innerHTML=(q?matches:matches.slice(0,12)).map(([k,b])=>'<button type="button" class="brandPick" data-brand="'+esc(k)+'"><span class="catalogLogo">'+brandLogoHtml(b)+'</span><span>'+esc(b.name)+'</span></button>').join('')||'<p class="hint">Nessun marchio trovato. Puoi creare una carta personalizzata.</p>';box.querySelectorAll('[data-brand]').forEach(btn=>btn.onclick=()=>{const el=document.getElementById('addBrand');el.value=btn.dataset.brand;el.dispatchEvent(new Event('change'));document.getElementById('addName').scrollIntoView({behavior:'smooth',block:'center'})})}
 
 function downloadBackup(data,filename=''){const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);localStorage.setItem('ficard.lastBackup',payload.exportedAt);document.getElementById('backupInfo').textContent='Backup creato: '+new Date().toLocaleString('it-IT')+'. Conserva il file per ripristinare le carte.';toast('Backup pronto da salvare in File')}
 function validateBackup(data){if(!Array.isArray(data)&&(!data||data.app!=='Fi-Card'||![1,2].includes(data.version)))throw Error('Questo file non è un backup Fi-Card compatibile');const arr=Array.isArray(data)?data:data.cards;if(!Array.isArray(arr)||arr.length>10000)throw Error('Elenco carte non valido');return arr.map((c,i)=>{if(!c||typeof c.name!=='string'||!c.name.trim()||c.name.length>200||typeof c.code!=='string'||!c.code||c.code.length>4096)throw Error('Carta '+(i+1)+' non valida: nessun dato è stato modificato');if(c.format&&!Object.prototype.hasOwnProperty.call({QR_CODE:1,AZTEC:1,CODABAR:1,CODE39:1,CODE93:1,CODE128:1,DATA_MATRIX:1,ITF:1,EAN13:1,EAN8:1,PDF417:1,UPCA:1,UPCE:1,RSS14:1,RSS_EXPANDED:1},normalizeFormat(c.format)))throw Error('Formato codice non supportato nella carta '+(i+1));const locations=c.locations||[];if(!Array.isArray(locations)||locations.some(l=>!l||typeof l.lat!=='number'||!Number.isFinite(l.lat)||Math.abs(l.lat)>90||typeof l.lng!=='number'||!Number.isFinite(l.lng)||Math.abs(l.lng)>180))throw Error('Posizione non valida nella carta '+(i+1));if(c.photo&&(!(typeof c.photo==='string')||!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(c.photo)||c.photo.length>2000000))throw Error('Foto non valida nella carta '+(i+1));return {id:crypto.randomUUID(),notes:typeof c.notes==='string'?c.notes.slice(0,2000):'',photo:c.photo||'',lastUsed:Number.isFinite(c.lastUsed)&&c.lastUsed>=0?c.lastUsed:0,useCount:Number.isInteger(c.useCount)&&c.useCount>=0?c.useCount:0,name:c.name.trim(),code:c.code,brandKey:Object.hasOwn(BRANDS,c.brandKey)?c.brandKey:'',category:c.category==='calzature'?'abbigliamento':Object.hasOwn(CATEGORIES,c.category)?c.category:'altro',color:/^#[0-9a-f]{6}$/i.test(c.color)?c.color:'#5B3DF5',format:normalizeFormat(c.format||inferManualFormat(c.code)),fav:c.fav===true,locations:locations.map(l=>({lat:l.lat,lng:l.lng,favorite:l.favorite===true,osmId:typeof l.osmId==="string"?l.osmId.slice(0,100):"",name:typeof l.name==="string"?l.name.slice(0,200):"",address:typeof l.address==="string"?l.address.slice(0,300):"",source:l.source==="osm-auto"?"osm-auto":"manual"}))}})}

@@ -1,0 +1,11 @@
+const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
+const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.html'),'utf8'),ui=fs.readFileSync(path.join(root,'ficard-stores-ui.js'),'utf8');
+const section=(s,a,b)=>s.slice(s.indexOf(a),s.indexOf(b,s.indexOf(a)));
+function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);
+vm.runInContext(section(html,'function distanceM(','function smartCard()')+section(html,'function smartOrder()','function nearbyCardCount()'),ctx);
+vm.runInContext(section(ui,'function savedAt(','function storeBrand(')+section(ui,'smartShopCandidates=function()','function resetShopFilters()'),ctx);return ctx}
+const card=(id,key)=>({id,name:id,brandKey:key,locations:[]});const point=(meters,id)=>({lat:meters/6371000*180/Math.PI,lng:0,osmId:id});
+test('OSM transient shops determine ordering even without saved locations',()=>{const c=fixture();c.cards=[card('a','a'),card('b','b')];c.results=[{cardId:'a',point:point(100,'node/1')},{cardId:'b',point:point(5,'node/2')}];assert.equal(c.smartOrder().ordered[0].id,'b');assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos).id,'b');assert.equal(c.cards[1].locations.length,0)});
+test('multiple nearby physical shops suppress the message, even for one card',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(5,'node/1')},{cardId:'a',point:point(6,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos),null)});
+test('multiple cards matching one OSM shop count as one shop',()=>{const c=fixture();c.cards=[card('a','a'),card('a2','a')];c.results=c.cards.map(x=>({cardId:x.id,point:point(5,'node/1')}));assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a')});
+test('message requires strictly below 10 m and a GPS position',()=>{const c=fixture();c.cards=[card('a','a')];c.cards[0].locations=[point(10.01)];assert.equal(c.arrivalCard(c.cards,c.currentPos),null);c.cards[0].locations=[point(9.99)];assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a');assert.equal(c.arrivalCard(c.cards,null),null)});

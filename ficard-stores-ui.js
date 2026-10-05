@@ -24,7 +24,9 @@ renderOverviewMap=function(){
  const el=document.getElementById('overviewMap');if(!el||!window.L)return;
  if(!overviewMap){overviewMap=L.map(el,{zoomControl:true}).setView([42.2,12.5],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(overviewMap)}
  if(overviewLayer)overviewLayer.remove();if(currentPosLayer){currentPosLayer.remove();currentPosLayer=null}
- overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45}):L.layerGroup()).addTo(overviewMap);
+ overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45,showCoverageOnHover:false,spiderfyDistanceMultiplier:1.8,
+ iconCreateFunction:cluster=>L.divIcon({className:'storeCluster',html:'<div class="storeClusterBadge"><b>'+cluster.getChildCount()+'</b><small>negozi</small></div>',iconSize:[48,48],iconAnchor:[24,24]})
+ }):L.layerGroup()).addTo(overviewMap);
  const items=filtered();for(const x of items){const v=mapBrandVisual(x.c),icon=L.divIcon({className:'',html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(x.c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38]});const popup=document.createElement('div');popup.append(row(x));L.marker([x.l.lat,x.l.lng],{icon}).addTo(overviewLayer).bindPopup(popup,{minWidth:245,maxWidth:300})}
  if(currentPos)currentPosLayer=L.circleMarker([currentPos.lat,currentPos.lng],{radius:9,weight:3,fillOpacity:.6}).addTo(overviewMap).bindTooltip('La tua posizione');
  setTimeout(()=>{overviewMap.invalidateSize();if(!mapFramed){if(currentPos){overviewMap.setView([currentPos.lat,currentPos.lng],13);mapFramed=true}else if(items.length){overviewMap.fitBounds(items.map(x=>[x.l.lat,x.l.lng]),{maxZoom:14,padding:[25,25]});mapFramed=true}}},80);
@@ -37,7 +39,7 @@ async function search(center,force=false){
  const hit=cache.find(x=>x.key===key);if(hit){results=S.parse(hit.data,ds);status='Risultati salvati.';renderLocations();renderOverviewMap();renderDetail();renderSmartCarousel();if(!force&&Date.now()-hit.at<86400000){busy=false;renderLocations();return}}
  else results=[];renderLocations();renderDetail();renderOverviewMap();
  try{const data=await S.request(S.query(center,allNames),active.signal);if(id!==requestId)return;results=S.parse(data,descriptors());status='Ricerca entro 10 km dalla zona scelta.';try{localStorage.setItem(CACHE,JSON.stringify([{key,at:Date.now(),data},...cache.filter(x=>x.key!==key)].slice(0,6)))}catch{}}
- catch(e){if(id!==requestId)return;status=hit?'Servizio non disponibile: mostro i risultati salvati.':'Ricerca non disponibile. Riprova; i negozi salvati restano visibili.'}
+ catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status=(hit?'Mostro i risultati salvati. ':'I negozi salvati restano visibili. ')+(e.message||'Ricerca non disponibile.');}
  finally{if(id===requestId){busy=false;renderLocations();renderOverviewMap();renderDetail();renderSmartCarousel()}}
 }
 function renderDetail(){const el=document.getElementById('cardNearbyStores');if(!el)return;const c=cards.find(c=>c.id===currentCardId);if(!c)return;const items=shops(c.id),favorites=items.filter(x=>x.favorite),nearby=items.filter(x=>!x.favorite);el.replaceChildren();for(const [title,rows] of [['Negozi preferiti',favorites],['Altri negozi vicini',nearby]]){const h=document.createElement('h3');h.textContent=title;el.append(h);const box=document.createElement('div');list(box,rows,busy?'Cerco i negozi…':title==='Negozi preferiti'?'Tocca ☆ su un negozio per salvarlo.':'Nessun altro negozio trovato in questa zona.');el.append(box)}const button=document.createElement('button');button.className='secondary';button.textContent='Trova negozi vicini';button.onclick=async()=>{try{const p=currentPos||await getPosition();currentPos=p;await search(p,true)}catch(e){toast(e.message)}};el.append(button)}

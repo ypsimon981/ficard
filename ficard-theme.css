@@ -9,7 +9,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .field:focus{border-color:var(--violet)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 12%,transparent)!important}
 .chip.active{background:var(--violet)!important;border-color:var(--violet)!important}
 .topActions{gap:6px}.topActions .iconbtn{width:36px;height:38px;color:var(--violet);display:grid;place-items:center}.iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;transform:translate(-16px,-20px);overflow:visible}.addCardStack svg{display:block;width:91.2px;height:76.8px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}
+.fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;transform:translate(-16px,-35px);overflow:visible}.addCardStack svg{display:block;width:91.2px;height:76.8px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}
 
 /* Neutral surfaces follow the mode; merchant artwork and barcodes keep their contrast. */
 :root[data-theme="dark"] .panel,:root[data-theme="dark"] .promo,:root[data-theme="dark"] .empty,:root[data-theme="dark"] .field,:root[data-theme="dark"] .search input,:root[data-theme="dark"] .chip:not(.active),:root[data-theme="dark"] .detailActions button,:root[data-theme="dark"] .brandPick,:root[data-theme="dark"] .back,:root[data-theme="dark"] .tab.active,:root[data-theme="dark"] .card:not(.cardItem){background:var(--surface)!important;color:var(--text)}
@@ -59,7 +59,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 
 /* Progressive stack: each card casts a shadow onto the next one. */
 .smartCarousel.depthCarousel{position:relative;gap:0!important;padding-bottom:24px;isolation:isolate;scroll-padding-inline-start:2px}
-.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{flex-basis:56%;transform:translate(var(--smart-shift,0px),calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;scroll-snap-align:start;box-shadow:14px 4px 20px rgba(17,24,39,.25),0 8px 14px rgba(31,41,55,.12)}
+.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{flex-basis:calc(56% + 3px);transform:translate(var(--smart-shift,0px),calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;scroll-snap-align:start;box-shadow:14px 4px 20px rgba(17,24,39,.25),0 8px 14px rgba(31,41,55,.12)}
 .smartCarousel.depthCarousel .smartCard+.smartCard{margin-left:-7%}
 .smartCarousel.depthCarousel::after{content:"";flex:0 0 44%;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{transform:translateX(var(--smart-shift,0px)) scale(var(--smart-scale,1))}}
@@ -68,7 +68,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .smartCarousel .smartCard{overflow:visible}
 .smartCarousel .smartCard::before,.smartCarousel .smartCard::after{border-radius:inherit}
 .smartCarousel .smartCard .smartMeta{position:absolute;top:calc(100% + 7px);left:0;width:100%;margin:0;text-align:center;line-height:1.3;color:var(--violet)!important;font-weight:800;opacity:1;white-space:nowrap;pointer-events:none}
-.smartCarousel.depthCarousel{padding-bottom:44px}
+.smartCarousel.depthCarousel{padding-bottom:24px}
 .smartCarousel.proximityFocus{padding-bottom:30px}
 .smartCarousel.denseNearby{padding-bottom:28px}
 .smartCarousel.denseNearby .smartPage{row-gap:28px;padding-bottom:4px}

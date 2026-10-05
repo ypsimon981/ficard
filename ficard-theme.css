@@ -1,0 +1,16 @@
+body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)) fixed!important}
+.bottom{background:var(--surface)!important}
+.top:after,.bottom:before{background:linear-gradient(90deg,var(--violet) 0 50%,var(--teal) 50% 100%)!important}
+.primary,.fab{background:var(--violet)!important}.primary,.fab{box-shadow:0 8px 20px color-mix(in srgb,var(--violet) 22%,transparent)!important}
+.secondary{background:var(--theme-soft)!important;color:var(--theme-soft-ink)!important;border-color:var(--line)!important}
+.promoIcon{background:var(--theme-soft)!important;color:var(--theme-soft-ink)!important}
+.hero{background:linear-gradient(135deg,var(--violet),var(--teal))!important}
+.tab.active,.nav,.nav.active,.navIcon,.back,.fileLabel,.brandPick,.manualEntryBtn{color:var(--violet)!important}
+.field:focus{border-color:var(--violet)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 12%,transparent)!important}
+.chip.active{background:var(--violet)!important;border-color:var(--violet)!important}
+.topActions{gap:6px}.topActions .iconbtn{width:36px;height:38px;color:var(--violet);display:grid;place-items:center}.iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.themeDialog{width:min(440px,calc(100% - 32px));box-sizing:border-box;padding:20px;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--text);box-shadow:0 20px 60px rgba(31,41,55,.2);max-height:85dvh;overflow:auto}
+.themeDialog::backdrop{background:rgba(17,24,39,.4)}.themeDialog h2{font-size:20px;margin:0}.themeDialog p{font-size:13px;color:var(--muted);line-height:1.45;margin:8px 0 16px}.themeDialog .sheetHead{margin:0}
+.themeChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.themeChoice{position:relative;border:2px solid var(--line);border-radius:16px;padding:12px;text-align:left;background:#fff;color:var(--text);cursor:pointer;min-height:114px}.themeChoice[aria-pressed="true"]{border-color:var(--violet);box-shadow:0 0 0 2px color-mix(in srgb,var(--violet) 12%,transparent)}.themeChoice b{display:block;font-size:14px;margin:9px 0 4px}.themeChoice small{display:block;font-size:11px;color:var(--muted);line-height:1.35}.themeSwatch{display:flex;gap:5px;border-radius:9px;padding:9px}.themeSwatch span{width:20px;height:20px;border-radius:50%;border:1px solid rgba(31,41,55,.12)}
+
+.fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;overflow:visible}.addCardStack svg{display:block;width:68px;height:68px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}

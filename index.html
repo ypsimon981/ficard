@@ -15,6 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.0"></script>
+  <script src="./ficard-theme.js?v=0.9.76"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -282,12 +283,13 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     #scandixitView{position:fixed;inset:0 0 calc(78px + env(safe-area-inset-bottom));max-width:580px;margin:auto;z-index:10;background:var(--bg)}
     #scandixitPanel{display:block;width:100%;height:100%;border:0}
 </style>
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.76">
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.75</div></div>
-    <div class="topActions"><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
+    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.76</div></div>
+    <div class="topActions"><button class="iconbtn" id="themeBtn" title="Preset cromatici" aria-label="Scegli i colori di FiCard" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1.5-3.3 1.4 1.4 0 0 1 1.1-2.3H18A3 3 0 0 0 21 12a9 9 0 0 0-9-9Z"/><circle cx="7.5" cy="10" r=".8"/><circle cx="10" cy="6.8" r=".8"/><circle cx="14" cy="7" r=".8"/><circle cx="17" cy="10" r=".8"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
   </header>
 
   <main>
@@ -341,10 +343,10 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 </div>
 
 <nav class="bottom">
-  <button class="nav active" data-view="home"><span class="navIcon navHome" aria-hidden="true">⌂</span>Home</button>
-  <button class="nav" data-view="scandixit"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 8v8M10 7v10M14 7v10M17 8v8"/></svg></span>ScanDixit</button>
-  <button class="fab" id="addFab" aria-label="Aggiungi una carta">+</button>
+  <button class="nav active" data-view="home"><span class="navIcon navHome" aria-hidden="true">⌂</span>Card</button>
   <button class="nav" data-view="map"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg></span>Mappa</button>
+  <button class="fab addCardStack" id="addFab" aria-label="Aggiungi una carta"><svg viewBox="0 0 72 72" aria-hidden="true"><rect x="12" y="8" width="39" height="51" rx="10" fill="var(--teal)" transform="rotate(-17 32 34)"/><rect x="18" y="13" width="39" height="51" rx="10" fill="var(--teal)" stroke="rgba(255,255,255,.65)" stroke-width="1.5" transform="rotate(-8 37 39)"/><rect x="23" y="19" width="39" height="48" rx="10" fill="var(--violet)"/><path d="M42.5 33v20M32.5 43h20" stroke="#fff" stroke-width="3.7" stroke-linecap="round"/></svg></button>
+  <button class="nav" data-view="scandixit"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 8v8M10 7v10M14 7v10M17 8v8"/></svg></span>ScanDixit</button>
   <button class="nav" data-view="profile"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.2"/><path d="M5.5 21a6.5 6.5 0 0 1 13 0"/></svg></span>Profilo</button>
 </nav>
 
@@ -406,6 +408,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 
 
 <div id="fullBarcode" class="fullBarcode"><div id="fullCardHeader" class="fullCardHeader"></div><canvas id="fullSvg"></canvas><div id="fullNum" class="num"></div><button id="closeFull">Chiudi</button></div>
+<dialog id="themeDialog" class="themeDialog" aria-labelledby="themeTitle"><div class="sheetHead"><h2 id="themeTitle">Colori di FiCard</h2><button id="closeTheme" class="close" aria-label="Chiudi preset cromatici">×</button></div><p>Prova un preset: la scelta resta su questo dispositivo.</p><div id="themeChoices" class="themeChoices"></div></dialog>
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
@@ -415,7 +418,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.05-scandixit-section-v0.9.75";
+const RELEASE="2026.10.05-color-presets-v0.9.76";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -836,11 +839,19 @@ function go(v){
  document.body.classList.toggle("scanSectionOpen",v==="scandixit");
  const panel=document.getElementById("scandixitPanel");
  if(v==="scandixit"&&!panel.hasAttribute("src")){
-  panel.onload=()=>{const back=panel.contentDocument?.querySelector("header > a");if(back)back.hidden=true;};
+  panel.onload=()=>{const back=panel.contentDocument?.querySelector("header > a");if(back)back.hidden=true;const theme=panel.contentWindow?.FiCardTheme;if(theme)theme.apply(FiCardTheme.current());};
   panel.src="./scandixit.html?section=ficard";
  }else if(v!=="scandixit"&&panel.hasAttribute("src")){panel.onload=null;panel.removeAttribute("src")}
  if(v==="map")setTimeout(renderOverviewMap,80);
 }
+const themeDialog=document.getElementById("themeDialog");
+document.getElementById("themeBtn").onclick=()=>{
+ const box=document.getElementById("themeChoices");box.replaceChildren();
+ FiCardTheme.presets.forEach(p=>{const b=document.createElement("button");b.type="button";b.className="themeChoice";b.dataset.themeChoice=p.id;b.setAttribute("aria-pressed",String(p.id===FiCardTheme.current()));const swatch=document.createElement("span");swatch.className="themeSwatch";swatch.style.background=p.gradient;[p.accent,p.second,"#FFFFFF"].forEach(color=>{const dot=document.createElement("span");dot.style.background=color;swatch.append(dot)});const name=document.createElement("b");name.textContent=p.name;const note=document.createElement("small");note.textContent=p.note;b.append(swatch,name,note);b.onclick=()=>FiCardTheme.apply(p.id,true);box.append(b)});
+ themeDialog.showModal();
+};
+document.getElementById("closeTheme").onclick=()=>themeDialog.close();
+themeDialog.addEventListener("click",e=>{if(e.target===themeDialog){const r=themeDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)themeDialog.close()}});
 document.getElementById("mapRefresh").onclick=refreshPosition;
 document.getElementById("pickerUseGps").onclick=async()=>{try{const p=await getPosition();currentPos=p;setPickerPoint(p.lat,p.lng,true);renderSmartCarousel();toast("Posizione acquisita")}catch(e){toast("GPS: "+e.message)}};
 document.getElementById("pickerSave").onclick=()=>{const c=cards.find(x=>x.id===locationPickerCardId);if(!c||!locationPickerPoint)return;if(!appendUniqueLocation(c,{lat:locationPickerPoint.lat,lng:locationPickerPoint.lng,createdAt:Date.now(),source:"osm"}))return;save();hideModal("locationPickerModal");renderAll();openCard(c.id,false);toast("Punto vendita associato")};

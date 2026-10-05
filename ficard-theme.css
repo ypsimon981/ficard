@@ -9,8 +9,20 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .field:focus{border-color:var(--violet)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 12%,transparent)!important}
 .chip.active{background:var(--violet)!important;border-color:var(--violet)!important}
 .topActions{gap:6px}.topActions .iconbtn{width:36px;height:38px;color:var(--violet);display:grid;place-items:center}.iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.themeDialog{width:min(440px,calc(100% - 32px));box-sizing:border-box;padding:20px;border:1px solid var(--line);border-radius:24px;background:var(--surface);color:var(--text);box-shadow:0 20px 60px rgba(31,41,55,.2);max-height:85dvh;overflow:auto}
-.themeDialog::backdrop{background:rgba(17,24,39,.4)}.themeDialog h2{font-size:20px;margin:0}.themeDialog p{font-size:13px;color:var(--muted);line-height:1.45;margin:8px 0 16px}.themeDialog .sheetHead{margin:0}
-.themeChoices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.themeChoice{position:relative;border:2px solid var(--line);border-radius:16px;padding:12px;text-align:left;background:#fff;color:var(--text);cursor:pointer;min-height:114px}.themeChoice[aria-pressed="true"]{border-color:var(--violet);box-shadow:0 0 0 2px color-mix(in srgb,var(--violet) 12%,transparent)}.themeChoice b{display:block;font-size:14px;margin:9px 0 4px}.themeChoice small{display:block;font-size:11px;color:var(--muted);line-height:1.35}.themeSwatch{display:flex;gap:5px;border-radius:9px;padding:9px}.themeSwatch span{width:20px;height:20px;border-radius:50%;border:1px solid rgba(31,41,55,.12)}
-
 .fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;overflow:visible}.addCardStack svg{display:block;width:76px;height:64px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}
+
+/* Neutral surfaces follow the mode; merchant artwork and barcodes keep their contrast. */
+:root[data-theme="dark"] .panel,:root[data-theme="dark"] .promo,:root[data-theme="dark"] .empty,:root[data-theme="dark"] .field,:root[data-theme="dark"] .search input,:root[data-theme="dark"] .chip:not(.active),:root[data-theme="dark"] .detailActions button,:root[data-theme="dark"] .brandPick,:root[data-theme="dark"] .back,:root[data-theme="dark"] .tab.active,:root[data-theme="dark"] .card:not(.cardItem){background:var(--surface)!important;color:var(--text)}
+:root[data-theme="dark"] .close,:root[data-theme="dark"] .tabs,:root[data-theme="dark"] .spec{background:var(--bg);color:var(--text)}
+:root[data-theme="dark"] .categoryCount,:root[data-theme="dark"] .matchNote,:root[data-theme="dark"] .manual button{background:var(--theme-soft);color:var(--theme-soft-ink)}
+:root[data-theme="dark"] .primary{background:#5B3DF5!important;color:white}
+:root[data-theme="dark"] .fullBarcode{color:#111;color-scheme:light}
+:root[data-theme="dark"] .fullBarcode button{color:#1F2937}
+:root[data-theme="dark"] a{color:var(--violet)}
+
+:root[data-theme="dark"] .navigationChoices a{background:var(--surface);color:var(--text)}
+:root[data-theme="dark"] .captureScan{background:linear-gradient(145deg,#5B3DF5,#794CFF)}
+:root[data-theme="dark"] .hero{background:linear-gradient(135deg,#5B3DF5,#147F78)!important}
+:root[data-theme="dark"] .captureImport{background:var(--theme-soft);color:var(--theme-soft-ink);border-color:var(--line)}
+:root[data-theme="dark"] .imageImportBusyOverlay{background:rgba(23,24,28,.94)}
+:root[data-theme="dark"] .leaflet-popup-content-wrapper,:root[data-theme="dark"] .leaflet-popup-tip{background:var(--surface);color:var(--text)}

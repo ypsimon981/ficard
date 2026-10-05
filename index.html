@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.0"></script>
-  <script src="./ficard-theme.js?v=0.9.77"></script>
+  <script src="./ficard-theme.js?v=0.9.80"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -290,19 +290,19 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .detailToolbar button{display:grid;place-items:center;min-height:48px;border:1px solid var(--line);border-radius:14px;background:var(--surface);color:var(--violet);padding:10px}
 .detailToolbar svg{width:24px;height:24px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .detailToolbar button:focus-visible,.detailFavorite:focus-visible{outline:3px solid var(--teal);outline-offset:3px}
-.cardLocations{margin-top:10px;border:1px solid var(--line);border-radius:16px;background:var(--surface);padding:0 14px}
-.cardLocations summary{padding:15px 0;font-size:14px;font-weight:750;cursor:pointer;color:var(--text)}
+.cardLocations{margin-top:14px}
+
 .cardLocations .detailActions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0;margin-bottom:12px}
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.77">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.80">
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.79</div></div>
-    <div class="topActions"><button class="iconbtn" id="themeBtn" title="Preset cromatici" aria-label="Scegli i colori di FiCard" aria-haspopup="dialog"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1.5-3.3 1.4 1.4 0 0 1 1.1-2.3H18A3 3 0 0 0 21 12a9 9 0 0 0-9-9Z"/><circle cx="7.5" cy="10" r=".8"/><circle cx="10" cy="6.8" r=".8"/><circle cx="14" cy="7" r=".8"/><circle cx="17" cy="10" r=".8"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
+    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.80</div></div>
+    <div class="topActions"><button class="iconbtn" id="themeBtn" type="button" title="Attiva tema scuro" aria-label="Attiva tema scuro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
   </header>
 
   <main>
@@ -421,7 +421,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 
 
 <div id="fullBarcode" class="fullBarcode"><div id="fullCardHeader" class="fullCardHeader"></div><canvas id="fullSvg"></canvas><div id="fullNum" class="num"></div><button id="closeFull">Chiudi</button></div>
-<dialog id="themeDialog" class="themeDialog" aria-labelledby="themeTitle"><div class="sheetHead"><h2 id="themeTitle">Colori di FiCard</h2><button id="closeTheme" class="close" aria-label="Chiudi preset cromatici">×</button></div><p>Prova un preset: la scelta resta su questo dispositivo.</p><div id="themeChoices" class="themeChoices"></div></dialog>
+
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
@@ -431,7 +431,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.05-card-toolbar-v0.9.79";
+const RELEASE="2026.10.05-light-dark-v0.9.80";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -724,7 +724,7 @@ function openCard(id,recordUse=true){
  const b=brandFor(c),n=nearestFor(c,currentPos),locs=(c.locations||[]).map((l,i)=>({l,i,d:currentPos?distanceM(currentPos,l):Infinity})).sort((a,b)=>a.d-b.d||a.i-b.i);
  const locHtml=locs.length?'<div class="panel" style="margin-top:12px"><b>Punti vendita associati</b>'+locs.map(x=>'<div class="promo" style="margin-bottom:0"><div class="locationBrandIcon" style="background:'+esc(c.color||"#5B3DF5")+'"><span>'+mapBrandInnerHtml(c)+'</span></div><div class="grow"><small>'+esc(distanceLabel(x.d))+'</small></div><button class="chip" title="Naviga" aria-label="Naviga" data-nav-loc="'+x.i+'">'+pinSvg()+'</button><button class="chip" data-remove-loc="'+x.i+'">Dissocia</button></div>').join("")+'</div>':'<p class="hint">Nessun punto vendita associato a questa carta.</p>';
  document.getElementById("detailContent").innerHTML='<div class="detailHero"><div class="detailBrandHeader '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button type="button" id="favBtn" class="detailFavorite" aria-label="'+(c.fav?'Rimuovi dai preferiti':'Aggiungi ai preferiti')+'" aria-pressed="'+String(!!c.fav)+'" title="Preferita">'+favoriteStarSvg(c.fav)+'</button><span class="detailLogo">'+brandLogoHtml(b,'wallet')+'</span><h2>'+esc(c.name)+'</h2><p>'+esc(categoryLabel(c))+'</p></div><div class="barcodeBox"><canvas id="detailSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>'+
- '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button></div><div id="cardExtras"></div><details class="cardLocations"><summary>Punti vendita'+(locs.length?' · '+locs.length:'')+'</summary><div class="detailActions"><button id="assocBtn">⌖ Aggiungi qui</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</details>'+
+ '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button></div><div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>'+
  
  '<button class="danger" id="deleteBtn">Elimina carta</button>';
  drawBarcode("detailSvg",c);showModal("detailModal");
@@ -855,14 +855,7 @@ function go(v){
  }else if(v!=="scandixit"&&panel.hasAttribute("src")){panel.onload=null;panel.removeAttribute("src")}
  if(v==="map")setTimeout(renderOverviewMap,80);
 }
-const themeDialog=document.getElementById("themeDialog");
-document.getElementById("themeBtn").onclick=()=>{
- const box=document.getElementById("themeChoices");box.replaceChildren();
- FiCardTheme.presets.forEach(p=>{const b=document.createElement("button");b.type="button";b.className="themeChoice";b.dataset.themeChoice=p.id;b.setAttribute("aria-pressed",String(p.id===FiCardTheme.current()));const swatch=document.createElement("span");swatch.className="themeSwatch";swatch.style.background=p.gradient;[p.accent,p.second,"#FFFFFF"].forEach(color=>{const dot=document.createElement("span");dot.style.background=color;swatch.append(dot)});const name=document.createElement("b");name.textContent=p.name;const note=document.createElement("small");note.textContent=p.note;b.append(swatch,name,note);b.onclick=()=>FiCardTheme.apply(p.id,true);box.append(b)});
- themeDialog.showModal();
-};
-document.getElementById("closeTheme").onclick=()=>themeDialog.close();
-themeDialog.addEventListener("click",e=>{if(e.target===themeDialog){const r=themeDialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)themeDialog.close()}});
+document.getElementById("themeBtn").onclick=()=>FiCardTheme.apply(FiCardTheme.current()==="dark"?"white":"dark",true);
 document.getElementById("mapRefresh").onclick=refreshPosition;
 document.getElementById("pickerUseGps").onclick=async()=>{try{const p=await getPosition();currentPos=p;setPickerPoint(p.lat,p.lng,true);renderSmartCarousel();toast("Posizione acquisita")}catch(e){toast("GPS: "+e.message)}};
 document.getElementById("pickerSave").onclick=()=>{const c=cards.find(x=>x.id===locationPickerCardId);if(!c||!locationPickerPoint)return;if(!appendUniqueLocation(c,{lat:locationPickerPoint.lat,lng:locationPickerPoint.lng,createdAt:Date.now(),source:"osm"}))return;save();hideModal("locationPickerModal");renderAll();openCard(c.id,false);toast("Punto vendita associato")};

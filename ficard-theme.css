@@ -63,3 +63,12 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .smartCarousel.depthCarousel .smartCard+.smartCard{margin-left:-7%}
 .smartCarousel.depthCarousel::after{content:"";flex:0 0 44%;pointer-events:none}
 @media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{transform:translateX(var(--smart-shift,0px)) scale(var(--smart-scale,1))}}
+
+/* Distance follows its card, centered below its lower edge. */
+.smartCarousel .smartCard{overflow:visible}
+.smartCarousel .smartCard::before,.smartCarousel .smartCard::after{border-radius:inherit}
+.smartCarousel .smartCard .smartMeta{position:absolute;top:calc(100% + 7px);left:0;width:100%;margin:0;text-align:center;line-height:1.3;color:var(--muted);opacity:1;white-space:nowrap;pointer-events:none}
+.smartCarousel.depthCarousel{padding-bottom:44px}
+.smartCarousel.proximityFocus{padding-bottom:30px}
+.smartCarousel.denseNearby{padding-bottom:28px}
+.smartCarousel.denseNearby .smartPage{row-gap:28px;padding-bottom:4px}

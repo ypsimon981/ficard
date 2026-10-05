@@ -67,7 +67,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 /* Distance follows its card, centered below its lower edge. */
 .smartCarousel .smartCard{overflow:visible}
 .smartCarousel .smartCard::before,.smartCarousel .smartCard::after{border-radius:inherit}
-.smartCarousel .smartCard .smartMeta{position:absolute;top:calc(100% + 7px);left:0;width:100%;margin:0;text-align:center;line-height:1.3;color:var(--muted);opacity:1;white-space:nowrap;pointer-events:none}
+.smartCarousel .smartCard .smartMeta{position:absolute;top:calc(100% + 7px);left:0;width:100%;margin:0;text-align:center;line-height:1.3;color:var(--violet);opacity:1;white-space:nowrap;pointer-events:none}
 .smartCarousel.depthCarousel{padding-bottom:44px}
 .smartCarousel.proximityFocus{padding-bottom:30px}
 .smartCarousel.denseNearby{padding-bottom:28px}

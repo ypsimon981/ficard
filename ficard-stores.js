@@ -19,7 +19,7 @@ function parse(data,descriptors){
  }return found;
 }
 async function request(q,signal){
- let last;for(const endpoint of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
+ let last;for(const endpoint of ['https://overpass.private.coffee/api/interpreter','https://overpass-api.de/api/interpreter']){
  if(signal?.aborted)throw Error('Ricerca annullata');
  const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});const timer=setTimeout(abort,25000);
  try{const r=await fetch(endpoint,{method:'POST',body:new URLSearchParams({data:q}),signal:controller.signal});if(!r.ok)throw Error('Servizio negozi temporaneamente occupato');const data=await r.json();if(data.remark)throw Error('Ricerca incompleta. Riprova tra poco.');return data;}

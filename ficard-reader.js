@@ -31,7 +31,17 @@ function readBarcode(value,format=''){
 function options(){return {formatsToSupport:formatNames.map(k=>root.Html5QrcodeSupportedFormats[k]).filter(n=>n!==undefined),useBarCodeDetectorIfSupported:false,verbose:false};}
 function createDecoder(id){return new root.Html5Qrcode(id,options());}
 function liveConfig(){return {fps:18,qrbox:(w,h)=>({width:Math.max(1,Math.floor(w*.94)),height:Math.max(1,Math.floor(h*.62))})};}
-function startLive(decoder,onRead){return decoder.start({facingMode:'environment'},liveConfig(),onRead,()=>{});}
+async function startLive(decoder,onRead){
+ const attempts=[null,{facingMode:{ideal:'environment'}},{width:{ideal:1280}}];
+ for(let i=0;i<attempts.length;i++){
+  try{return await decoder.start({facingMode:'environment'},{...liveConfig(),...(attempts[i]?{videoConstraints:attempts[i]}:{})},onRead,()=>{});}
+  catch(error){
+   const reason=String(error?.name||'')+' '+String(error?.message||error);
+   if(i===attempts.length-1||!/NotReadable|Overconstrained|NotFound|TrackStart|AbortError|Could not start|Could not access|constraint/i.test(reason))throw error;
+   try{await decoder.stop();}catch{}try{decoder.clear();}catch{}
+  }
+ }
+}
 async function setZoom(track,value){
  try{await track.applyConstraints({advanced:[{zoom:Number(value)}]});return track.getSettings().zoom??Number(value);}
  catch(e){await track.applyConstraints({zoom:Number(value)});return track.getSettings().zoom??Number(value);}

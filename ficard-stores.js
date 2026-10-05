@@ -1,0 +1,30 @@
+(function(root){
+'use strict';
+const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
+const aliases={pam:['Pam','Panorama'],coop:['Coop','Ipercoop'],despar:['Despar','Eurospar','Interspar'],tigota:['Tigotà','Tigota'],acquaesapone:['Acqua & Sapone','Acqua e Sapone'],jdsports:['JD Sports'],idromarket:['Idromarket','Idro Market']};
+function names(card,brands,key){return [...new Set(aliases[key]||[brands[key]?.name||card.name])].filter(s=>s&&s.length>=2)}
+function matches(tags,list){return ['brand','name','operator'].some(k=>{const value=' '+normalize(tags[k])+' ';return list.some(n=>value.includes(' '+normalize(n)+' '))})}
+function query(center,list,radius=10000){
+ if(!Number.isFinite(center?.lat)||!Number.isFinite(center?.lng))throw Error('Posizione non valida');
+ const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
+ const pattern=list.map(escape).join('|');if(!pattern)return null;
+ const quoted=JSON.stringify('(^|[^[:alnum:]])('+pattern+')([^[:alnum:]]|$)');
+ return '[out:json][timeout:20];('+['brand','name','operator'].map(k=>'nwr(around:'+radius+','+center.lat.toFixed(3)+','+center.lng.toFixed(3)+')[~"^(shop|amenity)$"~"."]["'+k+'"~'+quoted+',i];').join('')+');out center tags;';
+}
+function parse(data,descriptors){
+ const found=[];for(const e of data.elements||[]){const lat=e.lat??e.center?.lat,lng=e.lon??e.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)continue;
+ const tags=e.tags||{},address=[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']].filter(Boolean).join(' ');
+ for(const d of descriptors)if(matches(tags,d.names)){const point={lat,lng,osmId:e.type+'/'+e.id,name:String(tags.name||tags.brand||d.names[0]).slice(0,200),address:address.slice(0,300),source:'osm-discovered'};
+ if(!found.some(x=>x.cardId===d.id&&(x.point.osmId===point.osmId||Math.hypot(x.point.lat-lat,x.point.lng-lng)<.0003)))found.push({cardId:d.id,point});}
+ }return found;
+}
+async function request(q,signal){
+ let last;for(const endpoint of ['https://overpass-api.de/api/interpreter','https://overpass.kumi.systems/api/interpreter']){
+ if(signal?.aborted)throw Error('Ricerca annullata');
+ const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});const timer=setTimeout(abort,25000);
+ try{const r=await fetch(endpoint,{method:'POST',body:new URLSearchParams({data:q}),signal:controller.signal});if(!r.ok)throw Error('Servizio negozi temporaneamente occupato');const data=await r.json();if(data.remark)throw Error('Ricerca incompleta. Riprova tra poco.');return data;}
+ catch(e){last=e;if(signal?.aborted)throw e;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
+ }throw last;
+}
+root.FiCardStores={normalize,names,matches,query,parse,request};
+})(window);

@@ -12,7 +12,16 @@ function shops(cardId=''){
  }const origin=currentPos||searchCenter;return items.map(x=>({...x,d:origin?distanceM(origin,x.l):Infinity})).sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,'it'));
 }
 function filtered(){const category=document.getElementById('shopCategory').value,card=document.getElementById('shopCard').value,fav=document.getElementById('shopFavorites').checked;return shops().filter(x=>(!category||categoryFor(x.c)===category)&&(!card||x.c.id===card)&&(!fav||x.favorite))}
-function populate(){for(const [id,values] of [['shopCategory',Object.entries(CATEGORIES).filter(([k])=>cards.some(c=>categoryFor(c)===k))],['shopCard',cards.map(c=>[c.id,c.name])]]){const el=document.getElementById(id),value=el.value;el.innerHTML='<option value="">'+(id==='shopCategory'?'Tutte le categorie':'Tutte le tessere')+'</option>'+values.map(([k,n])=>'<option value="'+esc(k)+'">'+esc(n)+'</option>').join('');el.value=values.some(([k])=>k===value)?value:''}}
+function populate(){
+ const category=document.getElementById('shopCategory');
+ const categories=Object.entries(CATEGORIES).filter(([k])=>cards.some(c=>categoryFor(c)===k));
+ if(!categories.some(([k])=>k===category.value))category.value='';
+ for(const [id,values] of [['shopCategory',categories],['shopCard',cards.filter(c=>!category.value||categoryFor(c)===category.value).map(c=>[c.id,c.name])]]){
+  const el=document.getElementById(id),value=el.value;
+  el.innerHTML='<option value="">'+(id==='shopCategory'?'Tutte le categorie':'Tutte le tessere')+'</option>'+values.map(([k,n])=>'<option value="'+esc(k)+'">'+esc(n)+'</option>').join('');
+  el.value=values.some(([k])=>k===value)?value:'';
+ }
+}
 function navigate(x){document.getElementById('navigationDestination').textContent=(x.l.name||x.c.name)+' · '+distanceLabel(x.d);document.getElementById('navigationChoices').innerHTML=navigationLinks(x.l).map(n=>'<a href="'+esc(n.url)+'" target="_blank" rel="noopener noreferrer">↗ '+esc(n.name)+'</a>').join('');document.querySelectorAll('#navigationChoices a').forEach(a=>a.onclick=()=>hideModal('navigationModal'));showModal('navigationModal')}
 function favorite(x){let l=savedAt(x.c,x.l);if(l)l.favorite=!savedFavorite(l);else{l={...x.l,source:'osm-favorite',favorite:true,createdAt:Date.now()};(x.c.locations||(x.c.locations=[])).push(l)}save();renderSmartCarousel();renderLocations();renderOverviewMap();renderDetail();}
 function row(x){const el=document.createElement('div');el.className='promo locationResult';const visual=mapBrandVisual(x.c);el.innerHTML='<div class="locationBrandIcon" style="background:'+esc(visual.color)+'"><span>'+mapBrandInnerHtml(x.c)+'</span></div><div class="grow"><b>'+esc(x.l.name||x.c.name)+'</b><small>'+esc(x.c.name+' · '+distanceLabel(x.d))+'</small>'+(x.l.address?'<small>'+esc(x.l.address)+'</small>':'')+'<small>'+ (x.saved?'Salvato sulla tessera':'Da OpenStreetMap')+'</small></div><div class="shopActions"><button type="button" class="chip" data-shop-open>Apri carta</button><button type="button" class="chip" data-shop-nav aria-label="Naviga">'+pinSvg()+'</button><button type="button" class="chip" data-shop-fav aria-label="'+(x.favorite?'Rimuovi negozio dai preferiti':'Salva negozio tra i preferiti')+'" aria-pressed="'+x.favorite+'">'+(x.favorite?'★':'☆')+'</button></div>';

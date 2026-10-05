@@ -1,0 +1,31 @@
+name: Fix FiCard HQ logo priority v0.9.73
+
+on:
+  push:
+    paths:
+      - '.github/workflows/logo-quality-v073.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply HQ logo priority fix
+        run: python .github/scripts/logo_quality_v073.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Ensure HQ logo overrides win"
+            git push origin main
+          fi

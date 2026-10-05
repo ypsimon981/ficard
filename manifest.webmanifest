@@ -1,7 +1,7 @@
 {
   "name": "Fi-Card",
   "short_name": "Fi-Card",
-  "description": "Le tue carte fedeltà, sempre con te.",
+  "description": "Non devi cercare la card giusta, è lei che trova te.",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",

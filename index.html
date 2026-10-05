@@ -14,6 +14,7 @@
   <script src="./vendor/JsBarcode.all.min.js"></script>
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
+  <script src="./ficard-reader.js?v=1.1.0"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -273,6 +274,9 @@
 .cardItem[data-brand="footlocker"] .brandLogo,.smartCard[data-brand="footlocker"] .brandLogo,.detailBrandHeader[data-brand="footlocker"] .brandLogo{max-width:80%!important;max-height:58%!important}
 .cardItem[data-brand="penny"] .brandLogo,.smartCard[data-brand="penny"] .brandLogo,.detailBrandHeader[data-brand="penny"] .brandLogo{max-width:62%!important;max-height:72%!important}
 
+body.scannerBridge> :not(#addModal):not(#toast):not(script){display:none!important}
+body.scannerBridge #addModal{padding:0;background:#F8F9FC}
+body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding-top:calc(16px + env(safe-area-inset-top))}
 </style>
 </head>
 <body>
@@ -413,7 +417,11 @@
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
 
 <script>
-const RELEASE="2026.10.05-0849-v0.9.73";
+const scanRequest=new URLSearchParams(location.search).get('request')||'';
+const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
+let scanDelivered=false;
+async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
+const RELEASE="2026.10.05-shared-reader-v0.9.74";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -680,7 +688,7 @@ function renderWidget(){
  box.innerHTML='<div class="widgetPreview"><div class="widgetTop"><b>Fi-Card</b><span>Smart</span></div><div class="widgetCard"><div class="wName">'+esc(c.name)+'</div><canvas id="widgetSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>';
  setTimeout(()=>drawBarcode("widgetSvg",c),20)
 }
-function scanFormatName(result){const f=result?.result?.format||result?.format;if(typeof f==='string')return f;if(f?.formatName)return f.formatName;const number=typeof f==='number'?f:f?.format;return ['QR_CODE','AZTEC','CODABAR','CODE_39','CODE_93','CODE_128','DATA_MATRIX','MAXICODE','ITF','EAN_13','EAN_8','PDF_417','RSS_14','RSS_EXPANDED','UPC_A','UPC_E'][number]||null}
+function scanFormatName(result){return FiCardReader.formatName(result)||null}
 function normalizeFormat(name){
  const n=String(name||"").toUpperCase().replace(/[- ]/g,"_");
  const map={QR_CODE:"QR_CODE",AZTEC:"AZTEC",CODABAR:"CODABAR",CODE_39:"CODE39",CODE_93:"CODE93",CODE_128:"CODE128",DATA_MATRIX:"DATA_MATRIX",ITF:"ITF",EAN_13:"EAN13",EAN_8:"EAN8",PDF_417:"PDF417",UPC_A:"UPCA",UPC_E:"UPCE",RSS_14:"RSS14",RSS_EXPANDED:"RSS_EXPANDED"};
@@ -810,7 +818,7 @@ async function refreshPosition(){
  }
 }
 
-function showModal(id){document.getElementById(id).classList.add("show")}function hideModal(id){document.getElementById(id).classList.remove("show");if(id==="addModal")stopScan()}
+function showModal(id){document.getElementById(id).classList.add("show")}function hideModal(id){document.getElementById(id).classList.remove("show");if(id==="addModal"){stopScan();if(scannerBridge&&!scanDelivered)window.parent.postMessage({type:'ficard.scan.cancel',request:scanRequest},location.origin)}}
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>hideModal(b.dataset.close));
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)hideModal(m.id)}));
 function revealAddCardFields(scroll=true){
@@ -851,9 +859,9 @@ document.getElementById("scanBtn").onclick=async()=>{
  if(!window.Html5Qrcode)return toast("Scanner non disponibile: usa l'inserimento manuale");
  try{
    if(qrScanner)await stopScan();
-   const scanFormats=[Html5QrcodeSupportedFormats.QR_CODE,Html5QrcodeSupportedFormats.AZTEC,Html5QrcodeSupportedFormats.CODABAR,Html5QrcodeSupportedFormats.CODE_39,Html5QrcodeSupportedFormats.CODE_93,Html5QrcodeSupportedFormats.CODE_128,Html5QrcodeSupportedFormats.DATA_MATRIX,Html5QrcodeSupportedFormats.MAXICODE,Html5QrcodeSupportedFormats.ITF,Html5QrcodeSupportedFormats.EAN_13,Html5QrcodeSupportedFormats.EAN_8,Html5QrcodeSupportedFormats.PDF_417,Html5QrcodeSupportedFormats.RSS_14,Html5QrcodeSupportedFormats.RSS_EXPANDED,Html5QrcodeSupportedFormats.UPC_A,Html5QrcodeSupportedFormats.UPC_E,Html5QrcodeSupportedFormats.UPC_EAN_EXTENSION];
-   qrScanner=new Html5Qrcode("reader",{formatsToSupport:scanFormats,useBarCodeDetectorIfSupported:false,verbose:false});
-   await qrScanner.start({facingMode:"environment"},{fps:18,qrbox:(w,h)=>({width:Math.max(1,Math.floor(w*.94)),height:Math.max(1,Math.floor(h*.62))})},(txt,result)=>{
+   qrScanner=FiCardReader.createDecoder("reader");
+   await FiCardReader.startLive(qrScanner,(txt,result)=>{
+     if(scannerBridge){returnScanToParent(txt,FiCardReader.formatName(result));return;}
      document.getElementById("addCode").value=txt;
      pendingScanFormat=normalizeFormat(scanFormatName(result)||inferManualFormat(txt));document.getElementById("addFormat").value=pendingScanFormat;
      document.getElementById("detectedFormat").textContent="Rilevato: "+formatLabel(pendingScanFormat);
@@ -890,21 +898,9 @@ function downloadBackup(data,filename=''){const payload={app:'Fi-Card',version:2
 function validateBackup(data){if(!Array.isArray(data)&&(!data||data.app!=='Fi-Card'||![1,2].includes(data.version)))throw Error('Questo file non è un backup Fi-Card compatibile');const arr=Array.isArray(data)?data:data.cards;if(!Array.isArray(arr)||arr.length>10000)throw Error('Elenco carte non valido');return arr.map((c,i)=>{if(!c||typeof c.name!=='string'||!c.name.trim()||c.name.length>200||typeof c.code!=='string'||!c.code||c.code.length>4096)throw Error('Carta '+(i+1)+' non valida: nessun dato è stato modificato');if(c.format&&!Object.prototype.hasOwnProperty.call({QR_CODE:1,AZTEC:1,CODABAR:1,CODE39:1,CODE93:1,CODE128:1,DATA_MATRIX:1,ITF:1,EAN13:1,EAN8:1,PDF417:1,UPCA:1,UPCE:1,RSS14:1,RSS_EXPANDED:1},normalizeFormat(c.format)))throw Error('Formato codice non supportato nella carta '+(i+1));const locations=c.locations||[];if(!Array.isArray(locations)||locations.some(l=>!l||typeof l.lat!=='number'||!Number.isFinite(l.lat)||Math.abs(l.lat)>90||typeof l.lng!=='number'||!Number.isFinite(l.lng)||Math.abs(l.lng)>180))throw Error('Posizione non valida nella carta '+(i+1));if(c.photo&&(!(typeof c.photo==='string')||!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(c.photo)||c.photo.length>2000000))throw Error('Foto non valida nella carta '+(i+1));return {id:crypto.randomUUID(),notes:typeof c.notes==='string'?c.notes.slice(0,2000):'',photo:c.photo||'',lastUsed:Number.isFinite(c.lastUsed)&&c.lastUsed>=0?c.lastUsed:0,useCount:Number.isInteger(c.useCount)&&c.useCount>=0?c.useCount:0,name:c.name.trim(),code:c.code,brandKey:Object.hasOwn(BRANDS,c.brandKey)?c.brandKey:'',category:c.category==='calzature'?'abbigliamento':Object.hasOwn(CATEGORIES,c.category)?c.category:'altro',color:/^#[0-9a-f]{6}$/i.test(c.color)?c.color:'#5B3DF5',format:normalizeFormat(c.format||inferManualFormat(c.code)),fav:c.fav===true,locations:locations.map(l=>({lat:l.lat,lng:l.lng,favorite:l.favorite===true,osmId:typeof l.osmId==="string"?l.osmId.slice(0,100):"",name:typeof l.name==="string"?l.name.slice(0,200):"",address:typeof l.address==="string"?l.address.slice(0,300):"",source:l.source==="osm-auto"?"osm-auto":"manual"}))}})}
 function cardIdentity(c){return JSON.stringify([c.name.trim().toLocaleLowerCase('it'),c.code,normalizeFormat(c.format||inferManualFormat(c.code))])}
 function mergeCards(incoming){const seen=new Map(cards.map(c=>[cardIdentity(c),c]));let added=0;for(const c of incoming){const key=cardIdentity(c),existing=seen.get(key);if(existing){for(const l of c.locations||[])if(!(existing.locations||[]).some(x=>x.lat===l.lat&&x.lng===l.lng)){(existing.locations||(existing.locations=[])).push(l)}for(const l of c.locations||[]){const target=(existing.locations||[]).find(x=>x.lat===l.lat&&x.lng===l.lng);if(target&&l.favorite)target.favorite=true}if(!existing.notes&&c.notes)existing.notes=c.notes;if(!existing.photo&&c.photo)existing.photo=c.photo;existing.lastUsed=Math.max(existing.lastUsed||0,c.lastUsed||0);existing.useCount=Math.max(existing.useCount||0,c.useCount||0)}else{cards.push(c);seen.set(key,c);added++}}return added}
-async function imageToScanCandidates(file){
- const out=await barcodeScanCandidates(file);out.push(file);let bmp=null;
- try{
-   bmp=await createImageBitmap(file);const specs=[[.05,.20,.90,.68],[.08,.28,.84,.48],[0,.18,1,.70]];
-   for(let i=0;i<specs.length;i++){const [rx,ry,rw,rh]=specs[i],sx=Math.round(bmp.width*rx),sy=Math.round(bmp.height*ry),sw=Math.round(bmp.width*rw),sh=Math.round(bmp.height*rh),canvas=document.createElement("canvas"),maxW=1800,scale=Math.min(2,maxW/sw);canvas.width=Math.max(600,Math.round(sw*scale));canvas.height=Math.max(260,Math.round(sh*scale));const ctx=canvas.getContext("2d");ctx.imageSmoothingEnabled=true;ctx.imageSmoothingQuality="high";ctx.drawImage(bmp,sx,sy,sw,sh,0,0,canvas.width,canvas.height);const blob=await new Promise(r=>canvas.toBlob(r,"image/png",1));if(blob)out.push(new File([blob],"ficard-crop-"+i+".png",{type:"image/png"}))}
- }catch(e){}finally{try{bmp?.close()}catch(e){}}
- return out
-}
-async function scanImageRobust(scanner,file){
- const candidates=await imageToScanCandidates(file),errors=[];
- for(const candidate of candidates){try{return {result:await scanner.scanFileV2(candidate,false),candidate}}catch(e){errors.push(e)}}
- throw errors.at(-1)||new Error("Codice non letto")
-}
+async function scanImageRobust(scanner,file){return FiCardReader.scanFile(scanner,file)}
 function setImageImportBusy(active,label='Analisi in corso…'){const box=document.getElementById('imageImportBusy'),txt=document.getElementById('imageImportBusyText');if(txt)txt.textContent=label;if(box)box.classList.toggle('show',!!active)}
-async function importImages(e){if(imageImportBusy)return;const files=Array.from(e.target.files||[]);e.target.value='';if(!files.length)return;if(files.length>30)return toast('Seleziona al massimo 30 immagini per volta');const defaults=imageImportDefaults;imageImportDefaults=null;imageImportBusy=true;for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('addModal');await stopScan();showModal('imageImportModal');const status=document.getElementById('imageImportStatus');setImageImportBusy(true,'Analisi in corso…');document.getElementById('saveImages').disabled=true;document.getElementById('imageImportResults').innerHTML='';let scanner;try{if(!window.Html5Qrcode)throw Error('Scanner non disponibile');scanner=new Html5Qrcode('fileReader',{useBarCodeDetectorIfSupported:false});for(let i=0;i<files.length;i++){const file=files[i];status.textContent='Lettura immagine '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);const draft={fileName:file.name,code:'',format:'',error:'',brandKey:defaults?.brandKey||'',name:defaults?.name||'',category:defaults?.category||'',color:defaults?.color||'',preview:''};try{if(file.size>15000000)throw Error('Immagine troppo grande (massimo 15 MB)');draft.preview=URL.createObjectURL(file);const scanned=await scanImageRobust(scanner,file),result=scanned.result;if(scanned.candidate!==file){URL.revokeObjectURL(draft.preview);draft.preview=URL.createObjectURL(scanned.candidate);draft.cropped=true}draft.code=result.decodedText;draft.format=normalizeFormat(scanFormatName(result)||inferManualFormat(draft.code))}catch(err){draft.error='Lettura automatica non riuscita. Inserisci il numero visibile sotto il barcode: Fi-Card proverà a riconoscere il formato automaticamente.'}if(file.size<=15000000){status.textContent='Riconoscimento negozio '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);await fillMerchantFromImage(file,draft)}imageDrafts.push(draft)}renderImageDrafts();const read=imageDrafts.filter(d=>d.code).length;status.textContent=read+' codici letti automaticamente su '+files.length+'. Quelli non letti possono essere completati a mano usando il numero sotto il barcode.';document.getElementById('saveImages').disabled=false}catch(err){status.textContent=err.message||'Impossibile leggere le immagini'}finally{setImageImportBusy(false);if(scanner)try{scanner.clear()}catch(err){}imageImportBusy=false;await releaseMerchantOcr()}}
+async function importImages(e){if(scannerBridge){const file=e.target.files?.[0];e.target.value='';if(!file||imageImportBusy)return;imageImportBusy=true;let decoder;try{await stopScan();toast('Leggo il codice nella foto…');decoder=FiCardReader.createDecoder('fileReader');const found=await FiCardReader.scanFile(decoder,file);if(found?.code)await returnScanToParent(found.code,found.format);else toast('Più codici presenti: ritaglia la foto.');}catch(err){toast('Codice non letto: prova una foto più nitida.')}finally{decoder?.clear();imageImportBusy=false;}return;}if(imageImportBusy)return;const files=Array.from(e.target.files||[]);e.target.value='';if(!files.length)return;if(files.length>30)return toast('Seleziona al massimo 30 immagini per volta');const defaults=imageImportDefaults;imageImportDefaults=null;imageImportBusy=true;for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('addModal');await stopScan();showModal('imageImportModal');const status=document.getElementById('imageImportStatus');setImageImportBusy(true,'Analisi in corso…');document.getElementById('saveImages').disabled=true;document.getElementById('imageImportResults').innerHTML='';let scanner;try{if(!window.Html5Qrcode)throw Error('Scanner non disponibile');scanner=FiCardReader.createDecoder('fileReader');for(let i=0;i<files.length;i++){const file=files[i];status.textContent='Lettura immagine '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);const draft={fileName:file.name,code:'',format:'',error:'',brandKey:defaults?.brandKey||'',name:defaults?.name||'',category:defaults?.category||'',color:defaults?.color||'',preview:''};try{if(file.size>15000000)throw Error('Immagine troppo grande (massimo 15 MB)');draft.preview=URL.createObjectURL(file);const scanned=await scanImageRobust(scanner,file),result=scanned.result;if(scanned.candidate!==file){URL.revokeObjectURL(draft.preview);draft.preview=URL.createObjectURL(scanned.candidate);draft.cropped=true}draft.code=result.decodedText;draft.format=normalizeFormat(scanFormatName(result)||inferManualFormat(draft.code))}catch(err){draft.error='Lettura automatica non riuscita. Inserisci il numero visibile sotto il barcode: Fi-Card proverà a riconoscere il formato automaticamente.'}if(file.size<=15000000){status.textContent='Riconoscimento negozio '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);await fillMerchantFromImage(file,draft)}imageDrafts.push(draft)}renderImageDrafts();const read=imageDrafts.filter(d=>d.code).length;status.textContent=read+' codici letti automaticamente su '+files.length+'. Quelli non letti possono essere completati a mano usando il numero sotto il barcode.';document.getElementById('saveImages').disabled=false}catch(err){status.textContent=err.message||'Impossibile leggere le immagini'}finally{setImageImportBusy(false);if(scanner)try{scanner.clear()}catch(err){}imageImportBusy=false;await releaseMerchantOcr()}}
 function renderImageDrafts(){document.getElementById('imageImportResults').innerHTML=imageDrafts.map((d,i)=>'<div class="importRow" data-draft="'+i+'"><b>'+esc(d.fileName)+'</b>'+(d.preview?'<img src="'+d.preview+'" alt="Anteprima tessera">'+(d.cropped?'<div class="hint">Ritaglio automatico applicato per isolare la tessera.</div>':''):'')+(d.error?'<div class="scanWarning">'+esc(d.error)+'</div>':'')+(d.merchantNote?'<p class="hint">'+esc(d.merchantNote)+'</p>':'')+'<label><input type="checkbox" class="draftInclude" '+(d.code?'checked':'')+'> Importa questa carta</label><label>Marchio</label><select class="field draftBrand">'+catalogOptions(d.brandKey)+'</select><label for="draftCategory-'+i+'">Categoria</label><select id="draftCategory-'+i+'" class="field draftCategory">'+Object.entries(CATEGORIES).map(([key,label])=>'<option value="'+esc(key)+'" '+(key===(d.category||BRANDS[d.brandKey]?.category||'altro')?'selected':'')+'>'+esc(label)+'</option>').join('')+'</select><label>Nome carta</label><input class="field draftName" value="'+esc(d.name)+'" placeholder="Es. PittaRosso"><label>Codice</label><input class="field draftCode" inputmode="numeric" value="'+esc(d.code)+'" placeholder="Es. 9600040147713"><p class="hint draftFormat">'+(d.code?'Rilevato: '+esc(formatLabel(d.format)):'Inserisci il numero stampato sotto il barcode.')+'</p></div>').join('');document.querySelectorAll('[data-draft]').forEach(row=>{const sel=row.querySelector('.draftBrand'),code=row.querySelector('.draftCode'),include=row.querySelector('.draftInclude'),fmt=row.querySelector('.draftFormat');if(sel)sel.onchange=()=>{const d=imageDrafts[Number(row.dataset.draft)],b=BRANDS[sel.value];d.brandKey=sel.value;d.category=b?.category||'altro';d.color=b?.color||'#5B3DF5';row.querySelector('.draftName').value=b?.name||'';row.querySelector('.draftCategory').value=d.category};row.querySelector('.draftCategory').onchange=e=>{imageDrafts[Number(row.dataset.draft)].category=e.target.value};if(code)code.oninput=()=>{const v=code.value;fmt.textContent=v?'Rilevato: '+formatLabel(inferManualFormat(v)):'Inserisci il numero stampato sotto il barcode.';if(v)include.checked=true}})}
 function saveImageDrafts(){if(imageImportBusy)return;const incoming=[];for(const row of document.querySelectorAll('[data-draft]')){if(!row.querySelector('.draftInclude')?.checked)continue;const d=imageDrafts[Number(row.dataset.draft)],key=row.querySelector('.draftBrand').value,name=row.querySelector('.draftName').value.trim(),code=row.querySelector('.draftCode').value;if(!name||!code)return toast('Inserisci nome e codice per ogni carta selezionata');incoming.push({id:crypto.randomUUID(),name,code,format:code===d.code&&d.format?d.format:inferManualFormat(code),brandKey:key,category:row.querySelector('.draftCategory').value||d.category||BRANDS[key]?.category||'altro',color:d.color||BRANDS[key]?.color||'#5B3DF5',fav:false,locations:[]})}if(!incoming.length)return toast('Seleziona almeno una carta');const added=mergeCards(incoming);save();renderAll();for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('imageImportModal');toast(added+' carte aggiunte; duplicati ignorati')}
 
@@ -966,11 +962,17 @@ async function shareCard(c){
 }
 
 initCatalog();
-load();
-setTimeout(()=>refreshPosition(),700);
+if(scannerBridge){
+ document.body.classList.add('scannerBridge');resetAddCardFlow();showModal('addModal');
+ document.querySelector('#addModal h2').textContent='Lettore FiCard';
+ document.getElementById('captureHint').textContent='Il codice letto torna a ScanDixit.';
+ document.getElementById('manualEntryBtn').hidden=true;
+ document.getElementById('scanBtn').click();
+}else{load();setTimeout(()=>refreshPosition(),700);}
 </script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 
 </body>
 </html>
+

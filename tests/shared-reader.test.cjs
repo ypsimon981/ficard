@@ -1,0 +1,20 @@
+const assert=require('node:assert/strict');
+const reader=require('../ficard-reader.js');
+const shipping='55338834090101772503222982';
+assert.deepEqual(reader.readBarcode(shipping,'CODE_128'),{code:shipping,format:'CODE_128',productCode:null});
+assert.equal(reader.readBarcode(shipping),null);
+assert.equal(reader.readBarcode('4006381333932','EAN_13'),null);
+assert.equal(reader.readBarcode('4006381333931','EAN_13').productCode,'4006381333931');
+assert.equal(reader.readBarcode('04252614','UPC_E').code,'042100005264');
+assert.equal(reader.readBarcode('042100005264','UPC_E').code,'042100005264');
+assert.equal(reader.readBarcode('00123456789','CODE_128').code,'00123456789');
+assert.equal(reader.readBarcode(' A B ','QR_CODE').code,' A B ');
+assert.equal(reader.formatName({result:{format:0}}),'QR_CODE');
+assert.equal(reader.formatName({result:{format:{formatName:'CODE_128'}}}),'CODE_128');
+const w=600,h=400,pixels=new Uint8ClampedArray(w*h*4).fill(255);
+function fill(x0,y0,x1,y1,value){for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){const k=(y*w+x)*4;pixels[k]=pixels[k+1]=pixels[k+2]=value;}}
+fill(48,80,552,210,170);for(let x=140;x<440;x+=6)fill(x,100,x+3,180,80);
+for(let x=50;x<550;x+=4)fill(x,350,x+2,366,20);
+const band=reader.bandCrop({width:w,height:h,getContext:()=>({getImageData:()=>({data:pixels})})});
+assert(band&&band.y<100&&band.y+band.h>180&&band.y+band.h<350,'Low contrast bars should outrank denser footer text');
+console.log('Shared reader: shipping identifiers, retail checksums, UPC-E, leading zeros and raw QR content passed');

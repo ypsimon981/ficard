@@ -13,7 +13,7 @@ for(const node of nodes.values())node.classList.owner=node;
 const tabs=[makeNode('button'),makeNode('button')];tabs[0].dataset={tab:'barcode'};tabs[1].dataset={tab:'ocr'};
 let catalogMode='hit';const urls=[];
 const product={code:'4006381333931',product_name:'Crema demo',brands:'Marca demo',quantity:'250 ml',product_type:'beauty',ingredients_text:'Aqua, Glycerin',allergens:'',labels:'',categories:'Cura della pelle',last_modified_t:0};
-const context={document:{getElementById:get,querySelectorAll:()=>tabs,createElement:tag=>makeNode(tag)},ScanDixit:{normalizeBarcode:x=>/^4006381333931$/.test(x)?x:null},encodeURIComponent,fetch:async url=>{urls.push(url);if(catalogMode==='offline')throw Error('offline');return {ok:true,json:async()=>url.includes('openbeautyfacts.org')&&catalogMode==='hit'?{status:'success',product}:{status:'failure'}}},URL:{},setTimeout,clearTimeout,console};
+const context={document:{getElementById:get,querySelectorAll:()=>tabs,createElement:tag=>makeNode(tag)},FiCardReader:require('../ficard-reader.js'),ScanDixit:require('../scandixit-scanner.js'),encodeURIComponent,fetch:async url=>{urls.push(url);if(catalogMode==='offline')throw Error('offline');return {ok:true,json:async()=>url.includes('openbeautyfacts.org')&&catalogMode==='hit'?{status:'success',product}:{status:'failure'}}},URL:{},setTimeout,clearTimeout,console};
 context.window=context;vm.createContext(context);vm.runInContext(inline,context);
 (async()=>{
  get('scanStatus').textContent='Nessun codice valido trovato. Prova una foto più nitida o inserisci le cifre.';get('codeInput').value='4006381333931';await get('lookupCode').listeners.click();await new Promise(setImmediate);
@@ -26,5 +26,7 @@ context.window=context;vm.createContext(context);vm.runInContext(inline,context)
  assert.equal(get('sheetTitle').textContent,'Scheda non trovata nel catalogo');assert.equal(get('sheetFields').children.length,1);assert.match(get('sheetBrand').textContent,/non ha ancora/);
  catalogMode='offline';get('codeInput').value='4006381333931';await get('lookupCode').listeners.click();await new Promise(setImmediate);
  assert.equal(get('sheetTitle').textContent,'Catalogo non raggiungibile');
+ const count=urls.length;context.showCode('55338834090101772503222982','barcode','CODE_128');await new Promise(setImmediate);assert.equal(get('resultCode').textContent,'55338834090101772503222982');assert.equal(get('amazonSearch').hidden,true);assert.equal(get('productSheet').classes.has('show'),false);assert.equal(urls.length,count);assert.match(get('matchNote').textContent,/non è un identificativo prodotto/);
  console.log('Product sheet v3 catalog hit, miss, outage, ingredient mapping, attribution and Amazon link: passed');
 })().catch(e=>{console.error(e);process.exit(1)});
+

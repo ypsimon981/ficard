@@ -7,6 +7,8 @@
 <title>ScanDixit · FiCard</title>
 <link rel="icon" href="./icon-32.png" type="image/png">
 <script src="./vendor/html5-qrcode.min.js"></script>
+<script src="./barcode-crops.js?v=0.9.35"></script>
+<script src="./ficard-reader.js?v=1.1.0"></script>
 <style>
 :root{--violet:#5B3DF5;--violet2:#7C5CFF;--teal:#2DD4BF;--bg:#F8F9FC;--surface:#fff;--text:#1F2937;--muted:#6B7280;--line:#E7EAF0;--shadow:0 12px 32px rgba(31,41,55,.09)}
 [hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.app{max-width:580px;min-height:100dvh;margin:auto;padding:env(safe-area-inset-top) 16px calc(28px + env(safe-area-inset-bottom))}
@@ -121,12 +123,15 @@ async function loadProductSheet(code){
   const link=document.createElement("a");link.href="https://"+found.host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
  }catch(e){if(lookup!==productLookupId)return;$("sheetTitle").textContent="Catalogo non raggiungibile";$("sheetBrand").textContent="Non sono riuscito a contattare i cataloghi. Riprova tra poco; la ricerca Amazon resta disponibile.";$("sheetSource").textContent="Il codice è stato verificato, ma non è stato possibile completare la ricerca."}
 }
-function showCode(value,source){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");if(source!=="ocr")$("scanStatus").textContent="";$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa.":"Codice letto con cifra di controllo valida.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");if(source!=="ocr")loadProductSheet(code);else $("productSheet").classList.remove("show");$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function showCode(value,source,format=''){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value,format);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");if(source!=="ocr")$("scanStatus").textContent="";$("amazonLabel").textContent=source==="ocr"?"Cerca marca e modello su Amazon":"Cerca questo codice su Amazon";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa.":"Codice letto con cifra di controllo valida.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");const productCode=source!=="ocr"&&FiCardReader.readBarcode(code,format)?.productCode;
+$("amazonSearch").hidden=source!=="ocr"&&!productCode;
+if(productCode)loadProductSheet(productCode);else{++productLookupId;$("productSheet").classList.remove("show");if(source!=="ocr")$("matchNote").textContent="Codice letto correttamente · "+(format||"barcode")+". Questo codice non è un identificativo prodotto EAN/UPC: la ricerca nei cataloghi non si applica.";}$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
 $("lookupCode").addEventListener("click",()=>showCode($("codeInput").value,"barcode"));
 $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.currentTarget.value,"barcode")});
 $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
 
 </script>
-<script src="./scandixit-scanner.js?v=1.0.4"></script>
+<script src="./scandixit-scanner.js?v=1.1.0"></script>
 </body>
 </html>
+

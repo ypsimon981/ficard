@@ -86,3 +86,8 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .smartCarousel:not(.denseNearby):not(.proximityFocus) .smartCard .smartMeta{font-size:calc(clamp(10px,2.8vw,11px) + 3px)}
 .smartCarousel.proximityFocus .smartCard .smartMeta{font-size:17px}
 .smartCarousel.denseNearby .smartCard .smartMeta{font-size:13px}
+
+#homeView .promo[data-go="scandixit"]{background:#2DD4BF!important;border-color:#25BFAE;color:#153C36!important}
+#homeView .promo[data-go="scandixit"] small{color:#214B45}
+#homeView .promo[data-go="scandixit"] .promoIcon{background:rgba(255,255,255,.65)!important;color:#5B3DF5!important}
+#homeView .promo[data-go="scandixit"] .badge{background:#FFF;color:#116C61}

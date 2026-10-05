@@ -1,0 +1,31 @@
+name: Fix FiCard logo quality v0.9.72
+
+on:
+  push:
+    paths:
+      - '.github/workflows/logo-quality-v072.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply HQ logo fixes
+        run: python .github/scripts/logo_quality_v072.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html sw.js logos-hq/mediaworld-light.svg
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Use HQ logos for critical brands"
+            git push origin main
+          fi

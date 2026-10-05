@@ -26,3 +26,39 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 :root[data-theme="dark"] .captureImport{background:var(--theme-soft);color:var(--theme-soft-ink);border-color:var(--line)}
 :root[data-theme="dark"] .imageImportBusyOverlay{background:rgba(23,24,28,.94)}
 :root[data-theme="dark"] .leaflet-popup-content-wrapper,:root[data-theme="dark"] .leaflet-popup-tip{background:var(--surface);color:var(--text)}
+
+/* Compact shop filters and explicit shop favourites. */
+#mapView .shopFilters{margin-top:8px}
+#mapView .shopFilters>label{margin:6px 2px 3px;line-height:1.2;font-size:12px}
+#mapView .shopFilterRow{display:flex;align-items:center;gap:8px}
+#mapView .shopFilterRow .field{flex:1;min-width:0;width:0;min-height:44px;padding:9px 10px;font-size:14px;line-height:1.2;border-radius:13px}
+#mapView #shopReset{flex:none;min-height:44px;margin:0;padding:8px 12px;color:var(--violet);font-size:12px;font-weight:700}
+#mapView .shopFavoriteFilter{flex:none;display:flex;align-items:center;gap:5px;min-height:44px;margin:0;padding:0 7px;font-size:12px;line-height:1.2;white-space:nowrap}
+#mapView .shopFavoriteFilter input{width:17px;height:17px;margin:0;accent-color:#D92D48}
+#mapView #shopSearchHere{min-height:44px;margin-top:8px;padding:10px 12px;font-size:14px;line-height:1.2}
+#mapView #mapInfo{font-size:12px;line-height:1.3;margin:6px 2px}
+#mapView .mapLegend{gap:4px;margin:4px 0 0}
+#mapView .mapLegend .chip{padding:4px 7px;font-size:10px;line-height:1.2}
+.shopActions [data-shop-fav][aria-pressed="true"]{color:#D92D48!important;border-color:#F2A4B3;background:#FFF0F3!important}
+.shopActions [data-shop-fav][aria-pressed="true"] svg{fill:currentColor!important;stroke:currentColor}
+.favoriteStoresSection{margin:14px 0;padding:12px;border:1px solid #F2B9C5;border-radius:22px;background:linear-gradient(135deg,#FFF0F4,var(--surface));box-shadow:0 5px 18px rgba(190,32,70,.07)}
+.favoriteStoresSection>.sectionTitle{margin:0 0 9px}
+.favoriteStoresSection h2,.favoriteStoresSection h3{margin:0 0 10px;font-size:16px;line-height:1.3}
+.favoriteHeadingHeart,#cardNearbyStores .favoriteStoresSection h3{color:#C62847}
+.favoriteStoresSection .locationResult{margin:8px 0 0;border-color:#F2CCD5;box-shadow:none}
+.favoriteStoresSection .hint{margin:4px 0;line-height:1.3}
+.locationResult.favoriteStore{border-left:3px solid #D92D48}
+.cardLocations .detailActions #assocBtn{background:#5B3DF5!important;color:#FFF!important;border-color:#5B3DF5;box-shadow:0 4px 12px rgba(91,61,245,.2)}
+#cardNearbyStores h3{margin-top:14px;margin-bottom:6px}
+#cardNearbyStores .favoriteStoresSection h3{margin-top:0;margin-bottom:8px}
+:root[data-theme="dark"] .favoriteStoresSection{background:linear-gradient(135deg,#36202B,var(--surface));border-color:#824254}
+:root[data-theme="dark"] .favoriteHeadingHeart,:root[data-theme="dark"] #cardNearbyStores .favoriteStoresSection h3{color:#FF92AA}
+:root[data-theme="dark"] .shopActions [data-shop-fav][aria-pressed="true"]{background:#43212D!important;color:#FF92AA!important;border-color:#824254}
+:root[data-theme="dark"] .favoriteStoresSection .locationResult{border-color:#824254}
+
+/* Quick cards recede by 15% and grow continuously toward the leading slot. */
+.smartCarousel.depthCarousel{position:relative;gap:0!important;padding-bottom:18px;isolation:isolate}
+.smartCarousel.depthCarousel .smartCard{transform:translateY(calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;scroll-snap-align:start}
+.smartCarousel.depthCarousel .smartCard+.smartCard{margin-left:-14px}
+.smartCarousel.depthCarousel::after{content:"";flex:0 0 calc(50% + 14px);pointer-events:none}
+@media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel .smartCard{transform:scale(var(--smart-scale,1))}}

@@ -317,12 +317,12 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.81">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.97">
 </head>
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.96</div></div>
+    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">06/10/2026 · v0.9.97</div></div>
     <div class="topActions"><button class="iconbtn" id="themeBtn" type="button" title="Attiva tema scuro" aria-label="Attiva tema scuro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
   </header>
 
@@ -350,15 +350,20 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
       <div class="sectionTitle"><h2>Negozi delle mie tessere</h2><button id="mapRefresh">La mia posizione</button></div>
       <div class="panel">
         <div id="overviewMap" class="locationMap" aria-label="Mappa dei negozi delle tue tessere"></div>
-        <div><label for="shopCategory">Di che negozio hai bisogno?</label><select id="shopCategory" class="field"><option value="">Tutte le categorie</option></select></div>
-        <div><label for="shopCard">Hai un marchio in mente?</label><select id="shopCard" class="field"><option value="">Tutti i marchi</option></select></div>
-        <label class="shopFavoriteFilter"><input type="checkbox" id="shopFavorites"> Solo negozi preferiti</label>
+        <div class="shopFilters">
+          <label for="shopCategory">Di che negozio hai bisogno?</label>
+          <div class="shopFilterRow"><select id="shopCategory" class="field"><option value="">Tutte le categorie</option></select><button type="button" id="shopReset" class="chip" aria-label="Azzera tutti i filtri dei negozi">Reset</button></div>
+          <label for="shopCard">Hai un marchio in mente?</label>
+          <div class="shopFilterRow"><select id="shopCard" class="field"><option value="">Tutti i marchi</option></select><label class="shopFavoriteFilter" title="Mostra solo negozi preferiti"><input type="checkbox" id="shopFavorites" aria-label="Solo negozi preferiti"><span>Solo ❤️</span></label></div>
+        </div>
         <button type="button" id="shopSearchHere" class="secondary">Cerca in questa zona</button>
         <div id="mapInfo" class="hint" role="status" aria-live="polite">Usa la tua posizione o cerca nella zona della mappa.</div>
         <div class="mapLegend"><span class="chip">📍 Punto vendita</span><span class="chip">◎ La tua posizione</span><span class="chip">Tocca un gruppo per vedere i negozi</span></div>
       </div>
-      <div class="sectionTitle"><h2>Naviga verso uno dei tuoi negozi preferiti</h2></div>
-      <div id="favoriteStoresList"></div>
+      <section class="favoriteStoresSection" aria-label="Negozi preferiti">
+        <div class="sectionTitle"><h2><span class="favoriteHeadingHeart" aria-hidden="true">♥</span> Naviga verso uno dei tuoi negozi preferiti</h2></div>
+        <div id="favoriteStoresList"></div>
+      </section>
       <div class="sectionTitle" id="otherStoresTitle"><h2>Altri negozi delle tue tessere</h2></div>
       <div id="locationsList" style="margin-top:12px"></div>
     </section>
@@ -459,7 +464,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.05-light-dark-v0.9.96";
+const RELEASE="2026.10.06-light-dark-v0.9.97";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -596,6 +601,19 @@ function smartOrder(){
  return {ordered,geoReady}
 }
 function nearbyCardCount(){return currentPos?cards.filter(c=>{const n=nearestFor(c,currentPos);return n&&n.d<=100}).length:0}
+function updateSmartDepth(){
+ const box=document.getElementById('smartCarousel');if(!box)return;
+ const items=[...box.querySelectorAll('.smartCard')],enabled=!box.classList.contains('denseNearby')&&!box.classList.contains('proximityFocus')&&items.length>1;
+ box.classList.toggle('depthCarousel',enabled);
+ const start=items[0]?.offsetLeft||0,step=items.length>1?Math.max(1,items[1].offsetLeft-start):1;
+ items.forEach(el=>{const depth=enabled?Math.min(1,Math.abs(el.offsetLeft-start-box.scrollLeft)/step):0;el.style.setProperty('--smart-scale',String(1-.15*depth));el.style.setProperty('--smart-depth',String(depth));el.style.zIndex=String(100-Math.round(depth*50))});
+}
+let smartDepthFrame=0;
+function queueSmartDepth(){if(!smartDepthFrame)smartDepthFrame=requestAnimationFrame(()=>{smartDepthFrame=0;updateSmartDepth()})}
+const smartDepthBox=document.getElementById('smartCarousel');
+smartDepthBox.addEventListener('scroll',queueSmartDepth,{passive:true});
+if(window.ResizeObserver)new ResizeObserver(queueSmartDepth).observe(smartDepthBox);
+window.addEventListener('resize',queueSmartDepth);
 function renderSmartCarousel(){
  const box=document.getElementById("smartCarousel"),label=document.getElementById("smartOrderLabel");if(!box||!label)return;
  const {ordered,geoReady}=smartOrder(),nearCount=nearbyCardCount();
@@ -608,7 +626,7 @@ function renderSmartCarousel(){
  const previews=displayCards.map(c=>{const b=brandFor(c),n=geoReady?nearestFor(c,currentPos):null,meta=n&&Number.isFinite(n.d)?(n.d<1000?Math.round(n.d)+" m":(n.d/1000).toFixed(1)+" km"):(c.useCount?"Usata "+c.useCount+" "+(c.useCount===1?"volta":"volte"):"Non ancora usata");return '<div class="smartCard '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button class="smartCardOpen cardOpen" data-card-open="'+c.id+'" aria-label="Apri '+esc(c.name)+'"><span class="brandMark" aria-hidden="true">'+brandLogoHtml(b,'wallet')+'</span><div class="name">'+esc(c.name)+'</div><div class="smartMeta">'+esc(meta)+'</div></button></div>'});
  if(dense){const pageSize=nearCount>4?8:4,pages=[];for(let i=0;i<previews.length;i+=pageSize)pages.push('<div class="smartPage">'+previews.slice(i,i+pageSize).join("")+'</div>');box.innerHTML=pages.join("")}
  else box.innerHTML=previews.join("");
- bindCardInteractions(box)
+ bindCardInteractions(box);updateSmartDepth();queueSmartDepth()
 }
 
 function renderAll(){renderCategoryChips();renderSmartCarousel();renderCards();renderLocations();if(document.getElementById("mapView")?.classList.contains("active"))renderOverviewMap()}
@@ -1055,7 +1073,7 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.96"></script>
-<script src="./ficard-stores-ui.js?v=0.9.96"></script>
+<script src="./ficard-stores-ui.js?v=0.9.97"></script>
 
 </body>
 </html>

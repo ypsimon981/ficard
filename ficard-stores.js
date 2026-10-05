@@ -8,8 +8,9 @@ function query(center,list,radius=10000){
  if(!Number.isFinite(center?.lat)||!Number.isFinite(center?.lng))throw Error('Posizione non valida');
  const escape=s=>s.replace(/[.*+?^${}()|[\]\\]/g,'\\$&');
  const pattern=list.map(escape).join('|');if(!pattern)return null;
- const quoted=JSON.stringify('(^|[^[:alnum:]])('+pattern+')([^[:alnum:]]|$)');
- return '[out:json][timeout:20];('+['brand','name','operator'].map(k=>'nwr(around:'+radius+','+center.lat.toFixed(3)+','+center.lng.toFixed(3)+')[~"^(shop|amenity)$"~"."]["'+k+'"~'+quoted+',i];').join('')+');out center tags;';
+ const quoted=JSON.stringify(pattern),area='(around:'+radius+','+center.lat.toFixed(3)+','+center.lng.toFixed(3)+')';
+ // Concrete indexed tags first; whole-name matching remains in the local parser.
+ return '[out:json][timeout:10];('+['brand','name','operator'].flatMap(k=>['["shop"]','["amenity"~"^(fuel|pharmacy)$"]'].map(kind=>'nwr'+kind+'["'+k+'"~'+quoted+',i]'+area+';')).join('')+');out center tags;';
 }
 function parse(data,descriptors){
  const found=[];for(const e of data.elements||[]){const lat=e.lat??e.center?.lat,lng=e.lon??e.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)continue;
@@ -21,8 +22,8 @@ function parse(data,descriptors){
 async function request(q,signal){
  let last;for(const endpoint of ['https://overpass.private.coffee/api/interpreter','https://overpass-api.de/api/interpreter']){
  if(signal?.aborted)throw Error('Ricerca annullata');
- const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});const timer=setTimeout(abort,25000);
- try{const r=await fetch(endpoint,{method:'POST',body:new URLSearchParams({data:q}),signal:controller.signal});if(!r.ok)throw Error('Servizio negozi temporaneamente occupato');const data=await r.json();if(data.remark)throw Error('Ricerca incompleta. Riprova tra poco.');return data;}
+ const controller=new AbortController(),abort=()=>controller.abort();signal?.addEventListener('abort',abort,{once:true});const timer=setTimeout(abort,14000);
+ try{const r=await fetch(endpoint+'?'+new URLSearchParams({data:q}),{signal:controller.signal});if(!r.ok)throw Error('Servizio negozi: HTTP '+r.status);const data=await r.json();if(data.remark)throw Error('Ricerca incompleta. Riprova tra poco.');return data;}
  catch(e){last=e;if(signal?.aborted)throw e;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
  }throw last;
 }

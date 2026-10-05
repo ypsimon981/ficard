@@ -9,7 +9,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .field:focus{border-color:var(--violet)!important;box-shadow:0 0 0 3px color-mix(in srgb,var(--violet) 12%,transparent)!important}
 .chip.active{background:var(--violet)!important;border-color:var(--violet)!important}
 .topActions{gap:6px}.topActions .iconbtn{width:36px;height:38px;color:var(--violet);display:grid;place-items:center}.iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
-.fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;overflow:visible}.addCardStack svg{display:block;width:76px;height:64px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}
+.fab.addCardStack{width:64px;height:64px;border-radius:0;background:transparent!important;box-shadow:none!important;display:grid;place-items:center;padding:0;margin-top:-25px;transform:translate(-3px,-5px);overflow:visible}.addCardStack svg{display:block;width:76px;height:64px;filter:drop-shadow(0 7px 9px rgba(31,41,55,.20))}
 
 /* Neutral surfaces follow the mode; merchant artwork and barcodes keep their contrast. */
 :root[data-theme="dark"] .panel,:root[data-theme="dark"] .promo,:root[data-theme="dark"] .empty,:root[data-theme="dark"] .field,:root[data-theme="dark"] .search input,:root[data-theme="dark"] .chip:not(.active),:root[data-theme="dark"] .detailActions button,:root[data-theme="dark"] .brandPick,:root[data-theme="dark"] .back,:root[data-theme="dark"] .tab.active,:root[data-theme="dark"] .card:not(.cardItem){background:var(--surface)!important;color:var(--text)}

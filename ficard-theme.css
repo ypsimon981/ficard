@@ -56,9 +56,10 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 :root[data-theme="dark"] .shopActions [data-shop-fav][aria-pressed="true"]{background:#43212D!important;color:#FF92AA!important;border-color:#824254}
 :root[data-theme="dark"] .favoriteStoresSection .locationResult{border-color:#824254}
 
-/* Quick cards recede by 15% and grow continuously toward the leading slot. */
-.smartCarousel.depthCarousel{position:relative;gap:0!important;padding-bottom:18px;isolation:isolate}
-.smartCarousel.depthCarousel .smartCard{transform:translateY(calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;scroll-snap-align:start}
-.smartCarousel.depthCarousel .smartCard+.smartCard{margin-left:-14px}
-.smartCarousel.depthCarousel::after{content:"";flex:0 0 calc(50% + 14px);pointer-events:none}
-@media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel .smartCard{transform:scale(var(--smart-scale,1))}}
+
+/* Progressive stack: each card casts a shadow onto the next one. */
+.smartCarousel.depthCarousel{position:relative;gap:0!important;padding-bottom:24px;isolation:isolate;scroll-padding-inline-start:2px}
+.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{flex-basis:56%;transform:translate(var(--smart-shift,0px),calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;scroll-snap-align:start;box-shadow:14px 4px 20px rgba(17,24,39,.25),0 8px 14px rgba(31,41,55,.12)}
+.smartCarousel.depthCarousel .smartCard+.smartCard{margin-left:-7%}
+.smartCarousel.depthCarousel::after{content:"";flex:0 0 44%;pointer-events:none}
+@media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel:not(.denseNearby):not(.proximityFocus) .smartCard{transform:translateX(var(--smart-shift,0px)) scale(var(--smart-scale,1))}}

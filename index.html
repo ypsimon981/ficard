@@ -301,7 +301,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <body>
 <div class="app">
   <header class="top">
-    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.83</div></div>
+    <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="release">05/10/2026 · v0.9.84</div></div>
     <div class="topActions"><button class="iconbtn" id="themeBtn" type="button" title="Attiva tema scuro" aria-label="Attiva tema scuro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
   </header>
 
@@ -432,7 +432,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.05-light-dark-v0.9.83";
+const RELEASE="2026.10.05-light-dark-v0.9.84";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -589,7 +589,14 @@ function bindCardInteractions(root){
  root.querySelectorAll("[data-card-open]").forEach(x=>x.onclick=()=>openCard(x.dataset.cardOpen));
  root.querySelectorAll("[data-toggle-fav]").forEach(x=>x.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFavorite(x.dataset.toggleFav)})
 }
-function toggleFavorite(id){const c=cards.find(x=>x.id===id);if(!c)return;c.fav=!c.fav;save();renderAll();toast(c.fav?"Aggiunta ai preferiti":"Rimossa dai preferiti")}
+function toggleFavorite(id){
+ const c=cards.find(x=>x.id===id);if(!c)return;c.fav=!c.fav;save();
+ const label=c.fav?'Rimuovi dai preferiti':'Aggiungi ai preferiti';
+ document.querySelectorAll('[data-toggle-fav]').forEach(button=>{if(button.dataset.toggleFav!==id)return;button.classList.toggle('isFavorite',c.fav);button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',String(c.fav));button.title=label;button.innerHTML=favoriteStarSvg(c.fav)});
+ if(currentCardId===id){const button=document.getElementById('favBtn');if(button){button.setAttribute('aria-label',label);button.setAttribute('aria-pressed',String(c.fav));button.innerHTML=favoriteStarSvg(c.fav)}}
+ if(document.querySelector('.chip[data-filter].active')?.dataset.filter==='fav')renderCards();
+ toast(c.fav?'Aggiunta ai preferiti':'Rimossa dai preferiti')
+}
 let favoriteGradientSequence=0;
 function favoriteStarSvg(selected){
  const gradientId="favoriteStarGradient"+(++favoriteGradientSequence);
@@ -733,7 +740,7 @@ function openCard(id,recordUse=true){
  document.getElementById("editBtn").onclick=()=>openEditCard(c);
  document.getElementById('photoBtn').onclick=()=>{document.getElementById('cardExtras').innerHTML='<div class="panel">'+(c.photo?'<img class="originalPhoto" src="'+esc(c.photo)+'" alt="Foto della tessera originale">':'<p class="hint">Conserva una foto della tessera originale su questo dispositivo.</p>')+'<label for="cardPhoto">Scegli o scatta una foto</label><input id="cardPhoto" type="file" accept="image/*" class="field">'+(c.photo?'<button class="secondary" id="removePhoto">Rimuovi foto</button>':'')+'</div>';document.getElementById('cardPhoto').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{c.photo=await resizeCardPhoto(file);save();openCard(c.id,false);document.getElementById('photoBtn').click();toast('Foto salvata sul dispositivo')}catch(err){toast(err.message)}};const remove=document.getElementById('removePhoto');if(remove)remove.onclick=()=>{delete c.photo;save();openCard(c.id,false);toast('Foto rimossa')}};
  document.getElementById('shareBtn').onclick=()=>shareCard(c);
- document.getElementById("favBtn").onclick=()=>{c.fav=!c.fav;save();renderAll();openCard(c.id,false)};
+ document.getElementById("favBtn").onclick=()=>toggleFavorite(c.id);
  document.getElementById("assocBtn").onclick=()=>associateLocation(c.id);
  document.getElementById("mapAssocBtn").onclick=()=>openLocationPicker(c.id);
  document.querySelectorAll("[data-remove-loc]").forEach(btn=>btn.onclick=()=>{removeLocation(c.id,Number(btn.dataset.removeLoc));openCard(c.id,false);toast("Posizione dissociata")});document.querySelectorAll("[data-nav-loc]").forEach(btn=>btn.onclick=()=>openNavigation(c.id,Number(btn.dataset.navLoc)));

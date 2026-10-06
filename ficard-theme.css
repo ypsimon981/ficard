@@ -105,3 +105,5 @@ body.dotGridOn::after{content:"";position:fixed;inset:0;z-index:9999;pointer-eve
 .smartCarousel.denseNearby.hasShopAddress{padding-bottom:46px}
 .smartCarousel.denseNearby.hasShopAddress .smartPage{row-gap:46px}
 .smartCarousel.hasShopAddress.hasArrivalMessage{padding-bottom:82px!important}
+
+.smartCarousel.proximityFocus.hasShopAddress{padding-bottom:48px}

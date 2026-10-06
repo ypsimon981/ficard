@@ -1,7 +1,7 @@
 (function(root){
 'use strict';
 const normalize=s=>String(s||'').normalize('NFD').replace(/[\u0300-\u036f]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,' ').trim();
-const aliases={pam:['Pam','Panorama'],coop:['Coop','Ipercoop'],despar:['Despar','Eurospar','Interspar'],tigota:['Tigotà','Tigota'],acquaesapone:['Acqua & Sapone','Acqua e Sapone'],jdsports:['JD Sports'],idromarket:['Idromarket','Idro Market']};
+const aliases={pam:['Pam','Panorama'],coop:['Coop','Ipercoop'],despar:['Despar','Eurospar','Interspar'],tigota:['Tigotà','Tigota'],acquaesapone:['Acqua & Sapone','Acqua e Sapone'],jdsports:['JD Sports'],idromarket:['Idromarket','Idro Market'],arcaplanet:['Arcaplanet','Arca Planet'],maxizoo:['Maxi Zoo','Maxizoo'],isoladeitesori:["L'Isola dei Tesori",'Isola dei Tesori'],italpet:['Italpet','Ital Pet'],petmark:['Petmark','Pet Mark'],robinsonpetshop:['Robinson Pet Shop','Robinson Petshop'],zooservice:['Zoo Service','Zooservice'],majesticpets:["Majestic Pet's",'Majestic Pets'],elitepet:['Elite Pet','ElitePet'],petsupermarket:['Pet Supermarket','Petsupermarket'],globalpet:['Global Pet','GlobalPet'],emark:['Emark','E Mark'],maurys:["Maury's",'Maurys']};
 function names(card,brands,key){return [...new Set(aliases[key]||[brands[key]?.name||card.name])].filter(s=>s&&s.length>=2)}
 function matches(tags,list){return ['brand','name','operator'].some(k=>{const value=' '+normalize(tags[k])+' ';return list.some(n=>value.includes(' '+normalize(n)+' '))})}
 function query(center,list,radius=3000,bounds=null){

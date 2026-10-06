@@ -43,6 +43,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .shopActions{flex-wrap:nowrap;gap:6px}
 .shopActions [data-shop-remove]{color:#D92D48}
 .shopAddressLookup{border:0;background:transparent;color:var(--violet);padding:2px 0;font:inherit;font-size:12px;text-align:left;text-decoration:underline}
+.scanPromo .grow{min-width:0}.scanPromo small{display:block;line-height:1.3;min-height:3.9em}.scanPromo .badge{flex-shrink:0}
 .shopActions [data-shop-fav][aria-pressed="true"]{color:#D92D48!important;border-color:#F2A4B3;background:#FFF0F3!important}
 .shopActions [data-shop-fav][aria-pressed="true"] svg{fill:currentColor!important;stroke:currentColor}
 .favoriteStoresSection{margin:14px 0;padding:12px;border:1px solid #F2B9C5;border-radius:22px;background:linear-gradient(135deg,#FFF0F4,var(--surface));box-shadow:0 5px 18px rgba(190,32,70,.07)}

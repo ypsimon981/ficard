@@ -3,7 +3,7 @@ const root=path.join(__dirname,'..'),html=fs.readFileSync(path.join(root,'index.
 const section=(s,a,b)=>s.slice(s.indexOf(a),s.indexOf(b,s.indexOf(a)));
 test('GPS focus keeps all cards and enables the depth carousel',()=>{
  const c=fixture(),classes=new Set(),items=[0,1,2].map(i=>({offsetLeft:i*200,offsetWidth:250,style:{setProperty(k,v){this[k]=v}}}));
- const box={innerHTML:'',scrollLeft:0,classList:{contains:k=>classes.has(k),toggle(k,v){if(v)classes.add(k);else classes.delete(k)}},querySelectorAll:()=>items},label={};
+ const box={innerHTML:'',scrollLeft:0,classList:{add:k=>classes.add(k),contains:k=>classes.has(k),toggle(k,v){if(v)classes.add(k);else classes.delete(k)}},querySelectorAll:()=>items},label={};
  c.cards=[card('near','a'),card('far','b'),card('third','b')];c.cards.forEach((x,i)=>x.locations=[point(i?500+i*100:5)]);
  Object.assign(c,{document:{getElementById:id=>id==='smartCarousel'?box:label},brandFor:()=>({}),brandLogoHtml:()=>'',cardInk:()=>'',esc:String,bindCardInteractions(){},queueSmartDepth(){}});
  vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function renderSmartCarousel(){','function renderAll(){'),c);
@@ -11,6 +11,18 @@ test('GPS focus keeps all cards and enables the depth carousel',()=>{
  assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,3);assert.ok(classes.has('proximityFocus'));assert.ok(classes.has('depthCarousel'));assert.match(label.textContent,/scorri/);
  assert.equal(items[0].style['--smart-scale'],'1');assert.equal(items[1].style['--smart-scale'],'0.85');
  box.scrollLeft=200;c.updateSmartDepth();assert.equal(items[1].style['--smart-scale'],'1');
+ assert.equal(items[0].style['--smart-turn'],'10deg');assert.equal(items[2].style['--smart-turn'],'-10deg');
+ assert.ok(classes.has('largeQuickCards'));assert.doesNotMatch(box.innerHTML,/class="name"/);assert.match(box.innerHTML,/aria-label="Apri near"/);
+});
+test('quick cards stay large without GPS and with many nearby shops',()=>{
+ for(const gps of [false,true]){
+  const c=fixture(),classes=new Set(),items=[0,1,2].map(i=>({offsetLeft:i*200,offsetWidth:250,style:{setProperty(k,v){this[k]=v}}}));
+  const box={innerHTML:'',scrollLeft:0,classList:{add:k=>classes.add(k),contains:k=>classes.has(k),toggle(k,v){if(v)classes.add(k);else classes.delete(k)}},querySelectorAll:()=>items},label={};
+  c.cards=['a','b','c'].map(id=>({...card(id,'a'),locations:[point(60)]}));if(!gps)c.currentPos=null;
+  Object.assign(c,{document:{getElementById:id=>id==='smartCarousel'?box:label},brandFor:()=>({}),brandLogoHtml:()=>'',cardInk:()=>'',esc:String,bindCardInteractions(){},queueSmartDepth(){}});
+  vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function renderSmartCarousel(){','function renderAll(){'),c);c.renderSmartCarousel();
+  assert.ok(classes.has('largeQuickCards'));assert.ok(!classes.has('denseNearby'));assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,3);assert.doesNotMatch(box.innerHTML,/class="name"/);
+ }
 });
 function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);
 vm.runInContext(section(html,'function distanceM(','function smartCard()')+section(html,'function smartOrder()','function nearbyCardCount()'),ctx);

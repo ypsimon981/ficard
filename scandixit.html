@@ -164,8 +164,8 @@ async function loadProductSheet(code){
   if(picture&&/^https:\/\//i.test(picture)){const image=$("sheetImage");image.alt=name;image.onerror=()=>{image.hidden=true};image.src=picture;image.hidden=false}
   if(product.generic_name&&product.generic_name!==name){$("sheetDescription").textContent=product.generic_name;$("sheetDescription").hidden=false}
   $("sheetFeaturesTitle").hidden=false;
-  sheetField("Codice EAN/UPC",product.code||code,true);sheetField("Formato",product.quantity);sheetField("Categoria",product.categories);sheetField("Tipo",product.product_type);
-  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Etichette",product.labels,true);sheetField("Origine",product.origins||product.countries,true);sheetField("Confezione",product.packaging,true);
+  sheetField("Formato",product.quantity);sheetField("Tipo",product.product_type);sheetField("Categoria",product.categories);
+  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Codice EAN/UPC",product.code||code,true);sheetField("Origine",product.origins||product.countries,true);sheetField("Etichette",product.labels,true);sheetField("Confezione",product.packaging,true);
   const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString("it-IT"):"non indicato";
   const source=document.createElement("span");source.textContent="Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: "+stamp+". Fonte: ";
   const link=document.createElement("a");link.href="https://"+found.host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);

@@ -107,3 +107,12 @@ body.dotGridOn::after{content:"";position:fixed;inset:0;z-index:9999;pointer-eve
 .smartCarousel.hasShopAddress.hasArrivalMessage{padding-bottom:82px!important}
 
 .smartCarousel.proximityFocus.hasShopAddress{padding-bottom:48px}
+
+/* Contain every quick-card layer below dialogs, including GPS focus mode. */
+.smartBlock{position:relative;isolation:isolate;z-index:0;overflow:hidden}
+.smartCarousel{position:relative;isolation:isolate}
+.smartCarousel.proximityFocus{justify-content:flex-start;overflow-x:auto;overflow-y:hidden;scroll-padding-inline-start:2px}
+.smartCarousel.proximityFocus .smartCard{flex:0 0 82%;width:82%;min-width:0;max-width:none}
+.smartCarousel.depthCarousel.proximityFocus .smartCard{transform:translate(var(--smart-shift,0px),calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;box-shadow:14px 4px 20px rgba(17,24,39,.25),0 8px 14px rgba(31,41,55,.12)}
+.smartCarousel.depthCarousel.proximityFocus::after{flex-basis:18%}
+@media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel.proximityFocus .smartCard{transform:translateX(var(--smart-shift,0px)) scale(var(--smart-scale,1))}}

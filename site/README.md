@@ -14,7 +14,7 @@ Le versioni native non sono ancora pubblicate: le due piattaforme riportano Pros
 
 ## Screenshot e contenuti
 
-Le schermate mostrano la versione web v0.9.131. Immagini locali, font di sistema e icone SVG: il sito non carica script, font o immagini da terze parti. Mappe e ScanDixit nelle immagini sono fotografie dell’interfaccia, non sessioni live.
+Le schermate mostrano la versione web v0.9.131. Home e Carte rapide illustrano un negozio associato con posizione simulata, senza usare la posizione dell’utente. Immagini locali, font di sistema e icone SVG: il sito non carica script, font o immagini da terze parti. Mappe e ScanDixit nelle immagini sono fotografie dell’interfaccia, non sessioni live.
 
 ## Anteprima locale
 

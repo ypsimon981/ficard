@@ -19,3 +19,9 @@ Le schermate mostrano la versione web v0.9.131. Home e Carte rapide illustrano u
 ## Anteprima locale
 
 Aprire index.html nel browser oppure servire questa cartella con un server HTTP statico. Tutti i percorsi sono relativi e funzionano dalla radice del dominio o da una sottocartella.
+
+## Testi e pagine informative
+
+La home introduce le carte fedeltà offline e la vicinanza ai negozi. Le pagine carte-fedelta-offline.html e carta-negozio-gps.html rispondono a domande differenti: disponibilità offline e backup; associazione del negozio e limiti del GPS. Il sito dichiara che le versioni native sono in preparazione. Contatto pubblico: info@fi-card.app.
+
+La guida importare-carte-fedelta.html descrive l’importazione di una tessera alla volta da foto o screenshot, senza promettere il trasferimento di account, punti o buoni. La sitemap comprende le quattro pagine. Dopo il caricamento su OVH, verificare il dominio in Google Search Console con un record DNS e inviare sitemap.xml. Non sono richiesti analytics o cookie di tracciamento per questa verifica. L’indicizzazione, il posizionamento, Discover e la presenza nelle risposte AI non sono garantiti.

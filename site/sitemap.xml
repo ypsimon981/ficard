@@ -1,2 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://fi-card.app/</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://fi-card.app/</loc></url>
+  <url><loc>https://fi-card.app/carte-fedelta-offline.html</loc></url>
+  <url><loc>https://fi-card.app/carta-negozio-gps.html</loc></url>
+  <url><loc>https://fi-card.app/importare-carte-fedelta.html</loc></url>
+</urlset>

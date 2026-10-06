@@ -25,5 +25,5 @@
   const rect=banner.getBoundingClientRect();if(rect.bottom<=0||rect.top>=window.innerHeight)return;
   next();
   if(message.animate)message.animate([{opacity:.25},{opacity:1}],{duration:300});
- },6500);
+ },3000);
 })();

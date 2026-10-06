@@ -1,4 +1,4 @@
-/* Fi-Card v0.9.128: presentation only. Native sans fonts work offline. */
+/* Fi-Card v0.9.129: presentation only. Native sans fonts work offline. */
 :root{--ui-font:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--ui-radius:18px;--ui-shadow:0 5px 18px rgba(31,41,55,.055)}
 body,button,input,select,textarea{font-family:var(--ui-font)}
 body{font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
@@ -122,3 +122,5 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 :root[data-theme="dark"] #profileView #clearData{color:#FF9AA9}
 
 .brandPick{gap:8px;font-size:12px;font-weight:500;min-width:0;padding:10px;border-radius:13px}.brandPick>span:first-child{width:48px;height:36px;flex:0 0 48px}.brandPick>span:last-child{overflow-wrap:normal;word-break:normal}
+
+.scanPromo .promoIcon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}

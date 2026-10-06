@@ -8,11 +8,9 @@ test('promo random deck includes every message once per cycle and never repeats 
  for(let i=1;i<messages.length;i++){assert.notEqual(messages[i],messages[i-1]);assert.notEqual(colors[i],colors[i-1])}
  document.hidden=true;tick();assert.equal(message.textContent,messages.at(-1));
 });
-test('iPhone menu tracks visible viewport bottom after scroll, keyboard resize and restore',()=>{
- const callbacks={},values={},classes=new Set(),nav={offsetHeight:95,style:{setProperty:(k,v)=>values[k]=v},classList:{add:x=>classes.add(x)}},viewport={pageTop:0,height:844,offsetTop:0,addEventListener:(e,fn)=>callbacks[e]=fn};
- let render;const ctx={navigator:{userAgent:'iPhone'},document:{querySelector:()=>nav},window:{visualViewport:viewport,addEventListener(){},scrollY:0},scannerBridge:false,requestAnimationFrame:fn=>{render=fn;return 1}};
- vm.runInNewContext(source('ficard-viewport.js'),ctx);assert.equal(values['--nav-page-top'],'749px');assert.ok(classes.has('viewportAnchored'));
- viewport.pageTop=1300;callbacks.scroll();render();assert.equal(values['--nav-page-top'],'2049px');
- viewport.height=420;callbacks.resize();render();assert.equal(values['--nav-page-top'],'1625px');
- viewport.height=844;callbacks.resize();render();assert.equal(values['--nav-page-top'],'2049px');
+test('app shell never positions the menu using unreliable viewport coordinates',()=>{
+ const root=new Set(),body=new Set();
+ const ctx={scannerBridge:false,document:{documentElement:{classList:{add:v=>root.add(v)}},body:{classList:{add:v=>body.add(v)}}}};
+ vm.runInNewContext(source('ficard-viewport.js'),ctx);assert.ok(root.has('appShellRoot'));assert.ok(body.has('appShell'));
+ root.clear();body.clear();ctx.scannerBridge=true;vm.runInNewContext(source('ficard-viewport.js'),ctx);assert.equal(root.size,0);assert.equal(body.size,0);
 });

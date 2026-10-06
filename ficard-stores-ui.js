@@ -1,7 +1,12 @@
-/* Nearby shops stay transient; only explicit favourites enter card backups. */
+/* Discovered shops are cached locally; only explicit favourites enter card backups. */
 (function(){
 if(scannerBridge)return;
-const S=FiCardStores,CACHE='ficard.nearby-shops.v3';let results=[],searchCenter=null,controller=null,requestId=0,busy=false,status='',lastKey='',mapFramed=false;
+const S=FiCardStores;let results=[],searchCenter=null,controller=null,requestId=0,busy=false,status='',lastKey='',mapFramed=false;
+let shopCache=S.readCache(localStorage),matchedCards='',mapSignature='',listSignature='';
+function matchCachedShops(force=false){const ds=descriptors(),key=JSON.stringify(ds);if(force||key!==matchedCards){results=S.parse(shopCache,ds);matchedCards=key}}
+const baseSmartCarousel=renderSmartCarousel;renderSmartCarousel=function(){matchCachedShops();baseSmartCarousel()};
+function shopSignature(items,distances=true){const rows=items.map(x=>JSON.stringify([x.c.id,x.c.name,x.c.color,x.c.brandKey,x.l,x.favorite,x.saved,distances?Math.round(x.d):null]));return JSON.stringify(distances?rows:rows.sort())}
+
 const savedFavorite=l=>l.favorite===true;
 function descriptors(){return cards.map(c=>({id:c.id,names:S.names(c,BRANDS,inferredBrandKey(c))})).filter(d=>d.names.length)}
 function savedAt(c,l){return (c.locations||[]).find(p=>(l.osmId&&p.osmId===l.osmId)||distanceM(p,l)<50)}
@@ -32,49 +37,63 @@ function row(x){const el=document.createElement('div');el.className='promo locat
  if(x.saved){const remove=document.createElement('button');remove.className='chip';remove.textContent='Dissocia';remove.onclick=()=>{const i=x.c.locations.indexOf(x.l);if(i>=0){removeLocation(x.c.id,i);renderDetail()}};el.querySelector('.shopActions').append(remove)}return el;}
 function list(el,items,empty){el.replaceChildren();if(!items.length){const p=document.createElement('p');p.className='hint';p.textContent=empty;el.append(p)}else items.slice(0,100).forEach(x=>el.append(row(x)));}
 renderLocations=function(){
- populate();const items=filtered(),favorites=items.filter(x=>x.favorite),others=items.filter(x=>!x.favorite);
+ populate();if(!document.getElementById('mapView')?.classList.contains('active'))return;
+ const items=filtered(),favorites=items.filter(x=>x.favorite),others=items.filter(x=>!x.favorite),signature=shopSignature(items);
+ if(signature!==listSignature){listSignature=signature;
  list(document.getElementById('favoriteStoresList'),favorites,'Nessun negozio preferito con questi filtri. Tocca il cuore su un negozio per aggiungerlo.');
  const onlyFavorites=document.getElementById('shopFavorites').checked;
  document.getElementById('otherStoresTitle').hidden=onlyFavorites;
  document.getElementById('locationsList').hidden=onlyFavorites;
- list(document.getElementById('locationsList'),others,busy?'Cerco i negozi…':'Nessun altro negozio con questi filtri. Cerca nella zona o aggiungi un punto dalla tessera.');
+ list(document.getElementById('locationsList'),others,'Nessun altro negozio con questi filtri. Cerca nella zona o aggiungi un punto dalla tessera.');
+ }
+ document.getElementById('otherStoresTitle').hidden=document.getElementById('shopFavorites').checked;document.getElementById('locationsList').hidden=document.getElementById('shopFavorites').checked;
  document.getElementById('mapInfo').textContent=(busy?'Ricerca in corso… ':status?status+' ':'')+items.length+' negozi · '+favorites.length+' preferiti · distanze in linea d’aria. Dati © OpenStreetMap contributors.';
  document.getElementById('shopSearchHere').disabled=false;
  document.getElementById('shopSearchHere').textContent=busy?'Annulla ricerca':'Cerca in questa zona';
 };
 renderOverviewMap=function(){
+ if(!document.getElementById('mapView')?.classList.contains('active'))return;
  const el=document.getElementById('overviewMap');if(!el||!window.L)return;
  if(!overviewMap){overviewMap=L.map(el,{zoomControl:true}).setView([42.2,12.5],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(overviewMap)}
- if(overviewLayer)overviewLayer.remove();if(currentPosLayer){currentPosLayer.remove();currentPosLayer=null}
- overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45,showCoverageOnHover:false,spiderfyDistanceMultiplier:1.8,
- iconCreateFunction:cluster=>L.divIcon({className:'storeCluster',html:'<div class="storeClusterBadge"><b>'+cluster.getChildCount()+'</b><small>negozi</small></div>',iconSize:[48,48],iconAnchor:[24,24]})
- }):L.layerGroup()).addTo(overviewMap);
- const items=filtered();for(const x of items){const v=mapBrandVisual(x.c),icon=L.divIcon({className:'',html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(x.c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38]});const popup=document.createElement('div');popup.append(row(x));L.marker([x.l.lat,x.l.lng],{icon}).addTo(overviewLayer).bindPopup(popup,{minWidth:245,maxWidth:300})}
- if(currentPos)currentPosLayer=L.circleMarker([currentPos.lat,currentPos.lng],{radius:9,weight:3,fillOpacity:.6}).addTo(overviewMap).bindTooltip('La tua posizione');
+ const items=filtered(),signature=shopSignature(items,false);
+ if(!overviewLayer||signature!==mapSignature){
+  mapSignature=signature;if(overviewLayer)overviewLayer.remove();
+  overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45,showCoverageOnHover:false,spiderfyDistanceMultiplier:1.8,chunkedLoading:true,chunkInterval:40,chunkDelay:20,
+   iconCreateFunction:cluster=>L.divIcon({className:'storeCluster',html:'<div class="storeClusterBadge"><b>'+cluster.getChildCount()+'</b><small>negozi</small></div>',iconSize:[48,48],iconAnchor:[24,24]})
+  }):L.layerGroup()).addTo(overviewMap);
+  const markers=items.map(x=>{const v=mapBrandVisual(x.c),icon=L.divIcon({className:'',html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(x.c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38]});
+   return L.marker([x.l.lat,x.l.lng],{icon}).bindPopup(()=>{const popup=document.createElement('div');const origin=currentPos||searchCenter;popup.append(row({...x,d:origin?distanceM(origin,x.l):Infinity}));return popup},{minWidth:245,maxWidth:300})});
+  if(overviewLayer.addLayers)overviewLayer.addLayers(markers);else markers.forEach(m=>overviewLayer.addLayer(m));
+ }
+ if(currentPos){if(currentPosLayer)currentPosLayer.setLatLng([currentPos.lat,currentPos.lng]);else currentPosLayer=L.circleMarker([currentPos.lat,currentPos.lng],{radius:9,weight:3,fillOpacity:.6}).addTo(overviewMap).bindTooltip('La tua posizione')}
  setTimeout(()=>{overviewMap.invalidateSize();if(!mapFramed){if(currentPos){overviewMap.setView([currentPos.lat,currentPos.lng],13);mapFramed=true}else if(items.length){overviewMap.fitBounds(items.map(x=>[x.l.lat,x.l.lng]),{maxZoom:14,padding:[25,25]});mapFramed=true}}},80);
- if(currentPos&&!busy&&!lastKey)search(currentPos);
 };
+function renderShopUpdates(){renderSmartCarousel();renderLocations();renderOverviewMap();renderDetail()}
 async function search(center,force=false,bounds=null){
- const ds=descriptors(),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
+ matchCachedShops();const ds=descriptors(),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
  let query;try{query=S.query(center,allNames,3000,bounds)}catch(e){status=e.message;renderLocations();return}
- const key=[bounds?bounds.map(n=>n.toFixed(5)).join(','):center.lat.toFixed(3)+','+center.lng.toFixed(3),allNames.join('|')].join('/');if(key===lastKey&&!force)return;lastKey=key;searchCenter={lat:center.lat,lng:center.lng};controller?.abort();controller=new AbortController();const active=controller,id=++requestId;busy=true;status='';
- let cache=[];try{cache=JSON.parse(localStorage.getItem(CACHE)||'[]');if(!Array.isArray(cache))cache=[];cache=cache.filter(x=>x&&typeof x.key==='string'&&Number.isFinite(x.at)&&Array.isArray(x.data?.elements))}catch{}
- const hit=cache.find(x=>x.key===key);if(hit){results=S.parse(hit.data,ds);status='Risultati salvati.';renderLocations();renderOverviewMap();renderDetail();renderSmartCarousel();if(!force&&Date.now()-hit.at<86400000){busy=false;renderLocations();return}}
- else results=[];renderLocations();renderDetail();renderOverviewMap();renderSmartCarousel();
- try{const data=await S.request(query,active.signal);if(id!==requestId)return;results=S.parse(data,descriptors());status='Ricerca completata '+(bounds?'nell’area visibile.':'nei dintorni (zona di circa 6 × 6 km).');try{localStorage.setItem(CACHE,JSON.stringify([{key,at:Date.now(),data},...cache.filter(x=>x.key!==key)].slice(0,6)))}catch{}}
- catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status=(hit?'Mostro i risultati salvati. ':'I negozi salvati restano visibili. ')+(e.message||'Ricerca non disponibile.');}
- finally{if(id===requestId){busy=false;renderLocations();renderOverviewMap();renderDetail();renderSmartCarousel()}}
+ const area=bounds||S.boundsFor(center),needed=bounds||S.boundsFor(center,1000),key=area.map(n=>n.toFixed(5)).join(',');
+ searchCenter={lat:center.lat,lng:center.lng};
+ // Small GPS movements and card changes reuse the same stored geographic area.
+ if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();return}
+ if(busy&&key===lastKey)return;
+ controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
+ try{const data=await S.request(query,active.signal);if(id!==requestId)return;
+  shopCache=S.mergeCache(shopCache,data,area);matchCachedShops(true);
+  const stored=S.writeCache(localStorage,shopCache);status='Negozi aggiornati'+(stored?' e salvati sul dispositivo.':'. Cache piena: risultati disponibili in questa sessione.');
+ }catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status='Mostro i negozi già disponibili. '+(e.message||'Ricerca non disponibile.');}
+ finally{if(id===requestId){busy=false;renderShopUpdates()}}
 }
-function renderDetail(){const el=document.getElementById('cardNearbyStores');if(!el)return;const c=cards.find(c=>c.id===currentCardId);if(!c)return;const items=shops(c.id),favorites=items.filter(x=>x.favorite),nearby=items.filter(x=>!x.favorite);el.replaceChildren();for(const [title,rows] of [['Negozi preferiti',favorites],['Altri negozi vicini',nearby]]){const h=document.createElement('h3');h.textContent=title==='Negozi preferiti'?'♥ '+title:title;const section=document.createElement('section');if(title==='Negozi preferiti'){section.className='favoriteStoresSection';section.setAttribute('aria-label',title)}section.append(h);el.append(section);const box=document.createElement('div');list(box,rows,busy?'Cerco i negozi…':title==='Negozi preferiti'?'Tocca il cuore su un negozio per salvarlo.':'Nessun altro negozio trovato in questa zona.');section.append(box)}const button=document.createElement('button');button.className='secondary';button.textContent='Trova negozi vicini';button.onclick=async()=>{try{const p=currentPos||await getPosition();currentPos=p;await search(p,true)}catch(e){toast(e.message)}};el.append(button)}
-const baseOpen=openCard;openCard=function(id,recordUse=true){baseOpen(id,recordUse);const section=document.querySelector('#detailContent .cardLocations');if(section){const actions=section.querySelector('.detailActions');section.replaceChildren(actions);const box=document.createElement('div');box.id='cardNearbyStores';section.append(box);renderDetail();if(currentPos&&!lastKey&&!busy)search(currentPos)}};
+function renderDetail(){if(!document.getElementById('detailModal')?.classList.contains('show'))return;const el=document.getElementById('cardNearbyStores');if(!el)return;const c=cards.find(c=>c.id===currentCardId);if(!c)return;const items=shops(c.id),favorites=items.filter(x=>x.favorite),nearby=items.filter(x=>!x.favorite);el.replaceChildren();for(const [title,rows] of [['Negozi preferiti',favorites],['Altri negozi vicini',nearby]]){const h=document.createElement('h3');h.textContent=title==='Negozi preferiti'?'♥ '+title:title;const section=document.createElement('section');if(title==='Negozi preferiti'){section.className='favoriteStoresSection';section.setAttribute('aria-label',title)}section.append(h);el.append(section);const box=document.createElement('div');list(box,rows,busy?'Cerco i negozi…':title==='Negozi preferiti'?'Tocca il cuore su un negozio per salvarlo.':'Nessun altro negozio trovato in questa zona.');section.append(box)}const button=document.createElement('button');button.className='secondary';button.textContent='Trova negozi vicini';button.onclick=async()=>{try{const p=currentPos||await getPosition();currentPos=p;await search(p,true)}catch(e){toast(e.message)}};el.append(button)}
+const baseOpen=openCard;openCard=function(id,recordUse=true){baseOpen(id,recordUse);const section=document.querySelector('#detailContent .cardLocations');if(section){const actions=section.querySelector('.detailActions');section.replaceChildren(actions);const box=document.createElement('div');box.id='cardNearbyStores';section.append(box);renderDetail();if(currentPos&&!busy)search(currentPos)}};
 smartShopCandidates=function(){return shops().map(x=>({c:x.c,l:x.l}))};
 const baseNearest=nearestFor;nearestFor=function(c,pos){let n=baseNearest(c,pos);if(pos)for(const x of results.filter(x=>x.cardId===c.id)){const d=distanceM(pos,x.point);if(!n||d<n.d)n={...x.point,d}}return n};
 function resetShopFilters(){document.getElementById('shopCategory').value='';document.getElementById('shopCard').value='';document.getElementById('shopFavorites').checked=false;renderLocations();renderOverviewMap()}
 document.getElementById('shopReset').onclick=resetShopFilters;
 for(const id of ['shopCategory','shopCard','shopFavorites'])document.getElementById(id).onchange=()=>{renderLocations();renderOverviewMap()};
-document.getElementById('shopSearchHere').onclick=()=>{if(busy){requestId++;controller?.abort();busy=false;status='Ricerca annullata.';renderLocations();renderDetail();return}if(!overviewMap)return;const p=overviewMap.getCenter(),b=overviewMap.getBounds();search({lat:p.lat,lng:p.lng},true,[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()])};
-document.getElementById('mapRefresh').onclick=async()=>{try{currentPos=await getPosition();mapFramed=true;renderAll();if(overviewMap)overviewMap.setView([currentPos.lat,currentPos.lng],13);await search(currentPos,true)}catch(e){status=e.message;renderLocations();toast(e.message)}};
+document.getElementById('shopSearchHere').onclick=()=>{if(busy){requestId++;controller?.abort();busy=false;status='Ricerca annullata.';renderShopUpdates();return}if(!overviewMap)return;const p=overviewMap.getCenter(),b=overviewMap.getBounds();search({lat:p.lat,lng:p.lng},true,[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()])};
+document.getElementById('mapRefresh').onclick=async()=>{try{currentPos=await getPosition();mapFramed=true;renderAll();if(overviewMap)overviewMap.setView([currentPos.lat,currentPos.lng],13);await search(currentPos)}catch(e){status=e.message;renderLocations();toast(e.message)}};
 const baseRefresh=refreshPosition;refreshPosition=async function(){await baseRefresh();if(currentPos)search(currentPos)};
-const baseGo=go;go=function(v){baseGo(v);if(v==='map'){renderLocations();renderOverviewMap();if(!currentPos&&!busy){status='Usa La mia posizione oppure sposta la mappa e cerca nella zona.';renderLocations()}}};
-populate();renderLocations();
+const baseGo=go;go=function(v){baseGo(v);if(v==='map'){matchCachedShops();renderLocations();renderOverviewMap();if(currentPos&&!busy)search(currentPos);if(!currentPos&&!busy){status='Usa La mia posizione oppure sposta la mappa e cerca nella zona.';renderLocations()}}};
+matchCachedShops();S.writeCache(localStorage,shopCache);populate();renderLocations();
 })();

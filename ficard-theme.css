@@ -92,7 +92,7 @@ body{background:var(--theme-page,linear-gradient(105deg,#F0DEFF,#EAF3FF,#CFFFF8)
 .smartCarousel.proximityFocus .smartCard .smartMeta{font-size:17px}
 .smartCarousel.denseNearby .smartCard .smartMeta{font-size:13px}
 
-#homeView .promo[data-go="scandixit"]{background:#2DD4BF!important;border-color:#25BFAE;color:#153C36!important}
+#homeView .promo[data-go="scandixit"]{background:var(--scan-promo-bg,#DCF5F0)!important;border-color:rgba(91,61,245,.1);color:#243648!important;transition:background-color .65s ease}
 #homeView .promo[data-go="scandixit"] small{color:#214B45}
 #homeView .promo[data-go="scandixit"] .promoIcon{background:rgba(255,255,255,.65)!important;color:#5B3DF5!important}
 #homeView .promo[data-go="scandixit"] .badge{background:#FFF;color:#116C61}
@@ -121,3 +121,7 @@ body.dotGridOn::after{content:"";position:fixed;inset:0;z-index:9999;pointer-eve
 .smartCarousel.depthCarousel.proximityFocus .smartCard{transform:translate(var(--smart-shift,0px),calc(var(--smart-depth,0)*8px)) scale(var(--smart-scale,1));transform-origin:left center;will-change:transform;box-shadow:14px 4px 20px rgba(17,24,39,.25),0 8px 14px rgba(31,41,55,.12)}
 .smartCarousel.depthCarousel.proximityFocus::after{flex-basis:18%}
 @media(prefers-reduced-motion:reduce){.smartCarousel.depthCarousel.proximityFocus .smartCard{transform:translateX(var(--smart-shift,0px)) scale(var(--smart-scale,1))}}
+
+/* Native fixed positioning can drift in iOS WebKit; page coordinates follow the visible viewport. */
+.bottom.viewportAnchored{position:absolute!important;bottom:auto;top:var(--nav-page-top,0px)}
+@media(prefers-reduced-motion:reduce){#homeView .scanPromo{transition:none}}

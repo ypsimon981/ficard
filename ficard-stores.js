@@ -64,5 +64,18 @@ async function request(q,signal){
  catch(e){last=e.name==='AbortError'&&!signal?.aborted?Error('Il server OpenStreetMap non risponde entro 30 secondi.'):e;if(signal?.aborted)throw e;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
  }throw last;
 }
-root.FiCardStores={normalize,names,matches,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE};
+function addressText(a={}){const road=a.road||a.pedestrian||a.footway||a.residential||'',town=a.city||a.town||a.village||a.municipality||'';return [road?[road,a.house_number].filter(Boolean).join(' '):'',town].filter(Boolean).join(', ')}
+let addressQueue=Promise.resolve(),addressLast=0;const addressPending=new Map(),addressMemory=new Map();
+function reverseAddress(point,storage){
+ if(!Number.isFinite(point.lat)||!Number.isFinite(point.lng)||Math.abs(point.lat)>90||Math.abs(point.lng)>180)return Promise.resolve('');
+ const key=point.lat.toFixed(5)+','+point.lng.toFixed(5);let cache={};try{cache=JSON.parse(storage?.getItem('ficard-addresses-v1')||'{}')||{}}catch(e){}
+ if(typeof cache[key]==='string')return Promise.resolve(cache[key]);if(addressMemory.has(key))return Promise.resolve(addressMemory.get(key));if(addressPending.has(key))return addressPending.get(key);
+ const job=addressQueue.catch(()=>{}).then(async()=>{
+  const delay=Math.max(0,1100-(Date.now()-addressLast));if(delay)await new Promise(resolve=>setTimeout(resolve,delay));addressLast=Date.now();
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),8000);
+  try{const url='https://nominatim.openstreetmap.org/reverse?'+new URLSearchParams({format:'jsonv2',lat:point.lat,lon:point.lng,zoom:18,addressdetails:1,'accept-language':'it'});const response=await fetch(url,{signal:controller.signal});if(!response.ok)return '';const data=await response.json(),address=addressText(data.address);if(address){addressMemory.set(key,address);try{cache=JSON.parse(storage?.getItem('ficard-addresses-v1')||'{}')||{};cache[key]=address;storage?.setItem('ficard-addresses-v1',JSON.stringify(Object.fromEntries(Object.entries(cache).slice(-500))))}catch(e){}}return address;
+  }catch(e){return ''}finally{clearTimeout(timer)}
+ });addressPending.set(key,job);addressQueue=job;job.finally(()=>addressPending.delete(key));return job;
+}
+root.FiCardStores={normalize,names,matches,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
 })(window);

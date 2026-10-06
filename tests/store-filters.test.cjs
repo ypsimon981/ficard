@@ -1,5 +1,15 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const source=fs.readFileSync(path.join(__dirname,'../ficard-stores-ui.js'),'utf8');
+test('card map shortcut clears unrelated filters and opens the selected brand',()=>{
+ const {ctx,fields}=setup();let closed='',view='';
+ ctx.matchCachedShops=()=>{};ctx.hideModal=id=>{closed=id};ctx.go=id=>{view=id};ctx.mapFramed=true;
+ vm.runInContext(source.slice(source.indexOf('function openMapForCard('),source.lastIndexOf('})();')),ctx);
+ fields.shopCategory.value='abbigliamento';fields.shopCard.value='zara';fields.shopFavorites.checked=true;
+ ctx.openMapForCard(ctx.cards[0]);
+ assert.equal(fields.shopCategory.value,'');assert.equal(fields.shopCard.value,'conad');assert.equal(fields.shopFavorites.checked,false);
+ assert.equal(closed,'detailModal');assert.equal(view,'map');assert.equal(ctx.mapFramed,false);
+ assert.deepEqual(Array.from(ctx.filtered(),x=>x.c.id),['conad']);
+});
 function setup(){
  const fields={shopCategory:{value:''},shopCard:{value:''},shopFavorites:{checked:false}};
  const cards=[{id:'conad',name:'Conad',category:'supermercati'},{id:'zara',name:'Zara',category:'abbigliamento'},{id:'lidl',name:'Lidl',category:'supermercati'}];

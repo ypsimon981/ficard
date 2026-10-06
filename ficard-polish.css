@@ -1,0 +1,124 @@
+/* Fi-Card v0.9.127: presentation only. Native sans fonts work offline. */
+:root{--ui-font:ui-sans-serif,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;--ui-radius:18px;--ui-shadow:0 5px 18px rgba(31,41,55,.055)}
+body,button,input,select,textarea{font-family:var(--ui-font)}
+body{font-size:14px;line-height:1.45;-webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+:root:not([data-theme="dark"]) body{background:linear-gradient(125deg,#FAF8FF 0%,#F8FAFC 52%,#F2FBF9 100%) fixed!important}
+h1,h2,h3,b,strong{font-weight:600}
+h1,h2,h3{letter-spacing:-.025em;line-height:1.25}
+button,input,select,textarea{font-size:14px}button{font-weight:500}
+button,a,input,select,textarea{-webkit-tap-highlight-color:transparent}
+button:focus-visible,a:focus-visible{outline:2px solid var(--violet);outline-offset:3px}
+.sectionTitle{gap:12px;margin:16px 2px 10px}.sectionTitle h2,.smartHead h2{font-size:18px;font-weight:600}
+.sectionTitle button,.categoryMore{font-size:12px;font-weight:500;flex-shrink:0}
+.categoryHead h3{font-size:15px;font-weight:600}.categoryCount{font-weight:500}
+.hint,.promo small{font-size:12px;line-height:1.5}.hint{margin:8px 0;color:var(--muted)}
+.panel,.promo,.empty{border-radius:var(--ui-radius);box-shadow:var(--ui-shadow)}
+.panel{padding:16px}.promo{padding:13px;gap:11px}.promo b{font-size:14px;font-weight:600}
+.promoIcon{width:40px;height:40px;flex:0 0 40px;border-radius:12px;font-weight:500}
+.primary,.secondary,.danger{min-height:44px;border-radius:14px;padding:12px 14px;font-size:14px;font-weight:600;line-height:1.3}
+.field{min-height:44px;border-radius:13px;padding:11px 12px;font-size:14px;line-height:1.4}
+label{font-size:12px;font-weight:500;margin:12px 2px 5px}
+.chip{font-size:12px;font-weight:500;line-height:1.3}.chip.active{font-weight:600}
+.top{padding-top:18px;padding-bottom:15px}.topActions .iconbtn{box-shadow:none;border:1px solid var(--line);border-radius:12px}
+.release{font-size:10px;letter-spacing:.01em}.search input{font-size:14px;border-radius:14px}
+.smartBlock{padding:14px;border-radius:22px;box-shadow:var(--ui-shadow)}
+.smartHead{align-items:center}.smartHead small{font-size:11px;line-height:1.3}
+.smartCarousel .smartCard{background:#fff!important;--card-ink:#1F2937!important;color:#1F2937;border:1px solid #EBEDF3;border-radius:20px}
+.smartCarousel .smartCard .name{color:#1F2937!important;font-size:14px;font-weight:600;line-height:1.35}
+.smartCarousel .smartCard .brandMark{color:#1F2937!important}
+.smartCarousel .smartCard .brandLogo{filter:none!important}
+.smartCarousel.depthCarousel .smartCard{box-shadow:8px 3px 14px rgba(31,41,55,.14),0 3px 8px rgba(31,41,55,.05)!important}
+.smartCarousel .smartCard .smartMeta{color:var(--violet)!important;font-weight:400!important;opacity:1!important;line-height:1.4;overflow:visible}
+.smartCarousel:not(.denseNearby):not(.proximityFocus) .smartCard .smartMeta{font-size:16px}
+.smartCarousel.proximityFocus .smartCard .smartMeta{font-size:18px}
+.smartCarousel.denseNearby .smartCard .smartMeta{font-size:14px}
+.smartDistance{font-variant-numeric:tabular-nums;letter-spacing:-.015em}
+.smartCarousel .smartMeta .smartAddress{font-size:12px;font-weight:400;line-height:1.4;margin-top:2px}
+.smartCarousel.hasShopAddress{padding-bottom:48px}.smartCarousel.proximityFocus.hasShopAddress{padding-bottom:54px}
+.smartCarousel .smartCard .smartMeta.arrivalMessage{font-size:14px;font-weight:500!important;line-height:1.4}
+.cardShelf .card,.usageGrid .card{border-radius:20px;box-shadow:0 5px 16px rgba(31,41,55,.08)}
+.card .name{font-weight:600;letter-spacing:-.015em}.card .type{font-size:12px;font-weight:400;line-height:1.4}
+.sheet{border-radius:24px 24px 0 0;padding-top:14px}.sheetHead h2{font-size:20px;font-weight:600}
+.grab{height:4px;margin-bottom:13px}.close{border-radius:11px;background:var(--surface);color:var(--muted);border:1px solid var(--line)}
+.detailHero{border-radius:20px}.detailBrandHeader{padding:18px 18px 14px!important}
+.detailBrandHeader .detailLogo{height:92px!important;padding:10px 16px!important}
+.detailBrandHeader h2{font-size:23px;font-weight:600;margin-top:10px}.detailBrandHeader p{font-size:13px;line-height:1.4}
+.barcodeBox{border-radius:16px;padding:18px 12px 14px}.barcodeBox .num{font-size:15px;font-weight:500;letter-spacing:.07em}
+.barcodeBox canvas{image-rendering:auto}.barcodeBox [data-screen-awake]{font-size:11px;line-height:1.4;margin-top:10px}
+.detailToolbar{gap:8px;margin:12px 0}.detailToolbar button{border-radius:13px;min-height:46px;padding:10px;box-shadow:none}
+.detailToolbar svg,.shopActions svg{width:21px;height:21px;stroke-width:1.7}
+.cardLocations .detailActions button{font-size:12px;font-weight:500;line-height:1.4;min-height:46px;border-radius:13px;padding:10px 8px}
+.captureAction{border-radius:18px}.captureAction b{font-weight:600}.captureAction small{font-size:12px;font-weight:400}
+.manualEntryBtn{font-weight:500}.captureIcon svg{stroke-width:1.7}
+#mapView .locationMap{height:300px;margin:0 0 10px;border-radius:16px}
+#mapView .shopFilters>label{font-size:12px;line-height:1.3;margin-top:8px;font-weight:500}
+#mapView #shopReset,#mapView #shopSearchHere{font-weight:500}
+#mapView .mapLegend .chip{font-size:10px;border-color:transparent;background:transparent;color:var(--muted);padding:2px}
+.favoriteStoresSection{padding:13px;border-radius:20px;box-shadow:0 4px 14px rgba(190,32,70,.035)}
+.favoriteStoresSection .sectionTitle h2{font-size:16px;line-height:1.35;font-weight:600}
+.locationResult{display:grid;grid-template-columns:42px minmax(0,1fr);gap:10px;padding:13px;margin:8px 0;align-items:start}
+.locationResult .locationBrandIcon{width:42px;height:42px;border-radius:13px;box-shadow:0 2px 7px rgba(31,41,55,.06)}
+.locationResult .grow{min-width:0;align-self:center}.locationResult .grow b{display:block;font-size:14px;font-weight:600;line-height:1.35}
+.locationResult .shopAddress{font-size:12px;line-height:1.45;margin-top:3px;color:var(--muted)}
+.locationResult .shopDistance{font-size:16px;font-weight:400;line-height:1.4;color:var(--violet);font-variant-numeric:tabular-nums;margin-top:5px;letter-spacing:-.015em}
+.locationResult .shopOrigin{font-size:10px;line-height:1.3;margin-top:3px;color:var(--muted)}
+.locationResult .shopActions{grid-column:2;display:flex;gap:7px;margin-top:2px}
+.shopActions .chip{width:38px;height:38px;min-height:38px;flex-basis:38px;border-radius:12px;padding:8px;color:var(--violet);background:var(--surface)}
+#favoriteStoresList .locationResult{grid-template-columns:42px minmax(0,1fr);padding:12px;gap:9px}
+#favoriteStoresList .grow .shopDistance{font-size:16px}#favoriteStoresList .grow .shopAddress{font-size:12px}
+.leaflet-popup-content{margin:13px!important}.leaflet-popup-content .locationResult{margin:0;padding:0;border:0;box-shadow:none}
+.leaflet-popup-content .shopActions{gap:5px}.leaflet-popup-content .locationResult .grow b{font-size:14px}
+.bottom{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 78px minmax(0,1fr) minmax(0,1fr);padding:12px 10px calc(12px + env(safe-area-inset-bottom));align-items:center;min-height:78px}
+.bottom .nav{padding:2px 0;min-width:0;min-height:48px;gap:5px;font-size:10.5px;font-weight:500;line-height:1.2;white-space:nowrap}
+.bottom .nav.active{font-weight:600}.bottom .navIcon{height:23px}.bottom .navIcon svg{width:23px;height:23px;stroke-width:1.7}
+.fab.addCardStack{width:78px;height:58px;margin:0;transform:translateY(-10px);align-self:center;justify-self:center}
+.addCardStack svg{width:82px;height:68px;filter:drop-shadow(0 4px 6px rgba(31,41,55,.14))}
+.addCardLabel{position:absolute;bottom:-12px;left:-4px;right:-4px;font-size:10.5px;line-height:1.2;font-weight:600;color:var(--violet);text-align:center;white-space:nowrap}
+.profileBrand{padding-bottom:16px;gap:12px}.profileBrand img{width:52px;height:52px}.profileBrand strong{font-size:24px;font-weight:600}.profileBrand span{font-size:12px;line-height:1.4}
+.settingsFacts{display:grid;gap:14px;margin:0 0 16px}.settingsFact{display:grid;grid-template-columns:34px minmax(0,1fr);gap:10px;align-items:start}
+.settingsFact .factIcon{width:34px;height:34px;border-radius:11px;display:grid;place-items:center;background:var(--theme-soft);color:var(--violet)}
+.factIcon svg,.backupHeading svg{width:19px;height:19px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.settingsFact b{display:block;font-size:14px;font-weight:600;line-height:1.3}.settingsFact p{font-size:12px;line-height:1.5;color:var(--muted);margin:3px 0 0}
+#profileView #storageStatus{padding:10px 12px;background:var(--theme-soft);border:0;margin:0 0 16px;box-shadow:none}
+#profileView #storageStatus .promoIcon{width:30px;height:30px;flex-basis:30px;background:transparent!important;font-size:18px}
+#profileView #storageStatus small{font-size:11px}
+.backupPanel{padding:14px;border-radius:16px;border:1px solid var(--line);background:var(--surface)}
+.backupHeading{display:flex;align-items:center;gap:8px;color:var(--violet);font-size:15px;font-weight:600}
+.backupPanel .hint{font-size:12px;line-height:1.5;margin:7px 0 10px}
+#profileView #exportData{background:var(--violet)!important;color:#fff!important;border-color:var(--violet);margin-top:0;box-shadow:0 3px 10px rgba(91,61,245,.12)}
+#profileView #importData{margin-top:8px}#profileView #backupInfo{font-size:11px;margin:8px 0 0}
+#profileView #importImagesProfile{margin-top:14px}
+#profileView #clearData{background:transparent;color:#B54C59;border:1px solid var(--line);font-size:12px;font-weight:500;margin-top:10px}
+/* ScanDixit shares the typography, but keeps its search and scanner unchanged. */
+body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
+.scanDixitPage header{padding:14px 2px 12px}.scanDixitPage .lockup{font-weight:600}.scanDixitPage .lockup small{font-size:10px;font-weight:500}
+.scanDixitPage .hero{padding:18px;border-radius:20px;box-shadow:0 6px 20px rgba(91,61,245,.12)}
+.scanDixitPage .hero h1{font-size:25px;line-height:1.15;margin:7px 0;font-weight:600}.scanDixitPage .hero p{font-size:13px;line-height:1.45}
+.scanDixitPage .eyebrow{font-weight:500;font-size:10px;letter-spacing:.06em}
+.scanDixitPage .card{margin-top:12px;padding:14px;border-radius:18px;box-shadow:var(--ui-shadow);background:var(--surface);color:var(--text)}
+.scanDixitPage .tab{font-weight:500;font-size:12px;padding:10px 6px}.scanDixitPage .tab.active{font-weight:600}
+.scanDixitPage .scanHeading{font-size:16px;font-weight:600;margin:12px 0 4px}.scanDixitPage .sub{font-size:12px;line-height:1.45}
+.scanDixitPage .fileLabel{font-weight:500;font-size:12px;padding:11px;border-radius:13px}
+.scanDixitPage .manual button{font-weight:600;font-size:12px;flex-basis:94px;border-radius:13px}
+.scanDixitPage .separator{margin:10px 0;font-size:11px}.scanDixitPage .hint{font-size:11px;line-height:1.45}
+.scanDixitPage .ocrStatus{font-size:11px;line-height:1.4}.scanDixitPage .resultKicker{font-size:10px;font-weight:500;letter-spacing:.06em}
+.scanDixitPage .codeLine{font-size:14px;font-weight:500;margin-top:4px;letter-spacing:.035em}
+.scanDixitPage .matchNote{font-size:11px;line-height:1.4;margin-top:7px;padding:8px 10px;border-radius:11px}
+.scanDixitPage #productSheet{border:0;border-top:1px solid var(--line);border-radius:0;box-shadow:none;margin-top:12px;padding:13px 0 0}
+.scanDixitPage .productTitle{font-size:22px;font-weight:600;line-height:1.2;margin:6px 0}.scanDixitPage .productSub{font-size:12px;line-height:1.4}
+.scanDixitPage .productImage{display:block;max-width:100%;width:100%;height:144px;object-fit:contain;background:#fff;border:1px solid var(--line);border-radius:14px;margin:12px 0}
+.scanDixitPage .productDescription{font-size:13px;line-height:1.5;margin:10px 0 12px;color:var(--text)}
+.scanDixitPage .sheetSectionHeading{font-size:14px;font-weight:600;margin:13px 0 7px}
+.scanDixitPage .specs{gap:7px;margin-top:8px}.scanDixitPage .spec{padding:10px;border-radius:12px;background:var(--bg);min-width:0}
+.scanDixitPage .spec small{font-size:11px;font-weight:500;line-height:1.3}.scanDixitPage .spec b{font-size:12px;font-weight:400;line-height:1.5;overflow-wrap:anywhere;margin-top:4px}
+.scanDixitPage .spec.specWide{grid-column:1/-1}.scanDixitPage .spec.specAllergens{border-left:3px solid #E7B49B}
+.scanDixitPage #sheetSource{font-size:10px;line-height:1.5;margin:10px 0}
+.scanDixitPage .amazon{border:1px solid #E2E5EC;min-height:46px;padding:11px 12px;border-radius:13px;background:#F4F5F8;color:#283246;font-size:13px;font-weight:500;margin-top:12px;box-shadow:none}
+.scanDixitPage .amazonLogo{width:62px;flex-basis:62px}.scanDixitPage .amazonLogo path:not(#path8):not(#path10){fill:#283246}
+.scanDixitPage .matchNote,.scanDixitPage .productSub{overflow-wrap:anywhere}
+@media(min-width:700px){.locationResult{grid-template-columns:42px minmax(0,1fr) auto;align-items:center}.locationResult .shopActions{grid-column:3;grid-row:1;margin:0}.favoriteStoresSection .locationResult,.leaflet-popup-content .locationResult{grid-template-columns:42px minmax(0,1fr)}.favoriteStoresSection .shopActions,.leaflet-popup-content .shopActions{grid-column:2;grid-row:auto}.scanDixitPage .productImage{height:164px}}
+@media(max-width:360px){.bottom{padding-left:6px;padding-right:6px;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 68px minmax(0,1fr) minmax(0,1fr)}.bottom .nav,.addCardLabel{font-size:9.5px}.fab.addCardStack{width:68px}.addCardStack svg{width:74px}.settingsFact{grid-template-columns:30px minmax(0,1fr);gap:9px}.settingsFact .factIcon{width:30px;height:30px}.locationResult{gap:8px}}
+:root[data-theme="dark"] .smartBlock{box-shadow:none}
+:root[data-theme="dark"] .scanDixitPage .amazon{background:var(--theme-soft);color:var(--text);border-color:var(--line)}
+:root[data-theme="dark"] .scanDixitPage .amazonLogo path:not(#path8):not(#path10){fill:var(--text)}
+:root[data-theme="dark"] #profileView #clearData{color:#FF9AA9}

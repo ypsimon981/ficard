@@ -19,7 +19,7 @@ function query(center,list,radius=3000,bounds=null){
 }
 function parse(data,descriptors){
  const found=[];for(const e of data.elements||[]){const lat=e.lat??e.center?.lat,lng=e.lon??e.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)continue;
- const tags=e.tags||{},address=[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']].filter(Boolean).join(' ');
+ const tags=e.tags||{},address=tags['addr:street']?[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']].filter(Boolean).join(' '):tags['addr:suburb']||tags['addr:neighbourhood']||tags['addr:quarter']||tags['addr:district']||tags['addr:postcode']||tags['addr:city']||'';
  for(const d of descriptors)if(matches(tags,d.names)){const point={lat,lng,osmId:e.type+'/'+e.id,name:String(tags.name||tags.brand||d.names[0]).slice(0,200),address:address.slice(0,300),source:'osm-discovered'};
  if(!found.some(x=>x.cardId===d.id&&(x.point.osmId===point.osmId||Math.hypot(x.point.lat-lat,x.point.lng-lng)<.0003)))found.push({cardId:d.id,point});}
  }return found;
@@ -31,7 +31,7 @@ function compactElement(e){
  if(!e||!['node','way','relation'].includes(e.type)||!Number.isSafeInteger(e.id))return null;
  const lat=e.lat??e.center?.lat,lon=e.lon??e.center?.lon;
  if(!Number.isFinite(lat)||!Number.isFinite(lon)||Math.abs(lat)>90||Math.abs(lon)>180)return null;
- const tags={};for(const key of ['name','brand','operator','addr:street','addr:housenumber','addr:city'])if(typeof e.tags?.[key]==='string')tags[key]=e.tags[key].slice(0,300);
+ const tags={};for(const key of ['name','brand','operator','addr:street','addr:housenumber','addr:city','addr:suburb','addr:neighbourhood','addr:quarter','addr:district','addr:postcode'])if(typeof e.tags?.[key]==='string')tags[key]=e.tags[key].slice(0,300);
  if(!tags.name&&!tags.brand&&!tags.operator)return null;
  return {type:e.type,id:e.id,lat,lon,tags};
 }
@@ -64,7 +64,7 @@ async function request(q,signal){
  catch(e){last=e.name==='AbortError'&&!signal?.aborted?Error('Il server OpenStreetMap non risponde entro 30 secondi.'):e;if(signal?.aborted)throw e;}finally{clearTimeout(timer);signal?.removeEventListener('abort',abort)}
  }throw last;
 }
-function addressText(a={}){const road=a.road||a.pedestrian||a.footway||a.residential||'',town=a.city||a.town||a.village||a.municipality||'';return [road?[road,a.house_number].filter(Boolean).join(' '):'',town].filter(Boolean).join(', ')}
+function addressText(a={}){const road=a.road||a.pedestrian||a.footway||a.residential||'',town=a.city||a.town||a.village||a.municipality||'';return road?[[road,a.house_number].filter(Boolean).join(' '),town].filter(Boolean).join(', '):a.suburb||a.neighbourhood||a.quarter||a.city_district||a.postcode||town}
 let addressQueue=Promise.resolve(),addressLast=0;const addressPending=new Map(),addressMemory=new Map();
 function reverseAddress(point,storage){
  if(!Number.isFinite(point.lat)||!Number.isFinite(point.lng)||Math.abs(point.lat)>90||Math.abs(point.lng)>180)return Promise.resolve('');
@@ -79,3 +79,4 @@ function reverseAddress(point,storage){
 }
 root.FiCardStores={normalize,names,matches,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
 })(window);
+

@@ -29,8 +29,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 @media(max-width:360px){.hero h1{font-size:26px}.app{padding-left:12px;padding-right:12px}.manual button{flex-basis:92px}}
 </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.81">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.127">
 </head>
-<body>
+<body class="scanDixitPage">
 <div class="app">
 <header>
 <a href="./" aria-label="Torna a FiCard"><button class="back" type="button">‹</button></a>
@@ -81,7 +82,12 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 <div class="resultKicker">Scheda prodotto</div>
 <h2 class="productTitle" id="sheetTitle">Cerco il prodotto…</h2>
 <div class="productSub" id="sheetBrand"></div>
+<img id="sheetImage" class="productImage" alt="" hidden>
+<p id="sheetDescription" class="productDescription" hidden></p>
+<h3 id="sheetFeaturesTitle" class="sheetSectionHeading" hidden>Caratteristiche principali</h3>
 <div class="specs" id="sheetFields"></div>
+<h3 id="sheetMoreTitle" class="sheetSectionHeading" hidden>Informazioni aggiuntive</h3>
+<div id="sheetMoreFields" class="specs" hidden></div>
 <p class="hint" id="sheetSource"></p>
 </div>
 <a class="amazon" id="amazonSearch" aria-label="Leggi opinioni del prodotto su Amazon: apre una ricerca" target="_blank" rel="noopener noreferrer"><svg
@@ -134,11 +140,11 @@ function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show")
 function setTab(tab){activeTab=tab;document.querySelectorAll(".tab").forEach(b=>{const on=b.dataset.tab===tab;b.classList.toggle("active",on);b.setAttribute("aria-selected",String(on))});$("barcodeMode").classList.toggle("active",tab==="barcode");$("ocrMode").classList.toggle("active",tab==="ocr")}
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
 let productLookupId=0;
-function sheetField(label,value){if(!value)return;const box=document.createElement("div");box.className="spec";const title=document.createElement("small");title.textContent=label;const content=document.createElement("b");content.textContent=Array.isArray(value)?value.filter(Boolean).join(", "):String(value);box.append(title,content);$("sheetFields").append(box)}
+function sheetField(label,value,additional=false){if(!value)return;const box=document.createElement("div");box.className="spec"+(["Ingredienti","Allergeni","Categoria","Etichette","Confezione"].includes(label)?" specWide":"")+(label==="Allergeni"?" specAllergens":"");const title=document.createElement("small");title.textContent=label;const content=document.createElement("b");content.textContent=Array.isArray(value)?value.filter(Boolean).join(", "):String(value);box.append(title,content);$(additional?"sheetMoreFields":"sheetFields").append(box);if(additional){$("sheetMoreTitle").hidden=false;$("sheetMoreFields").hidden=false}}
 async function loadProductSheet(code){
- const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent="Cerco il prodotto nel catalogo…";$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";
+ const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent="Cerco il prodotto nel catalogo…";$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";$("sheetImage").hidden=true;$("sheetImage").src="";$("sheetDescription").hidden=true;$("sheetDescription").textContent="";$("sheetFeaturesTitle").hidden=true;$("sheetMoreFields").replaceChildren();$("sheetMoreFields").hidden=true;$("sheetMoreTitle").hidden=true;
  try{
-  const fields="code,product_name,product_name_en,generic_name,brands,quantity,product_type,categories,ingredients_text,allergens,labels,countries,origins,manufacturing_places,packaging,stores,created_t,last_modified_t";
+  const fields="code,product_name,product_name_en,generic_name,brands,quantity,product_type,categories,ingredients_text,allergens,labels,countries,origins,manufacturing_places,packaging,stores,created_t,last_modified_t,image_front_small_url,image_front_url";
   const hosts=["world.openbeautyfacts.org","world.openfoodfacts.org","world.openpetfoodfacts.org","world.openproductsfacts.org"];
   const checks=await Promise.allSettled(hosts.map(async host=>{
    const url="https://"+host+"/api/v3/product/"+encodeURIComponent(code)+".json?fields="+encodeURIComponent(fields);
@@ -154,8 +160,12 @@ async function loadProductSheet(code){
   if(!found){if(!results.length)throw Error("Cataloghi non raggiungibili");$("sheetTitle").textContent="Scheda non trovata nel catalogo";$("sheetBrand").textContent="Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.";sheetField("Codice",code);$("sheetSource").textContent="Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.";return}
   const name=product.product_name||product.product_name_en||product.generic_name||"Prodotto identificato";
   $("sheetTitle").textContent=name;$("sheetBrand").textContent=product.brands||"Marca non indicata";
-  sheetField("Codice EAN/UPC",product.code||code);sheetField("Formato",product.quantity);sheetField("Categoria",product.categories);sheetField("Tipo",product.product_type);
-  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Etichette",product.labels);sheetField("Origine",product.origins||product.countries);sheetField("Confezione",product.packaging);
+  const picture=product.image_front_small_url||product.image_front_url;
+  if(picture&&/^https:\/\//i.test(picture)){const image=$("sheetImage");image.alt=name;image.onerror=()=>{image.hidden=true};image.src=picture;image.hidden=false}
+  if(product.generic_name&&product.generic_name!==name){$("sheetDescription").textContent=product.generic_name;$("sheetDescription").hidden=false}
+  $("sheetFeaturesTitle").hidden=false;
+  sheetField("Codice EAN/UPC",product.code||code,true);sheetField("Formato",product.quantity);sheetField("Categoria",product.categories);sheetField("Tipo",product.product_type);
+  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Etichette",product.labels,true);sheetField("Origine",product.origins||product.countries,true);sheetField("Confezione",product.packaging,true);
   const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString("it-IT"):"non indicato";
   const source=document.createElement("span");source.textContent="Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: "+stamp+". Fonte: ";
   const link=document.createElement("a");link.href="https://"+found.host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
@@ -172,4 +182,5 @@ $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.tri
 <script src="./scandixit-scanner.js?v=1.1.0"></script>
 </body>
 </html>
+
 

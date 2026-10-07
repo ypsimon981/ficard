@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#5B3DF5">
 <title>ScanDixit · FiCard</title>
-<script src="./ficard-theme.js?v=0.9.80"></script>
+<script src="./ficard-theme.js?v=0.9.150"></script>
 <link rel="icon" href="./icon-32.png" type="image/png">
 <script src="./vendor/html5-qrcode.min.js"></script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
@@ -13,7 +13,7 @@
 <style>
 :root{--violet:#5B3DF5;--violet2:#7C5CFF;--teal:#2DD4BF;--bg:#F8F9FC;--surface:#fff;--text:#1F2937;--muted:#6B7280;--line:#E7EAF0;--shadow:0 12px 32px rgba(31,41,55,.09)}
 [hidden]{display:none!important}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif}.app{max-width:580px;min-height:100dvh;margin:auto;padding:env(safe-area-inset-top) 16px calc(28px + env(safe-area-inset-bottom))}
-header{display:flex;align-items:center;justify-content:space-between;padding:18px 2px 20px}.back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:21px;color:var(--violet);box-shadow:var(--shadow)}.lockup{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:-.5px}.lockup .fi{color:var(--violet)}.lockup .dash{color:var(--teal)}.lockup small{display:block;color:var(--muted);font-size:10px;letter-spacing:.4px;text-align:right;margin-top:2px}
+header{display:flex;align-items:center;justify-content:space-between;padding:12px 2px;position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 94%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}.back{border:0;background:#fff;border-radius:13px;width:42px;height:42px;font-size:21px;color:var(--violet);box-shadow:var(--shadow)}.scanHeaderBrand{display:flex;align-items:center;gap:10px;min-width:0}.scanFiLogo{width:118px;height:41px;display:flex;align-items:center}.scanFiLogo svg{display:block;width:100%;height:100%}.scanHeaderDivider{width:1px;height:30px;background:var(--line)}.scanHeaderProduct{display:flex;flex-direction:column;line-height:1.05}.scanHeaderProduct strong{font-size:14px;letter-spacing:-.2px}.scanHeaderProduct small{display:block;color:var(--muted);font-size:8px;letter-spacing:.5px;margin-top:4px;white-space:nowrap}
 .hero{position:relative;overflow:hidden;background:linear-gradient(135deg,#5B3DF5 0%,#7658F7 54%,#39CFC2 130%);border-radius:28px;padding:23px 21px 22px;color:#fff;box-shadow:0 16px 34px rgba(91,61,245,.19)}
 .hero:after{content:"";position:absolute;width:180px;height:180px;right:-73px;top:-83px;border-radius:50%;background:rgba(255,255,255,.13)}
 .eyebrow{font-size:11px;font-weight:800;letter-spacing:1.2px;text-transform:uppercase;opacity:.82}.hero h1{font-size:29px;line-height:1.05;letter-spacing:-1px;margin:9px 0}.hero p{margin:0;max-width:350px;font-size:14px;line-height:1.45;opacity:.9}
@@ -26,16 +26,18 @@ header{display:flex;align-items:center;justify-content:space-between;padding:18p
 .result{display:none}.result.show{display:block}.resultKicker{color:var(--violet);font-size:11px;font-weight:900;letter-spacing:.8px;text-transform:uppercase}.productTitle{font-size:21px;letter-spacing:-.5px;margin:7px 0 4px}.productSub{color:var(--muted);font-size:13px}.specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.spec{background:#F7F8FB;border-radius:13px;padding:11px}.spec small{display:block;color:var(--muted);font-size:10px}.spec b{display:block;font-size:12px;margin-top:3px}.demoTag{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:6px 9px;background:#FFF4D8;color:#8A5A00;font-size:10px;font-weight:900;margin-top:11px}
 .codeResult{display:none}.codeResult.show{display:block}.codeLine{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:16px;font-weight:800;letter-spacing:.7px;word-break:break-all;margin-top:8px}.matchNote{background:#F3F0FF;color:#5440A7;border-radius:13px;padding:11px 12px;font-size:12px;line-height:1.4;margin-top:13px}
 .toast{position:fixed;z-index:8;bottom:20px;left:50%;transform:translateX(-50%);display:none;background:#172033;color:white;border-radius:13px;padding:11px 15px;font-size:13px;box-shadow:var(--shadow);max-width:90%;text-align:center}.toast.show{display:block}
-@media(max-width:360px){.hero h1{font-size:26px}.app{padding-left:12px;padding-right:12px}.manual button{flex-basis:92px}}
+body.embeddedInFiCard .scanHeader{justify-content:center}body.embeddedInFiCard .scanBack{display:none}
+@media(max-width:360px){.hero h1{font-size:26px}.app{padding-left:12px;padding-right:12px}.manual button{flex-basis:92px}.scanFiLogo{width:105px}.scanHeaderProduct strong{font-size:13px}}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.81">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.131">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.150">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.150">
 </head>
 <body class="scanDixitPage">
+<script>if(new URLSearchParams(location.search).get("section")==="ficard")document.body.classList.add("embeddedInFiCard");</script>
 <div class="app">
-<header>
-<a href="./" aria-label="Torna a FiCard"><button class="back" type="button">‹</button></a>
-<div class="lockup"><span><span class="fi">Fi</span><span class="dash">·</span>Card</span><small>SCANSIONA E SCOPRI</small></div>
+<header class="scanHeader">
+<a href="./" class="scanBack" aria-label="Torna a FiCard"><button class="back" type="button">‹</button></a>
+<div class="scanHeaderBrand"><div class="scanFiLogo"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></div><span class="scanHeaderDivider" aria-hidden="true"></span><div class="scanHeaderProduct"><strong>ScanDixit</strong><small>SCANSIONA E SCOPRI</small></div></div>
 </header>
 <section class="hero">
 <div class="eyebrow">ScanDixit · informazioni prodotto</div>
@@ -179,6 +181,7 @@ $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.curr
 $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
 
 </script>
+<script src="./scandixit-i18n.js?v=1.0.0"></script>
 <script src="./scandixit-scanner.js?v=1.1.0"></script>
 </body>
 </html>

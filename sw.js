@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.154";
+const APP_VERSION="0.9.155";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -12,7 +12,7 @@ const CORE=[
   "./ficard-promo.js?v=0.9.120",
   "./ficard-stores.js?v=0.9.127",
   "./ficard-stores-ui.js?v=0.9.138",
-  "./ficard-theme.css?v=0.9.154",
+  "./ficard-theme.css?v=0.9.155",
   "./ficard-reader.js?v=1.1.1",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",
@@ -21,6 +21,11 @@ const CORE=[
   "./scandixit.html",
   "./scandixit-i18n.js?v=1.0.0",
   "./manifest.webmanifest",
+  "./privacy.html",
+  "./ficard-analytics-config.js?v=0.9.155",
+  "./ficard-analytics.js?v=0.9.155",
+  "./vendor/leaflet.js","./vendor/leaflet.css",
+  "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
   "./brand-approved.png",
   "./vendor/leaflet.markercluster.js","./vendor/MarkerCluster.css",
@@ -63,10 +68,13 @@ self.addEventListener("fetch",event=>{
       .then(response=>{
         if(response.ok){
           const copy=response.clone();
-          caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+          event.waitUntil(caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{}));
         }
         return response;
       })
-      .catch(()=>caches.match(event.request).then(cached=>cached||(event.request.mode==="navigate"?caches.match("./index.html"):Response.error())))
+      .catch(async()=>{
+        const shell=url.pathname.endsWith("/scandixit.html")?"./scandixit.html":url.pathname.endsWith("/privacy.html")?"./privacy.html":"./index.html";
+        return await caches.match(event.request)||await caches.match(request)||await caches.match(event.request,{ignoreSearch:true})||(event.request.mode==="navigate"?await caches.match(shell):null)||Response.error();
+      })
   );
 });

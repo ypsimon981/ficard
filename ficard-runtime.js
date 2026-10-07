@@ -1,7 +1,7 @@
-/* Fi-Card runtime v0.9.154 */
+/* Fi-Card runtime v0.9.155 */
 (function(root){
 'use strict';
-const VERSION='0.9.154';
+const VERSION='0.9.155';
 const LANGUAGE_KEY='ficard.language.v2';
 const LEGACY_LANGUAGE_KEY='ficard.language.v1';
 const RETURN_VIEW_KEY='ficard.language.returnView';
@@ -14,7 +14,7 @@ function detectedDeviceLanguage(){const supported=supportedLanguages();const lan
 function savedManualLanguage(){try{const value=root.localStorage.getItem(LANGUAGE_KEY)||root.localStorage.getItem(LEGACY_LANGUAGE_KEY)||'';return value?normaliseLanguage(value):'';}catch{return '';}}
 function automaticOptionLabel(){const current=root.FiCardI18n?.language?.()||detectedDeviceLanguage();const auto=AUTO_LABELS[current]||AUTO_LABELS.en;const languageName=root.FiCardI18n?.languageNames?.[current]||current.toUpperCase();return auto+' ('+languageName+')';}
 function enhanceLanguageControl(){const select=root.document?.getElementById('ficardLanguageSelect');if(!select)return false;let option=select.querySelector('option[value="auto"]');if(!option){option=root.document.createElement('option');option.value='auto';select.insertBefore(option,select.firstChild);}option.textContent=automaticOptionLabel();const manual=savedManualLanguage();select.value=manual||'auto';return true;}
-function changeLanguage(event){const select=event.target;if(!select||select.id!=='ficardLanguageSelect')return;const choice=String(select.value||'auto');try{if(choice==='auto'){root.localStorage.removeItem(LANGUAGE_KEY);root.localStorage.removeItem(LEGACY_LANGUAGE_KEY);}else{root.localStorage.setItem(LANGUAGE_KEY,normaliseLanguage(choice));root.localStorage.removeItem(LEGACY_LANGUAGE_KEY);}root.sessionStorage.setItem(RETURN_VIEW_KEY,'profile');}catch{}root.location.reload();}
+function changeLanguage(event){const select=event.target;if(!select||select.id!=='ficardLanguageSelect')return;event.stopImmediatePropagation();const choice=String(select.value||'auto');try{if(choice==='auto'){root.localStorage.removeItem(LANGUAGE_KEY);root.localStorage.removeItem(LEGACY_LANGUAGE_KEY);}else{root.localStorage.setItem(LANGUAGE_KEY,normaliseLanguage(choice));root.localStorage.removeItem(LEGACY_LANGUAGE_KEY);}root.sessionStorage.setItem(RETURN_VIEW_KEY,'profile');}catch{}root.location.reload();}
 function installAutomaticLanguage(){if(root.__ficardAutomaticLanguageInstalled)return;root.__ficardAutomaticLanguageInstalled=true;root.document?.addEventListener('change',changeLanguage,true);let attempts=0;const timer=root.setInterval(()=>{attempts++;if(enhanceLanguageControl()||attempts>80)root.clearInterval(timer);},50);root.addEventListener?.('ficard:languagechange',()=>root.setTimeout(enhanceLanguageControl,0));}
 function forceVersion(){const release=root.document?.querySelector('.release');if(!release)return false;const next=release.textContent.replace(/v\d+\.\d+\.\d+/,'v'+VERSION);if(release.textContent!==next)release.textContent=next;return true;}
 function installVersionSync(){let attempts=0;const timer=root.setInterval(()=>{attempts++;if(forceVersion()||attempts>80)root.clearInterval(timer);},50);const observer=new MutationObserver(()=>forceVersion());const attach=()=>{const release=root.document?.querySelector('.release');if(release)observer.observe(release,{childList:true,characterData:true,subtree:true});else root.setTimeout(attach,100);};attach();}

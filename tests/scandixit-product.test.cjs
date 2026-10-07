@@ -2,7 +2,7 @@ const assert=require('node:assert/strict');
 const fs=require('node:fs');
 const vm=require('node:vm');
 const html=fs.readFileSync(require('node:path').join(__dirname,'../scandixit.html'),'utf8');
-const inline=html.match(/<script>([\s\S]*?)<\/script>/)[1];
+const inline=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).find(s=>s.includes('function showCode('));
 const nodes=new Map();
 function makeNode(tag='div'){
  return {tag,value:'',textContent:'',href:'',target:'',rel:'',children:[],listeners:{},classes:new Set(),classList:{add(x){this.owner.classes.add(x)},remove(x){this.owner.classes.delete(x)},contains(x){return this.owner.classes.has(x)}},append(...xs){this.children.push(...xs)},appendChild(x){this.children.push(x)},replaceChildren(...xs){this.children=[...xs]},addEventListener(k,fn){this.listeners[k]=fn},querySelector(q){if(q==='.resultKicker')return this.kicker||=makeNode('div');return null},scrollIntoView(){}};
@@ -13,7 +13,7 @@ for(const node of nodes.values())node.classList.owner=node;
 const tabs=[makeNode('button'),makeNode('button')];tabs[0].dataset={tab:'barcode'};tabs[1].dataset={tab:'ocr'};
 let catalogMode='hit';const urls=[];
 const product={code:'4006381333931',product_name:'Crema demo',brands:'Marca demo',quantity:'250 ml',product_type:'beauty',ingredients_text:'Aqua, Glycerin',allergens:'',labels:'',categories:'Cura della pelle',last_modified_t:0};
-const context={document:{getElementById:get,querySelectorAll:()=>tabs,createElement:tag=>makeNode(tag)},FiCardReader:require('../ficard-reader.js'),ScanDixit:require('../scandixit-scanner.js'),encodeURIComponent,fetch:async url=>{urls.push(url);if(catalogMode==='offline')throw Error('offline');return {ok:true,json:async()=>url.includes('openbeautyfacts.org')&&catalogMode==='hit'?{status:'success',product}:{status:'failure'}}},URL:{},setTimeout,clearTimeout,console};
+const context={URLSearchParams,location:{search:''},document:{body:{classList:{add(){}}},getElementById:get,querySelectorAll:()=>tabs,createElement:tag=>makeNode(tag)},FiCardReader:require('../ficard-reader.js'),ScanDixit:require('../scandixit-scanner.js'),encodeURIComponent,fetch:async url=>{urls.push(url);if(catalogMode==='offline')throw Error('offline');return {ok:true,json:async()=>url.includes('openbeautyfacts.org')&&catalogMode==='hit'?{status:'success',product}:{status:'failure'}}},URL:{},setTimeout,clearTimeout,console};
 context.window=context;vm.createContext(context);vm.runInContext(inline,context);
 (async()=>{
  get('scanStatus').textContent='Nessun codice valido trovato. Prova una foto più nitida o inserisci le cifre.';get('codeInput').value='4006381333931';await get('lookupCode').listeners.click();await new Promise(setImmediate);

@@ -15,9 +15,9 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.154"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="./ficard-theme.js?v=0.9.155"></script>
+  <link rel="stylesheet" href="./vendor/leaflet.css">
+  <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
   <script src="./vendor/leaflet.markercluster.js"></script>
   <style>
@@ -318,7 +318,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.154">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.155">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.138">
 </head>
 <body>
@@ -400,6 +400,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
         </div>
         <button class="secondary" id="importImagesProfile">Importa carte da screenshot</button>
         <input id="importFile" type="file" accept="application/json,.json" hidden>
+        <section id="launchSettings" aria-label="Privacy e contatti" style="margin-top:16px"></section>
         <button class="danger" id="clearData">Cancella tutti i dati locali</button>
       </div>
     </section>
@@ -487,7 +488,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.06-light-dark-v0.9.131";
+const RELEASE="2026.10.07-launch-review-v0.9.155";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -595,12 +596,18 @@ function demoCards(){return [
 ]}
 function openLocalDB(){return new Promise((resolve,reject)=>{if(!("indexedDB" in window))return reject(new Error("IndexedDB non disponibile"));const req=indexedDB.open(DB_NAME,DB_VERSION);req.onupgradeneeded=()=>{const db=req.result;if(!db.objectStoreNames.contains(STORE_NAME))db.createObjectStore(STORE_NAME)};req.onsuccess=()=>resolve(req.result);req.onerror=()=>reject(req.error||new Error("Errore IndexedDB"))})}
 async function idbGet(key){const db=await openLocalDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE_NAME,"readonly");const req=tx.objectStore(STORE_NAME).get(key);req.onsuccess=()=>resolve(req.result??null);req.onerror=()=>reject(req.error);tx.oncomplete=()=>db.close()})}
-async function idbSet(key,value){const db=await openLocalDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE_NAME,"readwrite");tx.objectStore(STORE_NAME).put(value,key);tx.oncomplete=()=>{db.close();resolve(true)};tx.onerror=()=>{db.close();reject(tx.error)}})}
+async function idbSet(key,value){const db=await openLocalDB();return new Promise((resolve,reject)=>{const tx=db.transaction(STORE_NAME,"readwrite");tx.objectStore(STORE_NAME).put(value,key);tx.oncomplete=()=>{db.close();resolve(true)};tx.onerror=tx.onabort=()=>{db.close();reject(tx.error)}})}
 function localRead(){const keys=[KEY,...LEGACY_KEYS];for(const k of keys){try{const raw=localStorage.getItem(k);if(raw!==null){const parsed=JSON.parse(raw);if(Array.isArray(parsed))return parsed}}catch(e){}}return null}
 async function requestPersistentStorage(){try{if(navigator.storage&&navigator.storage.persist){const already=await navigator.storage.persisted();const ok=already||await navigator.storage.persist();updateStorageStatus(ok?"Archivio persistente richiesto":"Archivio locale attivo",ok)}}catch(e){updateStorageStatus("Archivio locale attivo",false)}}
 function updateStorageStatus(text,persistent){const box=document.getElementById("storageStatus");if(!box)return;const small=box.querySelector("small");if(small)small.textContent=text+(persistent?" · protetto dal browser quando possibile":" · installa Fi-Card sulla Home per maggiore stabilità")}
-async function load(){let idbCards=null;try{idbCards=await idbGet("cards")}catch(e){}const localCards=localRead();if(Array.isArray(idbCards))cards=idbCards;else if(Array.isArray(localCards))cards=localCards;else cards=demoCards();cards.forEach(c=>{if(Array.isArray(c.locations))c.locations=c.locations.filter(l=>l&&l.source!=="osm-auto")});try{localStorage.removeItem("ficard.osm.zones.v1")}catch(e){}normalizeCategories();save();renderAll();requestPersistentStorage()}
-function save(){const snapshot=JSON.parse(JSON.stringify(cards));try{localStorage.setItem(KEY,JSON.stringify(snapshot))}catch(e){}idbSet("cards",snapshot).catch(()=>{})}
+async function load(){let idbCards=null;try{idbCards=await idbGet("cards")}catch(e){}const localCards=localRead();let localNewer=false;try{localNewer=localStorage.getItem("ficard.cards.local-newer")==="yes"}catch{}if(localNewer&&Array.isArray(localCards))cards=localCards;else if(Array.isArray(idbCards))cards=idbCards;else if(Array.isArray(localCards))cards=localCards;else cards=[];cards.forEach(c=>{if(Array.isArray(c.locations))c.locations=c.locations.filter(l=>l&&l.source!=="osm-auto")});try{localStorage.removeItem("ficard.osm.zones.v1")}catch(e){}normalizeCategories();save();renderAll();requestPersistentStorage()}
+let saveQueue=Promise.resolve();
+function save(){
+ const snapshot=JSON.parse(JSON.stringify(cards)),serialized=JSON.stringify(snapshot);let localSaved=false;
+ try{localStorage.setItem(KEY,serialized);localStorage.setItem("ficard.cards.local-newer","yes");localSaved=true}catch{}
+ saveQueue=saveQueue.then(()=>idbSet("cards",snapshot)).then(()=>{try{if(localStorage.getItem(KEY)===serialized)localStorage.removeItem("ficard.cards.local-newer")}catch{}}).catch(()=>{if(!localSaved)toast("Salvataggio non riuscito: crea un backup prima di chiudere l’app.")});
+ return saveQueue;
+}
 function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
 function toast(t){const el=document.getElementById("toast");el.textContent=t;el.classList.add("show");clearTimeout(el._t);el._t=setTimeout(()=>el.classList.remove("show"),2600)}
 function distanceM(a,b){const R=6371000,p=Math.PI/180,dLat=(b.lat-a.lat)*p,dLon=(b.lng-a.lng)*p,x=Math.sin(dLat/2)**2+Math.cos(a.lat*p)*Math.cos(b.lat*p)*Math.sin(dLon/2)**2;return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x))}
@@ -1076,6 +1083,7 @@ function go(v){
  if(header&&header.parentElement!==view)view.prepend(header);
  document.querySelectorAll(".nav").forEach(x=>{const selected=x.dataset.view===v;x.classList.toggle("active",selected);if(selected)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
  document.body.classList.toggle("scanSectionOpen",v==="scandixit");
+ if(current!==view)window.FiCardAnalytics?.track("page_view",v);
  const panel=document.getElementById("scandixitPanel");
  if(v==="scandixit"&&!panel.hasAttribute("src")){
   panel.onload=()=>{
@@ -1084,7 +1092,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.154";
+  panel.src="./scandixit.html?section=ficard&v=0.9.155";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1108,7 +1116,7 @@ document.getElementById("saveCard").onclick=()=>{
  const brandKey=document.getElementById("addBrand").value,category=document.getElementById("addCategory").value,name=document.getElementById("addName").value.trim(),code=document.getElementById("addCode").value,format=normalizeFormat(document.getElementById("addFormat").value||pendingScanFormat||inferManualFormat(code)),color=document.getElementById("addColor").value;
  if(!name||!code)return toast("Inserisci nome e codice");
  if(!confirmPossibleDuplicate(code))return;
- const c={id:crypto.randomUUID(),name,brandKey,category,code,format,color,fav:false,locations:[]};cards.unshift(c);save();renderAll();hideModal("addModal");["addName","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id)
+ const c={id:crypto.randomUUID(),name,brandKey,category,code,format,color,fav:false,locations:[]};cards.unshift(c);save();window.FiCardAnalytics?.track("card_added","home",c.brandKey);renderAll();hideModal("addModal");["addName","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id)
 };
 
 let scanGeneration=0,scanStarting=false;
@@ -1138,20 +1146,16 @@ async function stopScan(){scanGeneration++;const decoder=qrScanner;qrScanner=nul
 
 const reviewAppButton=document.getElementById("reviewApp");
 if(reviewAppButton)reviewAppButton.onclick=()=>{
- const isAndroid=/Android/i.test(navigator.userAgent);
- if(isAndroid){
-  window.location.href="market://details?id=fi_card.app";
-  setTimeout(()=>window.open("https://play.google.com/store/apps/details?id=fi_card.app","_blank","noopener"),700);
-  return
- }
- toast("Il collegamento all’App Store sarà attivo con la pubblicazione di Fi-Card.")
+ const isAndroid=/Android/i.test(navigator.userAgent),url=isAndroid?FICARD_STORE_LINKS.googlePlay:FICARD_STORE_LINKS.appStore;
+ if(url&&(/^https:\/\/play\.google\.com\/store\/apps\/details\?/.test(url)||/^https:\/\/apps\.apple\.com\//.test(url))){window.open(url,"_blank","noopener,noreferrer");return}
+ window.location.href=document.getElementById("reviewMail").href;
 };
 document.getElementById("exportData").onclick=()=>downloadBackup(cards);
 document.getElementById("importData").onclick=()=>document.getElementById("importFile").click();
 document.getElementById("importFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>50000000)throw Error("Backup troppo grande");const data=JSON.parse(await file.text());pendingBackup=validateBackup(data);document.getElementById("backupSummary").textContent=pendingBackup.length+" carte nel backup. Hai "+cards.length+" carte su questo dispositivo.";showModal("backupModal")}catch(err){toast(err.message||"Backup non valido")}e.target.value=""};
 document.getElementById("mergeBackup").onclick=()=>{const added=mergeCards(pendingBackup);save();renderAll();hideModal("backupModal");toast(added+" carte aggiunte; duplicati ignorati")};
 document.getElementById("replaceBackup").onclick=()=>{if(!confirm("Sostituire le "+cards.length+" carte attuali con le "+pendingBackup.length+" carte del backup?"))return;downloadBackup(cards,"fi-card-prima-del-ripristino.json");cards=pendingBackup;save();renderAll();hideModal("backupModal");toast("Backup ripristinato")};
-document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tutte le carte e i punti vendita salvati?")){cards=[];try{[KEY,...LEGACY_KEYS].forEach(k=>localStorage.removeItem(k))}catch(e){}try{await idbSet("cards",[])}catch(e){}renderAll();toast("Dati locali cancellati")}};
+document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tutte le carte e i punti vendita salvati?")){window.FiCardAnalytics?.setConsent(false);cards=[];await saveQueue;try{[KEY,...LEGACY_KEYS,"ficard.cards.local-newer"].forEach(k=>localStorage.removeItem(k))}catch(e){}try{await idbSet("cards",[])}catch(e){}renderAll();toast("Dati locali cancellati")}};
 
 document.getElementById("refreshBtn").onclick=async()=>{toast("Aggiorno Fi-Card…");try{if("caches" in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith("ficard-")).map(k=>caches.delete(k)))}if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration("./");if(reg)await reg.update()}}catch(e){}const u=new URL(location.href);u.searchParams.set("release",RELEASE);u.searchParams.set("_refresh",Date.now());location.replace(u.toString())};
 window.addEventListener("beforeinstallprompt",e=>{e.preventDefault();deferredPrompt=e;document.getElementById("installBtn").style.display=""});
@@ -1174,7 +1178,7 @@ async function scanImageRobust(scanner,file){return FiCardReader.scanFile(scanne
 function setImageImportBusy(active,label='Analisi in corso…'){const box=document.getElementById('imageImportBusy'),txt=document.getElementById('imageImportBusyText');if(txt)txt.textContent=label;if(box)box.classList.toggle('show',!!active)}
 async function importImages(e){if(scannerBridge){const file=e.target.files?.[0];e.target.value='';if(!file||imageImportBusy)return;imageImportBusy=true;let decoder;try{await stopScan();toast('Leggo il codice nella foto…');decoder=FiCardReader.createDecoder('fileReader');const found=await FiCardReader.scanFile(decoder,file);if(found?.code)await returnScanToParent(found.code,found.format);else toast('Più codici presenti: ritaglia la foto.');}catch(err){toast('Codice non letto: prova una foto più nitida.')}finally{decoder?.clear();imageImportBusy=false;}return;}if(imageImportBusy)return;const files=Array.from(e.target.files||[]);e.target.value='';if(!files.length)return;if(files.length>30)return toast('Seleziona al massimo 30 immagini per volta');const defaults=imageImportDefaults;imageImportDefaults=null;imageImportBusy=true;for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('addModal');await stopScan();showModal('imageImportModal');const status=document.getElementById('imageImportStatus');setImageImportBusy(true,'Analisi in corso…');document.getElementById('saveImages').disabled=true;document.getElementById('imageImportResults').innerHTML='';let scanner;try{if(!window.Html5Qrcode)throw Error('Scanner non disponibile');scanner=FiCardReader.createDecoder('fileReader');for(let i=0;i<files.length;i++){const file=files[i];status.textContent='Lettura immagine '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);const draft={fileName:file.name,code:'',format:'',error:'',brandKey:defaults?.brandKey||'',name:defaults?.name||'',category:defaults?.category||'',color:defaults?.color||'',preview:''};try{if(file.size>15000000)throw Error('Immagine troppo grande (massimo 15 MB)');draft.preview=URL.createObjectURL(file);const scanned=await scanImageRobust(scanner,file),result=scanned.result;if(scanned.candidate!==file){URL.revokeObjectURL(draft.preview);draft.preview=URL.createObjectURL(scanned.candidate);draft.cropped=true}draft.code=result.decodedText;draft.format=normalizeFormat(scanFormatName(result)||inferManualFormat(draft.code))}catch(err){draft.error='Lettura automatica non riuscita. Inserisci il numero visibile sotto il barcode: Fi-Card proverà a riconoscere il formato automaticamente.'}if(file.size<=15000000){status.textContent='Riconoscimento negozio '+(i+1)+' di '+files.length+'…';setImageImportBusy(true,status.textContent);await fillMerchantFromImage(file,draft)}imageDrafts.push(draft)}renderImageDrafts();const read=imageDrafts.filter(d=>d.code).length;status.textContent=read+' codici letti automaticamente su '+files.length+'. Quelli non letti possono essere completati a mano usando il numero sotto il barcode.';document.getElementById('saveImages').disabled=false}catch(err){status.textContent=err.message||'Impossibile leggere le immagini'}finally{setImageImportBusy(false);if(scanner)try{scanner.clear()}catch(err){}imageImportBusy=false;await releaseMerchantOcr()}}
 function renderImageDrafts(){document.getElementById('imageImportResults').innerHTML=imageDrafts.map((d,i)=>'<div class="importRow" data-draft="'+i+'"><b>'+esc(d.fileName)+'</b>'+(d.preview?'<img src="'+d.preview+'" alt="Anteprima tessera">'+(d.cropped?'<div class="hint">Ritaglio automatico applicato per isolare la tessera.</div>':''):'')+(d.error?'<div class="scanWarning">'+esc(d.error)+'</div>':'')+(d.merchantNote?'<p class="hint">'+esc(d.merchantNote)+'</p>':'')+'<label><input type="checkbox" class="draftInclude" '+(d.code?'checked':'')+'> Importa questa carta</label><label>Marchio</label><select class="field draftBrand">'+catalogOptions(d.brandKey)+'</select><label for="draftCategory-'+i+'">Categoria</label><select id="draftCategory-'+i+'" class="field draftCategory">'+Object.entries(CATEGORIES).map(([key,label])=>'<option value="'+esc(key)+'" '+(key===(d.category||BRANDS[d.brandKey]?.category||'altro')?'selected':'')+'>'+esc(label)+'</option>').join('')+'</select><label>Nome carta</label><input class="field draftName" value="'+esc(d.name)+'" placeholder="Es. PittaRosso"><label>Codice</label><input class="field draftCode" inputmode="numeric" value="'+esc(d.code)+'" placeholder="Es. 9600040147713"><p class="hint draftFormat">'+(d.code?'Rilevato: '+esc(formatLabel(d.format)):'Inserisci il numero stampato sotto il barcode.')+'</p></div>').join('');document.querySelectorAll('[data-draft]').forEach(row=>{const sel=row.querySelector('.draftBrand'),code=row.querySelector('.draftCode'),include=row.querySelector('.draftInclude'),fmt=row.querySelector('.draftFormat');if(sel)sel.onchange=()=>{const d=imageDrafts[Number(row.dataset.draft)],b=BRANDS[sel.value];d.brandKey=sel.value;d.category=b?.category||'altro';d.color=b?.color||'#5B3DF5';row.querySelector('.draftName').value=b?.name||'';row.querySelector('.draftCategory').value=d.category};row.querySelector('.draftCategory').onchange=e=>{imageDrafts[Number(row.dataset.draft)].category=e.target.value};if(code)code.oninput=()=>{const v=code.value;fmt.textContent=v?'Rilevato: '+formatLabel(inferManualFormat(v)):'Inserisci il numero stampato sotto il barcode.';if(v)include.checked=true}})}
-function saveImageDrafts(){if(imageImportBusy)return;const incoming=[];for(const row of document.querySelectorAll('[data-draft]')){if(!row.querySelector('.draftInclude')?.checked)continue;const d=imageDrafts[Number(row.dataset.draft)],key=row.querySelector('.draftBrand').value,name=row.querySelector('.draftName').value.trim(),code=row.querySelector('.draftCode').value;if(!validateNewCardFields(row.querySelector('.draftName'),row.querySelector('.draftCode'),{value:code===d.code&&d.format?d.format:/^\\d+$/.test(code)?inferManualFormat(code):''}))return;incoming.push({id:crypto.randomUUID(),name,code,format:code===d.code&&d.format?d.format:inferManualFormat(code),brandKey:key,category:row.querySelector('.draftCategory').value||d.category||BRANDS[key]?.category||'altro',color:d.color||BRANDS[key]?.color||'#5B3DF5',fav:false,locations:[]})}if(!incoming.length)return toast('Seleziona almeno una carta');if(!incoming.every(c=>confirmPossibleDuplicate(c.code)))return;cards.push(...incoming);const added=incoming.length;save();renderAll();for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('imageImportModal');toast(added+' carte aggiunte')}
+function saveImageDrafts(){if(imageImportBusy)return;const incoming=[];for(const row of document.querySelectorAll('[data-draft]')){if(!row.querySelector('.draftInclude')?.checked)continue;const d=imageDrafts[Number(row.dataset.draft)],key=row.querySelector('.draftBrand').value,name=row.querySelector('.draftName').value.trim(),code=row.querySelector('.draftCode').value;if(!validateNewCardFields(row.querySelector('.draftName'),row.querySelector('.draftCode'),{value:code===d.code&&d.format?d.format:/^\\d+$/.test(code)?inferManualFormat(code):''}))return;incoming.push({id:crypto.randomUUID(),name,code,format:code===d.code&&d.format?d.format:inferManualFormat(code),brandKey:key,category:row.querySelector('.draftCategory').value||d.category||BRANDS[key]?.category||'altro',color:d.color||BRANDS[key]?.color||'#5B3DF5',fav:false,locations:[]})}if(!incoming.length)return toast('Seleziona almeno una carta');if(!incoming.every(c=>confirmPossibleDuplicate(c.code)))return;cards.push(...incoming);const added=incoming.length;save();for(const c of incoming)window.FiCardAnalytics?.track("card_added","home",c.brandKey);renderAll();for(const d of imageDrafts)if(d.preview)URL.revokeObjectURL(d.preview);imageDrafts=[];hideModal('imageImportModal');toast(added+' carte aggiunte')}
 
 
 async function resizeCardPhoto(file){if(file.size>15000000)throw Error('Foto troppo grande: massimo 15 MB');const url=URL.createObjectURL(file);try{const image=new Image();image.src=url;await image.decode();const scale=Math.min(1,1200/Math.max(image.width,image.height)),canvas=document.createElement('canvas');canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);return canvas.toDataURL('image/jpeg',.85)}finally{URL.revokeObjectURL(url)}}
@@ -1257,6 +1261,8 @@ if(scannerBridge){
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
+<script src="./ficard-analytics-config.js?v=0.9.155"></script>
+<script src="./ficard-analytics.js?v=0.9.155"></script>
 </body>
 </html>
 

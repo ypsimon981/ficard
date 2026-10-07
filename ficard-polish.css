@@ -136,3 +136,22 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .brandPick{gap:8px;font-size:12px;font-weight:500;min-width:0;padding:10px;border-radius:13px}.brandPick>span:first-child{width:48px;height:36px;flex:0 0 48px}.brandPick>span:last-child{overflow-wrap:normal;word-break:normal}
 
 .scanPromo .promoIcon svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+
+
+/* Fi-Card v0.9.132: CR80 card proportions */
+/* ISO/IEC 7810 ID-1 / CR80: 85.60 x 53.98 mm = 1.5858:1 */
+.cardShelf .cardItem,.usageGrid .cardItem,.smartCarousel .smartCard{
+  aspect-ratio:85.60/53.98!important;
+  height:auto!important;
+  min-height:0!important;
+}
+.smartCarousel.largeQuickCards .smartCard{
+  aspect-ratio:85.60/53.98!important;
+  height:auto!important;
+  min-height:0!important;
+}
+.smartCarousel.denseNearby .smartCard,.smartCarousel.proximityFocus .smartCard{
+  aspect-ratio:85.60/53.98!important;
+  height:auto!important;
+  min-height:0!important;
+}

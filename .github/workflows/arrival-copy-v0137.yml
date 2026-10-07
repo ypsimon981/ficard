@@ -1,0 +1,30 @@
+name: Apply FiCard arrival copy v0.9.137
+
+on:
+  push:
+    paths:
+      - '.github/workflows/arrival-copy-v0137.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply arrival copy
+        run: python .github/scripts/arrival_copy_v0137.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html ficard-polish.css
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Keep arrival message on one line"
+            git push origin main
+          fi

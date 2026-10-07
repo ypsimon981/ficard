@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.151"></script>
+  <script src="./ficard-theme.js?v=0.9.152"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -300,8 +300,9 @@ body.scannerBridge> :not(#addModal):not(#toast):not(script){display:none!importa
 body.scannerBridge #addModal{padding:0;background:#F8F9FC}
 body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding-top:calc(16px + env(safe-area-inset-top))}
     .bottom .nav{min-width:0;min-height:44px;padding:4px 0;font-size:10px}
-    body.scanSectionOpen .top{display:none}
-    #scandixitView{position:fixed;inset:0 0 calc(78px + env(safe-area-inset-bottom));max-width:580px;margin:auto;z-index:10;background:var(--bg)}
+    /* ScanDixit is a Fi-Card section: keep the same Fi-Card header and bottom navigation. */
+    body.scanSectionOpen .top{display:flex}
+    #scandixitView{height:100%;min-height:0;background:var(--bg);padding:0!important;overflow:hidden!important}
     #scandixitPanel{display:block;width:100%;height:100%;border:0}
 
 .detailBrandHeader{position:relative}
@@ -317,7 +318,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.151">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.152">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.138">
 </head>
 <body>
@@ -1048,7 +1049,7 @@ function go(v){
  const panel=document.getElementById("scandixitPanel");
  if(v==="scandixit"&&!panel.hasAttribute("src")){
   panel.onload=()=>{const back=panel.contentDocument?.querySelector("header > a");if(back)back.hidden=true;const theme=panel.contentWindow?.FiCardTheme;if(theme)theme.apply(FiCardTheme.current());};
-  panel.src="./scandixit.html?section=ficard&v=0.9.150";
+  panel.src="./scandixit.html?section=ficard&v=0.9.152";
  }else if(v!=="scandixit"&&panel.hasAttribute("src")){panel.onload=null;panel.removeAttribute("src")}
  if(v==="map")setTimeout(renderOverviewMap,80);
 }

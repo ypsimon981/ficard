@@ -269,3 +269,25 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .locationResult .locationMiniCard{width:64px;height:44px;align-self:start;flex:0 0 64px;filter:none}
 .locationMiniCard::after{display:none}
 .locationMiniCard .mapCardFace{border-color:rgba(31,41,55,.1);box-shadow:0 3px 8px rgba(31,41,55,.1)}
+
+/* v0.9.161 · Enlarge the arrival card using its reserved footer space. */
+@media(max-width:520px){
+ #homeView .smartCarousel.largeQuickCards.proximityFocus::before,
+ #homeView .smartCarousel.largeQuickCards.proximityFocus::after{flex-basis:6%}
+ #homeView .smartCarousel.largeQuickCards.proximityFocus .smartCard:first-child{
+  flex-basis:88%!important;width:88%!important;
+  height:clamp(190px,56vw,220px)!important;
+ }
+ #homeView .smartBlock .smartCarousel.largeQuickCards.proximityFocus.hasArrivalMessage{padding-bottom:26px!important}
+ #homeView .smartBlock .smartCarousel.largeQuickCards.proximityFocus.hasArrivalMessage.hasShopAddress{padding-bottom:46px!important}
+}
+
+/* v0.9.161 · Search on demand and a separate heading below filters. */
+#cardSearchRow[hidden]{display:none}
+#homeView>.sectionTitle{margin-top:12px!important}
+#homeView .homeFilters{gap:6px;align-items:center}
+.homeFilters .searchToggle{display:grid;place-items:center;flex:0 0 38px;height:38px;padding:7px;color:var(--violet)}
+.searchToggle svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round}
+.searchToggle[aria-expanded="true"]{background:var(--theme-soft,#F0EDFF);border-color:var(--violet)}
+@media(max-width:520px){#homeView .homeFilters .chip[data-filter]{padding:9px;font-size:12px}}
+@media(max-width:380px){#homeView .homeFilters .chip[data-filter]{padding:9px 7px;font-size:11px}}

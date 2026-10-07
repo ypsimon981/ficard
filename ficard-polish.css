@@ -206,3 +206,15 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
   min-height:58px!important;
   padding-bottom:max(0px,calc(12px + env(safe-area-inset-bottom) - 20px))!important;
 }
+
+
+/* Fi-Card v0.9.137: single-line arrival message */
+.smartCarousel .smartCard .smartMeta.arrivalMessage{
+  white-space:nowrap!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  font-size:clamp(10.5px,3.05vw,13px)!important;
+  line-height:1.2!important;
+  letter-spacing:-.025em!important;
+}
+.smartCarousel .smartCard .smartMeta.arrivalMessage .smartDistance{white-space:nowrap!important}

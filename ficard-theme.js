@@ -18,7 +18,7 @@ function apply(id,persist=false){current=valid(id);const p=presets.find(p=>p.id=
 function loadI18n(){
  if(!root.document||root.FiCardI18n||root.document.querySelector('script[data-ficard-i18n]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-i18n.js?v=2.0.5';
+ script.src='./ficard-i18n.js?v=2.0.6';
  script.dataset.ficardI18n='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);

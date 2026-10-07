@@ -12,9 +12,11 @@
 - Cache offline: riconoscimento delle query di versione; fallback distinti per ScanDixit, privacy e home. Salvataggi IndexedDB serializzati; in caso di errore si preferisce la copia locale più recente alla vecchia copia IndexedDB.
 
 ## Verifica
-59 test Node superati: scanner e consenso letture, navigazione ScanDixit, schede prodotti, condivisione, wake lock, catalogo, GPS/negozi, cache, backup/merge, salvataggi, privacy dei payload e pagine offline. Test preesistenti allineati agli helper correnti e alla regola già implementata di 50 m, con negozio unico entro 200 m.
+60 test Node superati: scanner e consenso letture, navigazione ScanDixit, schede prodotti, condivisione, wake lock, catalogo, GPS/negozi, cache, backup/merge, salvataggi, privacy dei payload e pagine offline. Test preesistenti allineati agli helper correnti e alla regola già implementata di 50 m, con negozio unico entro 200 m.
 
 Prova REST effettiva: evento valido HTTP 201; lettura anonima HTTP 401; marchio arbitrario rifiutato HTTP 400; campo barcode inesistente rifiutato HTTP 400. Eventi di test eliminati. Verificati RLS, privilegi e job di conservazione. Nessuna segnalazione degli advisor relativa alla nuova tabella; esistono avvisi preesistenti di altri moduli del progetto condiviso, fuori da questa revisione.
+
+Verifica browser sulla webapp pubblicata: versione 0.9.155 visibile, impostazioni e contatti presenti, statistiche disattivate, cambio italiano → inglese → automatico con ritorno italiano e ritorno alle impostazioni. Completate anche le traduzioni dei sei messaggi rotanti e degli stati archivio nelle sette lingue.
 
 ## Prima della distribuzione sugli store
 1. Portare la webapp in Capacitor, generare APK e provare su Android reale: camera, geolocalizzazione precisa/negata, avvio offline dopo prima installazione, pausa/ripresa, tasto Indietro, backup su File e condivisione. Queste prove fisiche non sono sostituite dai test automatici. Questa repository non contiene ancora una build nativa.

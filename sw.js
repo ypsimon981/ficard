@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.153";
+const APP_VERSION="0.9.154";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -12,7 +12,7 @@ const CORE=[
   "./ficard-promo.js?v=0.9.120",
   "./ficard-stores.js?v=0.9.127",
   "./ficard-stores-ui.js?v=0.9.138",
-  "./ficard-theme.css?v=0.9.153",
+  "./ficard-theme.css?v=0.9.154",
   "./ficard-reader.js?v=1.1.1",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",

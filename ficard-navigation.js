@@ -1,10 +1,12 @@
-/* Fi-Card navigation/runtime patch
+/* Fi-Card navigation/runtime patch v0.9.142
  * - independent scroll for each main view
  * - refresh GPS after 3 minutes in background/standby
+ * - visible version fallback
  */
 (function(root){
 'use strict';
 
+const VERSION='0.9.142';
 const STANDBY_MS=3*60*1000;
 const BG_KEY='ficard.nav.backgroundAt';
 
@@ -19,11 +21,12 @@ function installScrollIsolation(){
   if('scrollRestoration' in root.history)root.history.scrollRestoration='manual';
 
   const yByView=Object.create(null);
+  root.document?.querySelectorAll('.view[id$="View"]').forEach(el=>{yByView[el.id.slice(0,-4)]=0;});
   let current=activeView()||'home';
   let restoring=false;
   yByView[current]=root.scrollY||0;
 
-  const save=()=>{
+  const saveCurrent=()=>{
     if(!restoring&&current)yByView[current]=Math.max(0,root.scrollY||0);
   };
   const restore=view=>{
@@ -31,33 +34,37 @@ function installScrollIsolation(){
     current=view;
     const y=Math.max(0,Number(yByView[view])||0);
     restoring=true;
-    const apply=()=>root.scrollTo(0,y);
+    const apply=()=>root.scrollTo({top:y,left:0,behavior:'auto'});
     root.requestAnimationFrame(()=>{
       apply();
       root.requestAnimationFrame(apply);
     });
-    root.setTimeout(()=>{apply();restoring=false;},180);
+    root.setTimeout(apply,80);
+    root.setTimeout(()=>{apply();restoring=false;},220);
   };
 
-  root.addEventListener('scroll',save,{passive:true});
+  root.addEventListener('scroll',saveCurrent,{passive:true});
 
-  // Capture BEFORE the app's own onclick runs, so the outgoing page keeps its Y.
+  // Save outgoing scroll before the app's own click handler changes the active view.
+  root.document?.addEventListener('pointerdown',event=>{
+    const control=event.target?.closest?.('[data-view],[data-go]');
+    if(!control)return;
+    saveCurrent();
+  },true);
+
   root.document?.addEventListener('click',event=>{
     const control=event.target?.closest?.('[data-view],[data-go]');
     if(!control)return;
     const target=control.dataset.view||control.dataset.go;
     if(!target||target===current)return;
-    save();
+    saveCurrent();
     root.setTimeout(()=>restore(target),0);
   },true);
 
-  // Also handle programmatic changes of .view.active.
+  // Catch every programmatic view change too.
   const observer=new MutationObserver(()=>{
     const next=activeView();
-    if(next&&next!==current){
-      save();
-      restore(next);
-    }
+    if(next&&next!==current)restore(next);
   });
   root.document?.querySelectorAll('.view').forEach(el=>observer.observe(el,{attributes:true,attributeFilter:['class']}));
 }
@@ -104,9 +111,17 @@ function installStandbyRefresh(){
   root.addEventListener?.('focus',()=>{if(!root.document?.hidden)resume()});
 }
 
+function forceVersion(){
+  const release=root.document?.querySelector('.release');
+  if(!release)return;
+  release.textContent=release.textContent.replace(/v\d+\.\d+\.\d+/,'v'+VERSION);
+}
 function init(){
   installScrollIsolation();
   installStandbyRefresh();
+  forceVersion();
+  root.setTimeout(forceVersion,100);
+  root.setTimeout(forceVersion,500);
 }
 if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init,{once:true});
 else init();

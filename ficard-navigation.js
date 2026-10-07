@@ -1,4 +1,4 @@
-/* Fi-Card navigation/runtime patch v0.9.142
+/* Fi-Card navigation/runtime patch v0.9.143
  * - independent scroll for each main view
  * - refresh GPS after 3 minutes in background/standby
  * - visible version fallback
@@ -6,7 +6,7 @@
 (function(root){
 'use strict';
 
-const VERSION='0.9.142';
+const VERSION='0.9.143';
 const STANDBY_MS=3*60*1000;
 const BG_KEY='ficard.nav.backgroundAt';
 
@@ -45,7 +45,6 @@ function installScrollIsolation(){
 
   root.addEventListener('scroll',saveCurrent,{passive:true});
 
-  // Save outgoing scroll before the app's own click handler changes the active view.
   root.document?.addEventListener('pointerdown',event=>{
     const control=event.target?.closest?.('[data-view],[data-go]');
     if(!control)return;
@@ -61,7 +60,6 @@ function installScrollIsolation(){
     root.setTimeout(()=>restore(target),0);
   },true);
 
-  // Catch every programmatic view change too.
   const observer=new MutationObserver(()=>{
     const next=activeView();
     if(next&&next!==current)restore(next);

@@ -26,7 +26,7 @@ function loadI18n(){
 function loadRuntime(){
  if(!root.document||root.document.querySelector('script[data-ficard-runtime]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-runtime.js?v=0.9.144';
+ script.src='./ficard-runtime.js?v=0.9.145';
  script.dataset.ficardRuntime='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);
@@ -34,7 +34,7 @@ function loadRuntime(){
 function loadNavigation(){
  if(!root.document||root.document.querySelector('script[data-ficard-navigation]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-navigation.js?v=0.9.144';
+ script.src='./ficard-navigation.js?v=0.9.145';
  script.dataset.ficardNavigation='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);

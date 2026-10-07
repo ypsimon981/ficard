@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.148"></script>
+  <script src="./ficard-theme.js?v=0.9.149"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -31,7 +31,7 @@
     .sectionTitle{display:flex;align-items:center;justify-content:space-between;margin:8px 2px 10px}.sectionTitle h2{font-size:17px;margin:0}.sectionTitle button{border:0;background:none;color:var(--violet);font-weight:700;font-size:13px}
     .cards{display:block}.categorySection{margin:0 0 20px}.categoryHead{display:flex;align-items:center;justify-content:space-between;margin:0 2px 9px}.categoryHead h3{font-size:15px;margin:0;display:flex;align-items:center;gap:7px}.categoryCount{display:inline-grid;place-items:center;min-width:23px;height:23px;padding:0 7px;border-radius:999px;background:#EEEAFE;color:var(--violet);font-size:11px;font-weight:900}.categoryMore{border:0;background:none;color:var(--violet);font-size:12px;font-weight:800;padding:5px}.cardShelf{display:flex;gap:12px;overflow-x:auto;padding:2px 2px 10px;scroll-snap-type:x proximity;scrollbar-width:none}.cardShelf::-webkit-scrollbar{display:none}.cardShelf .card{flex:0 0 176px;scroll-snap-align:start}.card{position:relative;min-height:132px;border:0;border-radius:22px;padding:16px;color:#fff;text-align:left;box-shadow:var(--shadow);overflow:hidden}.brandMark{position:absolute;left:14px;top:13px;min-width:40px;height:30px;padding:0 8px;border-radius:9px;background:rgba(255,255,255,.94);color:#172033;display:grid;place-items:center;font-size:10px;font-weight:900;letter-spacing:-.2px;box-shadow:0 3px 10px rgba(0,0,0,.08)}.card:after{content:"";position:absolute;width:110px;height:110px;border-radius:50%;background:rgba(255,255,255,.11);right:-34px;bottom:-45px}.card .star{position:absolute;right:12px;top:10px;font-size:19px}.card .name{font-size:17px;font-weight:800;margin-top:33px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.card .type{opacity:.9;font-size:12px;margin-top:4px}.card .mini{position:absolute;left:15px;top:14px;width:33px;height:25px;border:2px solid rgba(255,255,255,.85);border-radius:6px}.card .mini:after{content:"";position:absolute;left:4px;right:4px;top:6px;height:3px;background:rgba(255,255,255,.85);border-radius:3px}
     .empty{grid-column:1/-1;background:#fff;border:1px dashed #CFC9FF;border-radius:22px;padding:28px;text-align:center;color:var(--muted)}.empty strong{display:block;color:var(--text);font-size:16px;margin-bottom:6px}
-    .promo{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;margin:10px 0;display:flex;gap:12px;align-items:center}.promoIcon{width:46px;height:46px;border-radius:15px;background:#F0ECFF;color:var(--violet);font-size:22px;font-weight:900;display:grid;place-items:center}.promo .grow{flex:1}.promo b{font-size:14px}.promo small{display:block;color:var(--muted);margin-top:4px;line-height:1.25}.badge{background:#E7FFF7;color:#107764;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800}
+    .promo{background:#fff;border:1px solid var(--line);border-radius:20px;padding:14px;margin:10px 0;display:flex;gap:12px;align-items:center}.promoIcon{width:46px;height:46px;border-radius:15px;background:#F0ECFF;color:var(--violet);font-size:22px;font-weight:900;display:grid;place-items:center}.promo .grow{flex:1}.promo b{font-size:14px}.promo small{display:block;color:var(--muted);margin-top:4px;line-height:1.25}.badge{background:#E7FFF7;color:#107764;border-radius:999px;padding:5px 8px;font-size:11px;font-weight:800}.reviewPrompt{align-items:flex-start}.reviewStar{font-size:30px;line-height:1}.reviewAction{border:0;background:none;color:var(--violet);font-weight:800;padding:8px 0 0;margin:0;text-align:left;font-size:13px}
     .bottom{position:fixed;z-index:15;left:50%;transform:translateX(-50%);bottom:0;width:min(580px,100%);padding:8px 18px calc(9px + env(safe-area-inset-bottom));background:#A7E8E2;background-image:url("./nav-barcode.svg?v=0.9.43");background-repeat:no-repeat;background-position:center bottom;background-size:80% 30px;border-top:1px solid rgba(255,255,255,.55);display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 64px minmax(0,1fr) minmax(0,1fr);align-items:end}.nav{border:0;background:none;color:var(--violet);font-size:11px;display:grid;gap:4px;place-items:center;font-weight:700}.navIcon{color:var(--violet);height:22px;display:grid;place-items:center;font-size:24px;line-height:1}.navIcon svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}.navHome{font-size:25px}.nav.active{color:var(--violet);font-weight:900}.fab{width:58px;height:58px;border:0;border-radius:19px;background:linear-gradient(145deg,var(--violet),#794CFF);color:white;font-size:30px;box-shadow:0 10px 25px rgba(91,61,245,.35);margin-top:-25px}
     .view{display:none}.view.active{display:block}.panel{background:#fff;border:1px solid var(--line);border-radius:22px;padding:16px;box-shadow:0 7px 20px rgba(31,41,55,.04)}.profileBrand{display:flex;align-items:center;gap:12px;padding:4px 0 16px}.profileBrand img{width:64px;height:64px;object-fit:contain}.profileBrand strong{display:block;font-size:25px;letter-spacing:-.6px}.profileBrand span{display:block;color:var(--muted);font-size:12px;margin-top:2px}
     .modal{position:fixed;inset:0;z-index:40;background:rgba(17,24,39,.48);display:none;align-items:flex-end;justify-content:center}.modal.show{display:flex}.sheet{width:min(580px,100%);max-height:92dvh;overflow:auto;background:var(--bg);border-radius:28px 28px 0 0;padding:18px 16px calc(26px + env(safe-area-inset-bottom));box-shadow:0 -20px 60px rgba(17,24,39,.25)}.grab{width:42px;height:5px;border-radius:9px;background:#D7DAE0;margin:0 auto 15px}.sheetHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}.sheetHead h2{margin:0;font-size:20px}.close{border:0;background:#ECEEF3;width:36px;height:36px;border-radius:12px;font-size:20px}
@@ -317,7 +317,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.148">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.149">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.138">
 </head>
 <body>
@@ -379,6 +379,14 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
           <div class="settingsFact"><span class="factIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s7-6 7-11a7 7 0 0 0-14 0c0 5 7 11 7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg></span><div><b>La posizione è facoltativa</b><p>Serve a trovare i negozi vicini. Per cercare nuovi negozi e prodotti occorre internet.</p></div></div>
         </div>
         <div id="storageStatus" class="promo"><div class="promoIcon">✓</div><div class="grow"><b>Archivio locale</b><small>Controllo stato…</small></div></div>
+        <div class="promo reviewPrompt">
+          <div class="promoIcon reviewStar" aria-hidden="true">☆</div>
+          <div class="grow">
+            <b>Aiutaci a migliorare Fi-Card</b>
+            <small>Non cerchiamo 5 stelle: lascia un giudizio sincero sull’app. Ci aiuta a capire cosa funziona e cosa migliorare.</small>
+            <button type="button" class="reviewAction" id="reviewApp">Lascia il tuo giudizio</button>
+          </div>
+        </div>
         <div class="backupPanel">
           <div class="backupHeading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg><span>I tuoi dati, la tua copia di sicurezza</span></div>
           <p class="hint">Crea ogni tanto un backup e conservalo in File, iCloud o in un posto sicuro, soprattutto prima di cambiare telefono o cancellare i dati dell’app.</p>
@@ -1082,6 +1090,16 @@ document.getElementById("scanBtn").onclick=async()=>{
 };
 async function stopScan(){scanGeneration++;const decoder=qrScanner;qrScanner=null;document.getElementById("scanner").classList.remove("show");if(decoder){try{await decoder.stop()}catch(e){}try{await decoder.clear()}catch(e){}}}
 
+const reviewAppButton=document.getElementById("reviewApp");
+if(reviewAppButton)reviewAppButton.onclick=()=>{
+ const isAndroid=/Android/i.test(navigator.userAgent);
+ if(isAndroid){
+  window.location.href="market://details?id=fi_card.app";
+  setTimeout(()=>window.open("https://play.google.com/store/apps/details?id=fi_card.app","_blank","noopener"),700);
+  return
+ }
+ toast("Il collegamento all’App Store sarà attivo con la pubblicazione di Fi-Card.")
+};
 document.getElementById("exportData").onclick=()=>downloadBackup(cards);
 document.getElementById("importData").onclick=()=>document.getElementById("importFile").click();
 document.getElementById("importFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>50000000)throw Error("Backup troppo grande");const data=JSON.parse(await file.text());pendingBackup=validateBackup(data);document.getElementById("backupSummary").textContent=pendingBackup.length+" carte nel backup. Hai "+cards.length+" carte su questo dispositivo.";showModal("backupModal")}catch(err){toast(err.message||"Backup non valido")}e.target.value=""};

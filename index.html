@@ -565,6 +565,7 @@ Object.assign(BRANDS,{
  globalpet:{name:"Global Pet",mark:"GLOBAL PET",color:"#5B3DF5",category:"petstore",domain:"globalpet.it"},
  emark:{name:"Emark",mark:"EMARK",color:"#5B3DF5",category:"casalinghi",domain:"emarksupermercati.it"}
 });
+Object.assign(BRANDS.adidas,{color:'#2B63D2'});
 Object.assign(BRANDS.leroymerlin,{logo:'./logos-hq/leroymerlin.svg',color:'#FAFAF5'});
 BRANDS.scarpescarpe={name:'Scarpe & Scarpe',mark:'SCARPE & SCARPE',logo:'./logos-hq/scarpescarpe.png',color:'#B8BDC4',category:'abbigliamento'};
 Object.assign(BRANDS.awlab,{logo:'./logos-hq/awlab.png',color:'#FFFFF0'});
@@ -608,6 +609,7 @@ function normalizeCategories(){
  cards.forEach(c=>{
    const key=inferredBrandKey(c);if(key&&c.brandKey!==key){c.brandKey=key;changed=true}
    const category=categoryFor(c);if(c.category!==category){c.category=category;changed=true}
+   if(key==='adidas'&&(!c.color||['#5B3DF5','#111111','#000000'].includes(c.color.toUpperCase()))){c.color=BRANDS.adidas.color;changed=true}
    if(key==='leroymerlin'&&(!c.color||['#78BE20','#62A744','#5B3DF5'].includes(c.color.toUpperCase()))){c.color=BRANDS.leroymerlin.color;changed=true}
    if(key==='scarpescarpe'&&(!c.color||c.color.toUpperCase()==='#5B3DF5')){c.color=BRANDS.scarpescarpe.color;changed=true}
    if(key==='elite'&&(!c.color||c.color.toUpperCase()==='#5B3DF5')){c.color=BRANDS.elite.color;changed=true}

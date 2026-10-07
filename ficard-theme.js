@@ -18,7 +18,7 @@ function apply(id,persist=false){current=valid(id);const p=presets.find(p=>p.id=
 function loadI18n(){
  if(!root.document||root.FiCardI18n||root.document.querySelector('script[data-ficard-i18n]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-i18n.js?v=2.0.4';
+ script.src='./ficard-i18n.js?v=2.0.5';
  script.dataset.ficardI18n='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);
@@ -26,7 +26,7 @@ function loadI18n(){
 function loadRuntime(){
  if(!root.document||root.document.querySelector('script[data-ficard-runtime]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-runtime.js?v=0.9.150';
+ script.src='./ficard-runtime.js?v=0.9.151';
  script.dataset.ficardRuntime='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);
@@ -34,7 +34,7 @@ function loadRuntime(){
 function loadNavigation(){
  if(!root.document||root.document.querySelector('script[data-ficard-navigation]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-navigation.js?v=0.9.150';
+ script.src='./ficard-navigation.js?v=0.9.151';
  script.dataset.ficardNavigation='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);

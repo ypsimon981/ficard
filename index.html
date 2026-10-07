@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.146"></script>
+  <script src="./ficard-theme.js?v=0.9.147"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -647,12 +647,16 @@ function smartOrder(){
 function smartShopCandidates(){return cards.flatMap(c=>(c.locations||[]).map(l=>({c,l})))}
 function arrivalCard(ordered,pos){
  if(!pos)return null;
- const nearby=smartShopCandidates().filter(x=>distanceM(pos,x.l)<10),unique=[];
+ // Super mode: one unambiguous shop inside 200 m and that shop is within 50 m.
+ const nearby=smartShopCandidates().filter(x=>distanceM(pos,x.l)<200),unique=[];
  for(const x of nearby){const key=inferredBrandKey(x.c)||x.c.brandKey||x.c.name;
   let shop=unique.find(y=>(x.l.osmId&&y.l.osmId===x.l.osmId)||((!x.l.osmId||!y.l.osmId)&&y.key===key&&distanceM(y.l,x.l)<2));
-  if(!shop){shop={l:x.l,key,cardIds:new Set()};unique.push(shop)}shop.cardIds.add(x.c.id);
+  if(!shop){shop={l:x.l,key,d:distanceM(pos,x.l),cardIds:new Set()};unique.push(shop)}
+  else shop.d=Math.min(shop.d,distanceM(pos,x.l));
+  shop.cardIds.add(x.c.id);
  }
- return unique.length===1?ordered.find(c=>unique[0].cardIds.has(c.id))||null:null;
+ if(unique.length!==1||unique[0].d>=50)return null;
+ return ordered.find(c=>unique[0].cardIds.has(c.id))||null;
 }
 function nearbyCardCount(){return currentPos?cards.filter(c=>{const n=nearestFor(c,currentPos);return n&&n.d<=100}).length:0}
 function updateSmartDepth(){
@@ -686,8 +690,7 @@ function renderSmartCarousel(){
    return
  }
  const nearCount=nearbyCardCount(),arrival=arrivalCard(ordered,currentPos);
- const within200=ordered.filter(c=>{const n=nearestFor(c,currentPos);return n&&n.d<=200});
- const focusCard=arrival||(within200.length===1&&nearestFor(within200[0],currentPos)?.d<50?within200[0]:null);
+ const focusCard=arrival;
  const dense=false,displayCards=focusCard?[focusCard,...ordered.filter(c=>c!==focusCard)]:ordered;
  box.classList.toggle("denseNearby",dense);box.classList.toggle("proximityFocus",!!focusCard);box.classList.toggle("hasArrivalMessage",!!arrival);box.classList.toggle("hasShopAddress",displayCards.some(c=>String(nearestFor(c,currentPos)?.address||'').trim()));
  label.textContent=focusCard?(ordered.length>1?"Più vicina · scorri →":"Negozio a meno di 50 m"):"Per distanza";

@@ -150,7 +150,7 @@ function translateDocument(){
     renderLanguageControl();
     updateThemeLabels();
     const release=root.document.querySelector('.release');
-    if(release)release.textContent=release.textContent.replace(/v\d+\.\d+\.\d+/,'v0.9.153');
+    if(release)release.textContent=release.textContent.replace(/v\d+\.\d+\.\d+/,'v0.9.154');
   }finally{applying=false;}
 }
 function connectObserver(){

@@ -219,18 +219,13 @@
     </section>
 
     <section>
-      <h2>9. Statistiche facoltative e assistenza</h2>
-      <p>Le statistiche di utilizzo sono disattivate per impostazione predefinita. Si attivano solo selezionando «Condividi statistiche di utilizzo» nelle impostazioni. Il consenso può essere revocato nello stesso punto, senza limitare le funzioni dell’app.</p>
-      <p>Con il consenso inviamo a Supabase, nel progetto ospitato nella regione europea eu-central-1, un identificativo casuale dell’installazione, il tipo di evento (apertura dell’app, sezione visitata o aggiunta di una carta), la sezione, la versione dell’app e, per le carte nuove, il solo marchio selezionato dal catalogo. La data di ricezione è registrata dal server. Si tratta di dati pseudonimi: l’identificativo non è un account né un identificatore pubblicitario.</p>
-      <p>Non inviamo nelle statistiche numeri tessera, barcode o QR, nomi personalizzati, note, foto, coordinate, destinazioni o ricerche ScanDixit. L’archivio delle carte non viene caricato su Supabase. Le carte già presenti o ripristinate da backup non vengono censite retroattivamente.</p>
-      <p>I dati servono a misurare l’utilizzo e migliorare Fi-Card. Sono consultabili solo dal gestore e sono eliminati giornalmente quando superano 90 giorni. Disattivare le statistiche interrompe i nuovi invii e rimuove l’identificativo locale; non elimina automaticamente eventi già ricevuti. Il fornitore può trattare indirizzo IP e informazioni tecniche di rete nei propri log operativi: questi non vengono aggiunti alla tabella delle statistiche di Fi-Card. <a href="https://supabase.com/privacy">Informativa di Supabase</a>.</p>
-      <p>
-        Questa versione della webapp non integra un SDK aggiuntivo per il monitoraggio degli errori o la raccolta del modello del dispositivo.
-      </p>
-      <p>
-        Se l'utente contatta l'assistenza, possono inoltre essere trattati l'indirizzo email, il contenuto della comunicazione
-        e le eventuali informazioni tecniche fornite volontariamente.
-      </p>
+      <h2>9. Statistiche aggregate e assistenza</h2>
+      <p>Le statistiche aggregate sono attive per impostazione predefinita e possono essere disattivate da «Condividi statistiche aggregate» nelle impostazioni, senza limitare le funzioni dell’app. Le disattivazioni già salvate vengono rispettate.</p>
+      <p>Inviano a Supabase, nella regione europea eu-central-1, solo il tipo di utilizzo (apertura, sezione visitata o nuova carta), la sezione e, per una nuova carta, il marchio del catalogo. Il server incrementa direttamente un totale giornaliero: non conserva una riga per ogni invio, orari precisi, identificativi dell’installazione o cronologie individuali. Il precedente identificativo locale viene rimosso. Non vengono conteggiati utenti unici né costruiti profili.</p>
+      <p>Non inviamo numeri tessera, barcode o QR, nomi personalizzati, note, foto, coordinate, destinazioni o ricerche ScanDixit. Le carte già presenti o ripristinate da backup non vengono censite retroattivamente. Offline non vengono accodati invii per un momento successivo.</p>
+      <p>I conteggi servono a migliorare Fi-Card, sono consultabili solo dal gestore e vengono eliminati giornalmente oltre 90 giorni. Disattivare le statistiche interrompe gli invii futuri; dai totali non è possibile isolare e sottrarre le attività di un singolo utente. Gli eventuali dati pseudonimi raccolti dalle versioni precedenti con consenso restano separati e soggetti alla precedente conservazione di 90 giorni; il vecchio endpoint non accetta nuovi invii.</p>
+      <p>Come per ogni richiesta internet, Supabase può trattare indirizzo IP e informazioni tecniche nei log operativi per erogazione e sicurezza. Questi dati non vengono copiati nei conteggi di Fi-Card né utilizzati dal gestore per profilazione o combinati con altre statistiche. <a href="https://supabase.com/privacy" target="_blank" rel="noopener">Informativa di Supabase</a>.</p>
+      <p>Per assistenza e richieste privacy: <a href="mailto:info@fi-card.app">info@fi-card.app</a>.</p>
     </section>
 
     <section>

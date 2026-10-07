@@ -1,3 +1,5 @@
+Aggiornamento 08/10/2026 · v0.9.162: statistiche aggregate attive di default, disattivabili. Nessun identificativo dell’installazione o archivio di eventi individuali; soli conteggi giornalieri. Non misurano utenti unici. Informativa aggiornata in privacy.html e site/privacy.html; la copia OVH deve essere caricata manualmente. Aggiornare Data Safety della build finale per descrivere la raccolta effettiva. Il resoconto precedente segue come storico.
+
 # Fi-Card — revisione prima del lancio, v0.9.155
 
 ## Modifiche

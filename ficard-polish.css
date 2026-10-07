@@ -182,3 +182,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 
 /* Empty category filter row was reserving about 14-15 px before “Le mie carte”. */
 #homeView #categoryChips:empty{display:none!important}
+
+
+/* Fi-Card v0.9.134: GPS age beside version */
+.headerMeta{display:grid;grid-template-columns:auto auto;align-items:center;column-gap:10px;min-width:0;white-space:nowrap}
+.headerMeta .release,.headerMeta .positionAge{margin:0;font-size:10px;line-height:1.2;color:var(--muted);font-variant-numeric:tabular-nums}
+.headerMeta .positionAge[data-age="fresh"]{color:var(--success)}
+.headerMeta .positionAge[data-age="warm"]{color:var(--warning)}
+.headerMeta .positionAge[data-age="old"]{color:var(--danger)}
+@media(max-width:390px){.headerMeta{column-gap:7px}.headerMeta .release,.headerMeta .positionAge{font-size:9px}}

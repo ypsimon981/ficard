@@ -218,3 +218,17 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
   letter-spacing:-.025em!important;
 }
 .smartCarousel .smartCard .smartMeta.arrivalMessage .smartDistance{white-space:nowrap!important}
+
+/* Mini loyalty cards: the bottom tip sits on the shop coordinates. */
+.mapCardMarker{background:none;border:0}
+.mapCardPin{position:relative;width:64px;height:52px;color:var(--card-ink,#fff);filter:drop-shadow(0 3px 4px rgba(17,24,39,.28))}
+.mapCardPin::after{content:"";position:absolute;left:24px;top:42px;width:16px;height:10px;background:var(--card-color);clip-path:polygon(0 0,100% 0,50% 100%)}
+.mapCardFace{position:relative;width:64px;height:44px;box-sizing:border-box;border:1.5px solid rgba(255,255,255,.9);border-radius:9px;background:var(--card-color);display:flex;align-items:center;justify-content:center;padding:7px;overflow:hidden}
+.mapCardFace::before{content:"";position:absolute;inset:0;background:linear-gradient(140deg,rgba(255,255,255,.18),transparent 55%);pointer-events:none}
+.mapCardFace .brandLogo{position:relative;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain;border-radius:0}
+.mapCardFace .brandLogoFallback{position:relative;font-size:9px;font-weight:900;text-align:center;line-height:1.1;overflow-wrap:anywhere}
+.mapCardInitial{position:relative;font-size:22px;font-weight:900;line-height:1}
+.mapCardPin[data-brand="ovs"] .brandLogo,.mapCardPin[data-brand="pittarosso"] .brandLogo,
+.mapCardPin.walletDark[data-brand="esselunga"] .brandLogo,.mapCardPin.walletDark[data-brand="carrefour"] .brandLogo,
+.mapCardPin.walletDark[data-brand="decathlon"] .brandLogo{filter:brightness(0) invert(1)}
+.mapCardMarker:focus-visible .mapCardFace{outline:3px solid #5B3DF5;outline-offset:2px}

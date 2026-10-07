@@ -318,7 +318,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.121">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.137">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.138">
 </head>
 <body>
 <div class="app">
@@ -742,6 +742,11 @@ function mapBrandInnerHtml(c){
  const v=mapBrandVisual(c);
  return v.b.logo?'<img src="'+esc(v.b.logo)+'" alt="">':esc(v.initial)
 }
+function mapCardPinIcon(c){
+ const v=mapBrandVisual(c),ink=cardInk(v.color),key=inferredBrandKey(c)||c.brandKey||'';
+ const content=v.b.logo?brandLogoHtml(v.b,'wallet'):'<span class="mapCardInitial">'+esc(v.initial)+'</span>';
+ return L.divIcon({className:'mapCardMarker',html:'<div class="mapCardPin '+(ink==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(key)+'" style="--card-color:'+esc(v.color)+';--card-ink:'+ink+'"><div class="mapCardFace">'+content+'</div></div>',iconSize:[64,52],iconAnchor:[32,52],popupAnchor:[0,-48],tooltipAnchor:[0,-32]})
+}
 function renderLocations(){
  const items=[];cards.forEach(c=>(c.locations||[]).forEach((l,i)=>items.push({c,l,i,d:currentPos?distanceM(currentPos,l):Infinity})));
  items.sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,"it")||a.i-b.i);
@@ -783,7 +788,7 @@ function renderOverviewMap(){
  }):L.layerGroup()).addTo(overviewMap);
  const storeBounds=[];
  cards.forEach(c=>(c.locations||[]).forEach(l=>{
-   const v=mapBrandVisual(c),icon=L.divIcon({className:"",html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38],popupAnchor:[0,-34]});
+   const icon=mapCardPinIcon(c);
    const marker=L.marker([l.lat,l.lng],{icon}).addTo(overviewLayer),wrap=document.createElement("div"),title=document.createElement("b"),meta=document.createElement("div"),actions=document.createElement("div"),open=document.createElement("button"),nav=document.createElement("button"),remove=document.createElement("button");
    title.textContent=c.name;meta.textContent=distanceLabel(currentPos?distanceM(currentPos,l):Infinity);actions.className="storePopupActions";open.textContent="Apri";open.onclick=()=>openCard(c.id);nav.innerHTML=pinSvg();nav.title="Naviga";nav.setAttribute("aria-label","Naviga");nav.onclick=()=>openNavigation(c.id,i);remove.innerHTML=trashSvg();remove.title="Dissocia";remove.setAttribute("aria-label","Dissocia");remove.className="storeRemove";remove.onclick=()=>{removeLocation(c.id,i);renderOverviewMap();toast("Punto vendita dissociato")};actions.append(open,nav,remove);wrap.append(title,meta,actions);marker.bindPopup(wrap);
    storeBounds.push([l.lat,l.lng])
@@ -920,7 +925,7 @@ function openLocationPicker(id){
    const showExisting=document.getElementById("pickerShowExisting");showExisting.hidden=!points.length;
    showExisting.onclick=()=>locationPickerMap.fitBounds(L.latLngBounds(points.map(l=>[l.lat,l.lng])),{padding:[35,35],maxZoom:17});
    points.forEach(l=>{
-     const v=mapBrandVisual(c),icon=L.divIcon({className:"",html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38]});
+     const icon=mapCardPinIcon(c);
      const marker=L.marker([l.lat,l.lng],{icon}).addTo(locationPickerMap);
      marker.bindTooltip("Punto già salvato · "+c.name);
      marker.on("click",()=>setPickerPoint(l.lat,l.lng,false))
@@ -1166,7 +1171,7 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.127"></script>
+<script src="./ficard-stores-ui.js?v=0.9.138"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 

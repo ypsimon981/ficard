@@ -65,7 +65,7 @@ renderOverviewMap=function(){
   overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45,showCoverageOnHover:false,spiderfyDistanceMultiplier:1.8,chunkedLoading:true,chunkInterval:40,chunkDelay:20,
    iconCreateFunction:cluster=>L.divIcon({className:'storeCluster',html:'<div class="storeClusterBadge"><b>'+cluster.getChildCount()+'</b><small>negozi</small></div>',iconSize:[48,48],iconAnchor:[24,24]})
   }):L.layerGroup()).addTo(overviewMap);
-  const markers=items.map(x=>{const v=mapBrandVisual(x.c),icon=L.divIcon({className:'',html:'<div class="brandPin" style="background:'+esc(v.color)+'"><div class="brandPinInner">'+mapBrandInnerHtml(x.c)+'</div></div>',iconSize:[40,40],iconAnchor:[20,38]});
+  const markers=items.map(x=>{const icon=mapCardPinIcon(x.c);
    return L.marker([x.l.lat,x.l.lng],{icon}).bindPopup(()=>{const popup=document.createElement('div');const origin=currentPos||searchCenter;popup.append(row({...x,d:origin?distanceM(origin,x.l):Infinity}));return popup},{minWidth:245,maxWidth:300})});
   if(overviewLayer.addLayers)overviewLayer.addLayers(markers);else markers.forEach(m=>overviewLayer.addLayer(m));
  }

@@ -565,7 +565,7 @@ Object.assign(BRANDS,{
  globalpet:{name:"Global Pet",mark:"GLOBAL PET",color:"#5B3DF5",category:"petstore",domain:"globalpet.it"},
  emark:{name:"Emark",mark:"EMARK",color:"#5B3DF5",category:"casalinghi",domain:"emarksupermercati.it"}
 });
-BRANDS.risparmiocasa.category='casalinghi';BRANDS.maurys.category='casalinghi';
+Object.assign(BRANDS.risparmiocasa,{category:'casalinghi',logo:'./logos-hq/risparmiocasa.png'});BRANDS.maurys.category='casalinghi';
 
 function demoCards(){return [
  {id:crypto.randomUUID(),name:"Esselunga",brandKey:"esselunga",category:"supermercati",code:"1234567890123",format:"EAN13",color:"#F5C400",fav:true,locations:[]},

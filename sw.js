@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.144";
+const APP_VERSION="0.9.145";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",

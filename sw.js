@@ -1,9 +1,71 @@
-const CACHE="ficard-mini-card-pins-light-dark-v0.9.131-risparmiocasa-transparent-lidl-arcaplanet-elite-awlab-elite-cutout-elite-vector-scarpescarpe-leroymerlin-adidas-blue-white-v2-nike-ikea";
-const CORE=["./ficard-polish.css?v=0.9.138","./ficard-viewport.js?v=0.9.119","./ficard-promo.js?v=0.9.120","./ficard-stores.js?v=0.9.127","./ficard-stores-ui.js?v=0.9.138","./ficard-theme.js?v=0.9.80","./ficard-theme.css?v=0.9.121","./ficard-reader.js?v=1.1.1","./scandixit-scanner.js?v=1.1.0","./nav-barcode.svg?v=0.9.43", "./barcode-crops.js?v=0.9.35", "./merchant-ocr.js?v=0.9.34", "./", "./index.html", "./scandixit.html", "./manifest.webmanifest", "./icon.svg", "./icon-32.png", "./icon-180.png", "./icon-192.png", "./icon-512.png", "./icon-32.png?v=0.9.22", "./icon-180.png?v=0.9.22", "./icon-192.png?v=0.9.22", "./icon-512.png?v=0.9.22", "./brand-approved.png", "./vendor/leaflet.markercluster.js", "./vendor/MarkerCluster.css", "./vendor/JsBarcode.all.min.js", "./vendor/bwip-js-min.js", "./vendor/html5-qrcode.min.js", "./logos-hq/adidas.svg", "./logos-hq/adidas-white.svg", "./logos-hq/bata.svg", "./logos-hq/carrefour.svg", "./logos-hq/conad.svg","./logos-hq/conad-light.svg", "./logos-hq/coop.png", "./logos-hq/decathlon.svg", "./logos-hq/douglas.svg", "./logos-hq/eni.svg", "./logos-hq/esselunga.svg", "./logos-hq/eurospin.png", "./logos-hq/hm.svg", "./logos-hq/ikea.svg", "./logos-hq/lidl.svg", "./logos-hq/mediaworld.svg", "./logos-hq/mediaworld-light.svg", "./logos-hq/nike.png", "./logos-hq/nike-white.svg", "./logos-hq/ikea-transparent.svg", "./logos-hq/ovs.svg", "./logos-hq/q8.svg", "./logos-hq/sephora.svg", "./logos-hq/tigota.svg", "./logos-hq/unieuro.svg", "./logos-hq/idromarket.svg", "./logos-hq/pittarosso.svg", "./logos-hq/todis.svg", "./logos-hq/risparmiocasa.png", "./logos-hq/arcaplanet.png", "./logos-hq/elite.svg", "./logos-hq/awlab.png", "./logos-hq/scarpescarpe.png", "./logos-hq/leroymerlin.svg"];
-self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));
-self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("ficard-")&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));
-self.addEventListener("fetch",e=>{
- if(e.request.method!=="GET"||new URL(e.request.url).origin!==self.location.origin||!e.request.url.startsWith(self.registration.scope))return;
- e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{})}return r}).catch(()=>caches.match(e.request).then(r=>r||(e.request.mode==="navigate"?caches.match("./index.html"):Response.error()))));
+const APP_VERSION="0.9.143";
+const CACHE="ficard-v"+APP_VERSION;
+const CORE=[
+  "./",
+  "./index.html",
+  "./ficard-theme.js?v="+APP_VERSION,
+  "./ficard-runtime.js?v="+APP_VERSION,
+  "./ficard-navigation.js?v="+APP_VERSION,
+  "./ficard-i18n.js?v=2.0.0",
+  "./ficard-polish.css?v=0.9.138",
+  "./ficard-viewport.js?v=0.9.119",
+  "./ficard-promo.js?v=0.9.120",
+  "./ficard-stores.js?v=0.9.127",
+  "./ficard-stores-ui.js?v=0.9.138",
+  "./ficard-theme.css?v=0.9.121",
+  "./ficard-reader.js?v=1.1.1",
+  "./scandixit-scanner.js?v=1.1.0",
+  "./nav-barcode.svg?v=0.9.43",
+  "./barcode-crops.js?v=0.9.35",
+  "./merchant-ocr.js?v=0.9.34",
+  "./scandixit.html",
+  "./manifest.webmanifest",
+  "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
+  "./brand-approved.png",
+  "./vendor/leaflet.markercluster.js","./vendor/MarkerCluster.css",
+  "./vendor/JsBarcode.all.min.js","./vendor/bwip-js-min.js","./vendor/html5-qrcode.min.js"
+];
+
+self.addEventListener("install",event=>{
+  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
 });
 
+self.addEventListener("activate",event=>{
+  event.waitUntil(
+    caches.keys()
+      .then(keys=>Promise.all(keys.filter(key=>key.startsWith("ficard-")&&key!==CACHE).map(key=>caches.delete(key))))
+      .then(()=>self.clients.claim())
+  );
+});
+
+function latestShellRequest(url){
+  const path=url.pathname;
+  if(path.endsWith("/ficard-theme.js"))return "./ficard-theme.js?v="+APP_VERSION;
+  if(path.endsWith("/ficard-runtime.js"))return "./ficard-runtime.js?v="+APP_VERSION;
+  if(path.endsWith("/ficard-navigation.js"))return "./ficard-navigation.js?v="+APP_VERSION;
+  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.0";
+  return "";
+}
+
+self.addEventListener("fetch",event=>{
+  if(event.request.method!=="GET")return;
+  const url=new URL(event.request.url);
+  if(url.origin!==self.location.origin||!event.request.url.startsWith(self.registration.scope))return;
+
+  const forced=latestShellRequest(url);
+  const request=forced
+    ? new Request(new URL(forced,self.registration.scope),{cache:"no-store"})
+    : event.request;
+
+  event.respondWith(
+    fetch(request,{cache:"no-store"})
+      .then(response=>{
+        if(response.ok){
+          const copy=response.clone();
+          caches.open(CACHE).then(cache=>cache.put(event.request,copy)).catch(()=>{});
+        }
+        return response;
+      })
+      .catch(()=>caches.match(event.request).then(cached=>cached||(event.request.mode==="navigate"?caches.match("./index.html"):Response.error())))
+  );
+});

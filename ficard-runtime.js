@@ -1,12 +1,12 @@
-/* Fi-Card runtime fixes v0.9.140
+/* Fi-Card runtime fixes v0.9.142
  * - Automatic language mode based on device language
- * - Independent scroll position for each bottom-navigation view
  * - Visible build version sync
+ * - Scroll handling is delegated to ficard-navigation.js
  */
 (function(root){
 'use strict';
 
-const VERSION='0.9.140';
+const VERSION='0.9.142';
 const LANGUAGE_KEY='ficard.language.v2';
 const LEGACY_LANGUAGE_KEY='ficard.language.v1';
 const RETURN_VIEW_KEY='ficard.language.returnView';
@@ -97,50 +97,6 @@ function installAutomaticLanguage(){
   root.addEventListener?.('ficard:languagechange',()=>root.setTimeout(enhanceLanguageControl,0));
 }
 
-function activeViewName(){
-  const active=root.document?.querySelector('.view.active');
-  return active?.id?.endsWith('View')?active.id.slice(0,-4):'';
-}
-function installIndependentViewScroll(){
-  if(root.__ficardIndependentScrollInstalled)return;
-  if(typeof root.go!=='function'){
-    root.setTimeout(installIndependentViewScroll,50);
-    return;
-  }
-  root.__ficardIndependentScrollInstalled=true;
-  if('scrollRestoration' in root.history)root.history.scrollRestoration='manual';
-  const positions=Object.create(null);
-  const originalGo=root.go;
-  let switching=false;
-  const first=activeViewName();
-  if(first)positions[first]=root.scrollY||0;
-
-  function restore(view){
-    const y=Math.max(0,Number(positions[view])||0);
-    const apply=()=>root.scrollTo({top:y,left:0,behavior:'auto'});
-    root.requestAnimationFrame(()=>{
-      apply();
-      root.requestAnimationFrame(apply);
-    });
-    root.setTimeout(()=>{apply();switching=false;},120);
-  }
-
-  root.addEventListener('scroll',()=>{
-    if(switching)return;
-    const view=activeViewName();
-    if(view)positions[view]=root.scrollY||0;
-  },{passive:true});
-
-  root.go=function(view){
-    const current=activeViewName();
-    if(current)positions[current]=root.scrollY||0;
-    switching=true;
-    const result=originalGo.apply(this,arguments);
-    restore(view);
-    return result;
-  };
-}
-
 function forceVersion(){
   const release=root.document?.querySelector('.release');
   if(!release)return false;
@@ -165,7 +121,6 @@ function installVersionSync(){
 
 function init(){
   installAutomaticLanguage();
-  installIndependentViewScroll();
   installVersionSync();
 }
 

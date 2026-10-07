@@ -255,3 +255,10 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
  #homeView>.chips:not(#categoryChips){padding-bottom:2px}
  #homeView>.sectionTitle{margin-top:0}
 }
+
+/* v0.9.159 · Hide quick-card labels; add 5 px before ScanDixit. */
+#homeView .smartHead{display:none}
+#homeView .smartBlock + .promo[data-go="scandixit"]{margin-top:21px!important}
+@media(max-width:520px){
+ #homeView .smartBlock + .promo[data-go="scandixit"]{margin-top:7px!important}
+}

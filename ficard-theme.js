@@ -23,10 +23,19 @@ function loadI18n(){
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);
 }
+function loadRuntime(){
+ if(!root.document||root.document.querySelector('script[data-ficard-runtime]'))return;
+ const script=root.document.createElement('script');
+ script.src='./ficard-runtime.js?v=0.9.140';
+ script.dataset.ficardRuntime='1';
+ script.async=true;
+ (root.document.head||root.document.documentElement).appendChild(script);
+}
 try{current=valid(root.localStorage.getItem(KEY));}catch{}
 root.FiCardTheme={presets,apply,current:()=>current};
 apply(current);
 loadI18n();
+loadRuntime();
 root.document?.addEventListener('DOMContentLoaded',()=>apply(current),{once:true});
 root.addEventListener?.('storage',e=>{if(e.key===KEY||e.key===null)apply(e.newValue);});
 })(typeof window==='undefined'?globalThis:window);

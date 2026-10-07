@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.159";
+const APP_VERSION="0.9.160";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -7,12 +7,12 @@ const CORE=[
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
   "./ficard-i18n.js?v=2.0.7",
-  "./ficard-polish.css?v=0.9.159",
+  "./ficard-polish.css?v=0.9.160",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-stores.js?v=0.9.127",
-  "./ficard-stores-ui.js?v=0.9.138",
-  "./ficard-theme.css?v=0.9.159",
+  "./ficard-stores-ui.js?v=0.9.160",
+  "./ficard-theme.css?v=0.9.160",
   "./ficard-reader.js?v=1.1.1",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",
@@ -22,8 +22,8 @@ const CORE=[
   "./scandixit-i18n.js?v=1.0.0",
   "./manifest.webmanifest",
   "./privacy.html",
-  "./ficard-analytics-config.js?v=0.9.159",
-  "./ficard-analytics.js?v=0.9.159",
+  "./ficard-analytics-config.js?v=0.9.160",
+  "./ficard-analytics.js?v=0.9.160",
   "./vendor/leaflet.js","./vendor/leaflet.css",
   "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",

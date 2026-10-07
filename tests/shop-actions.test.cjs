@@ -7,7 +7,7 @@ test('manual map legacy points remain removable; OSM shops and favourites do not
 });
 function element(){return {dataset:{},children:[],setAttribute(k,v){this[k]=v},append(x){this.children.push(x)},querySelector(q){return this.targets[q]||(this.targets[q]=element())},targets:{}}}
 test('shop rows use barcode icon and only manually added points get a trash button',()=>{
- const c={name:'Negozio',id:'c'},scope=vm.createContext({document:{createElement:element},isManualLocation:ctx.isManualLocation,mapBrandVisual:()=>({color:'#000'}),esc:s=>s,mapBrandInnerHtml:()=>'',distanceLabel:()=>'',pinSvg:()=>'<svg/>',trashSvg:()=>'<svg/>',heartSvg:()=>'<svg/>'});
+ const c={name:'Negozio',id:'c'},scope=vm.createContext({document:{createElement:element},isManualLocation:ctx.isManualLocation,mapBrandVisual:()=>({color:'#000'}),esc:s=>s,mapBrandInnerHtml:()=>'',shopMiniCardHtml:()=>'<div class="locationMiniCard"></div>',distanceLabel:()=>'',pinSvg:()=>'<svg/>',trashSvg:()=>'<svg/>',heartSvg:()=>'<svg/>'});
  vm.runInContext(ui.slice(ui.indexOf('function cardBarcodeSvg('),ui.indexOf('function list(')),scope);
  for(const [l,remove] of [[{source:'osm',address:'Via Roma 1'},true],[{osmId:'node/1',address:'Via Roma 1'},false],[{source:'osm-favorite',address:'Via Roma 1'},false]]){
   c.locations=[l];const row=scope.row({c,l,saved:true,favorite:true,d:0});assert.match(row.innerHTML,/aria-label="Apri carta"[^>]*><svg/);assert.match(row.innerHTML,/Via Roma 1/);assert.equal(row.querySelector('.shopActions').children.length,remove?1:0);

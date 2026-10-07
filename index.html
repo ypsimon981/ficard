@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.159"></script>
+  <script src="./ficard-theme.js?v=0.9.160"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.159">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.159">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.160">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.160">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -497,7 +497,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.07-launch-review-v0.9.159";
+const RELEASE="2026.10.07-launch-review-v0.9.160";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -794,6 +794,11 @@ function mapBrandInnerHtml(c){
  const v=mapBrandVisual(c);
  return v.b.logo?'<img src="'+esc(v.b.logo)+'" alt="">':esc(v.initial)
 }
+function shopMiniCardHtml(c){
+ const v=mapBrandVisual(c),ink=cardInk(v.color),key=inferredBrandKey(c)||c.brandKey||'';
+ const content=v.b.logo?brandLogoHtml(v.b,'wallet'):'<span class="mapCardInitial">'+esc(v.initial)+'</span>';
+ return '<div class="mapCardPin locationMiniCard '+(ink==='#FFFFFF'?'walletDark':'walletLight')+'" aria-hidden="true" data-brand="'+esc(key)+'" style="--card-color:'+esc(v.color)+';--card-ink:'+ink+'"><div class="mapCardFace">'+content+'</div></div>'
+}
 function mapCardPinIcon(c){
  const v=mapBrandVisual(c),ink=cardInk(v.color),key=inferredBrandKey(c)||c.brandKey||'';
  const content=v.b.logo?brandLogoHtml(v.b,'wallet'):'<span class="mapCardInitial">'+esc(v.initial)+'</span>';
@@ -802,7 +807,7 @@ function mapCardPinIcon(c){
 function renderLocations(){
  const items=[];cards.forEach(c=>(c.locations||[]).forEach((l,i)=>items.push({c,l,i,d:currentPos?distanceM(currentPos,l):Infinity})));
  items.sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,"it")||a.i-b.i);
- document.getElementById("locationsList").innerHTML=items.length?items.map(x=>{const v=mapBrandVisual(x.c);return '<div class="promo locationResult"><div class="locationBrandIcon" style="background:'+esc(v.color)+'"><span>'+mapBrandInnerHtml(x.c)+'</span></div><div class="grow"><b>'+esc(x.c.name)+'</b><small>'+esc(distanceLabel(x.d))+'</small></div><div class="locationActions"><button class="chip locationOpen" data-map-card="'+x.c.id+'">Apri</button><button class="chip storeIconAction" data-navigate="'+x.c.id+'|'+x.i+'" aria-label="Naviga" title="Naviga"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-7.2 7-13A7 7 0 0 0 5 9c0 5.8 7 13 7 13Z"/><circle cx="12" cy="9" r="2.2"/></svg></button><button class="chip storeIconAction storeRemove" data-remove-map-loc="'+x.c.id+'|'+x.i+'" aria-label="Rimuovi punto vendita" title="Rimuovi punto vendita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></button></div></div>'}).join(""):'<div class="panel hint">Non hai ancora associato punti vendita.</div>';
+ document.getElementById("locationsList").innerHTML=items.length?items.map(x=>{const v=mapBrandVisual(x.c);return '<div class="promo locationResult">'+shopMiniCardHtml(x.c)+'<div class="grow"><b>'+esc(x.c.name)+'</b><small>'+esc(distanceLabel(x.d))+'</small></div><div class="locationActions"><button class="chip locationOpen" data-map-card="'+x.c.id+'">Apri</button><button class="chip storeIconAction" data-navigate="'+x.c.id+'|'+x.i+'" aria-label="Naviga" title="Naviga"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 22s7-7.2 7-13A7 7 0 0 0 5 9c0 5.8 7 13 7 13Z"/><circle cx="12" cy="9" r="2.2"/></svg></button><button class="chip storeIconAction storeRemove" data-remove-map-loc="'+x.c.id+'|'+x.i+'" aria-label="Rimuovi punto vendita" title="Rimuovi punto vendita"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></button></div></div>'}).join(""):'<div class="panel hint">Non hai ancora associato punti vendita.</div>';
  document.querySelectorAll("[data-map-card]").forEach(b=>b.onclick=()=>openCard(b.dataset.mapCard));
  document.querySelectorAll("[data-navigate]").forEach(b=>b.onclick=()=>{const [id,i]=b.dataset.navigate.split("|");openNavigation(id,Number(i))});
  document.querySelectorAll("[data-remove-map-loc]").forEach(b=>b.onclick=()=>{const [id,i]=b.dataset.removeMapLoc.split("|");removeLocation(id,Number(i));renderOverviewMap()});
@@ -1107,7 +1112,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.159";
+  panel.src="./scandixit.html?section=ficard&v=0.9.160";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1272,12 +1277,12 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.138"></script>
+<script src="./ficard-stores-ui.js?v=0.9.160"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.159"></script>
-<script src="./ficard-analytics.js?v=0.9.159"></script>
+<script src="./ficard-analytics-config.js?v=0.9.160"></script>
+<script src="./ficard-analytics.js?v=0.9.160"></script>
 </body>
 </html>
 

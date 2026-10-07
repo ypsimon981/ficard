@@ -232,3 +232,14 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .mapCardPin.walletDark[data-brand="esselunga"] .brandLogo,.mapCardPin.walletDark[data-brand="carrefour"] .brandLogo,
 .mapCardPin.walletDark[data-brand="decathlon"] .brandLogo{filter:brightness(0) invert(1)}
 .mapCardMarker:focus-visible .mapCardFace{outline:3px solid #5B3DF5;outline-offset:2px}
+
+/* v0.9.157 · About 70 px less above the mobile home grid:
+   30 px from quick cards, 39 px from the ScanDixit teaser. */
+@media(max-width:520px){
+ #homeView .smartCarousel.largeQuickCards .smartCard{
+  height:calc(clamp(190px,56vw,220px) - 30px)!important;
+  min-height:0!important;aspect-ratio:auto!important;
+ }
+ #homeView .scanPromo{padding-top:9px;padding-bottom:9px}
+ #homeView .scanPromo small{min-height:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}

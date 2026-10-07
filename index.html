@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.152"></script>
+  <script src="./ficard-theme.js?v=0.9.153"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -300,10 +300,10 @@ body.scannerBridge> :not(#addModal):not(#toast):not(script){display:none!importa
 body.scannerBridge #addModal{padding:0;background:#F8F9FC}
 body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;min-height:100dvh;border-radius:0;padding-top:calc(16px + env(safe-area-inset-top))}
     .bottom .nav{min-width:0;min-height:44px;padding:4px 0;font-size:10px}
-    /* ScanDixit is a Fi-Card section: keep the same Fi-Card header and bottom navigation. */
+    /* Header and ScanDixit content belong to the same per-section scroll flow. */
     body.scanSectionOpen .top{display:flex}
-    #scandixitView{height:100%;min-height:0;background:var(--bg);padding:0!important;overflow:hidden!important}
-    #scandixitPanel{display:block;width:100%;height:100%;border:0}
+    #scandixitView{height:100%;min-height:0;background:var(--bg);padding:0!important;overflow-y:auto!important;overflow-x:hidden!important}
+    #scandixitPanel{display:block;width:100%;height:auto;min-height:100%;border:0;overflow:hidden}
 
 .detailBrandHeader{position:relative}
 .detailFavorite{position:absolute;top:12px;right:12px;z-index:2;display:grid;place-items:center;width:44px;height:44px;padding:5px;border:0;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 3px 10px rgba(31,41,55,.12)}
@@ -318,18 +318,17 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.152">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.153">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.138">
 </head>
 <body>
 <div class="app">
-  <header class="top">
+  <main>
+    <section id="homeView" class="view active">
+<header class="top">
     <div class="brand"><h1 class="brandLockup"><svg viewBox="370 835 515 177" role="img" aria-labelledby="brandTitle" xmlns="http://www.w3.org/2000/svg"><title id="brandTitle">Fi-Card</title><defs><filter id="ficardBgAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 .92"/><feComponentTransfer><feFuncA type="linear" slope="20" intercept="0"/></feComponentTransfer></filter><filter id="ficardInkAlpha" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  -.2126 -.7152 -.0722 0 1"/></filter><mask id="ficardTransparentBg" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" mask-type="alpha" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardBgAlpha)"/></mask><mask id="ficardDarkInk" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1448" height="1086"><image href="./brand-approved.png" width="1448" height="1086" filter="url(#ficardInkAlpha)"/></mask><linearGradient id="ficardDashGradient" x1="615" y1="0" x2="655" y2="0" gradientUnits="userSpaceOnUse"><stop stop-color="#5B3DF5"/><stop offset="1" stop-color="#2DD4BF"/></linearGradient></defs><image href="./brand-approved.png" width="1448" height="1086" mask="url(#ficardTransparentBg)"/><rect x="615" y="835" width="41" height="177" fill="url(#ficardDashGradient)" mask="url(#ficardDarkInk)"/><rect x="656" y="835" width="229" height="177" fill="#2DD4BF" mask="url(#ficardDarkInk)"/></svg></h1><div class="headerMeta"><div class="release">07/10/2026 · v0.9.137</div><div id="positionAge" class="positionAge">Posizione · —</div></div></div>
     <div class="topActions"><button class="iconbtn" id="themeBtn" type="button" title="Attiva tema scuro" aria-label="Attiva tema scuro" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 13A8.5 8.5 0 0 1 11 3.5 8.5 8.5 0 1 0 20.5 13Z"/></svg></button><button class="iconbtn" id="gridBtn" type="button" title="Mostra griglia 10 px" aria-label="Mostra griglia 10 px" aria-pressed="false"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="5" cy="5" r="1.4"/><circle cx="12" cy="5" r="1.4"/><circle cx="19" cy="5" r="1.4"/><circle cx="5" cy="12" r="1.4"/><circle cx="12" cy="12" r="1.4"/><circle cx="19" cy="12" r="1.4"/><circle cx="5" cy="19" r="1.4"/><circle cx="12" cy="19" r="1.4"/><circle cx="19" cy="19" r="1.4"/></svg></button><button class="iconbtn" id="refreshBtn" title="Aggiorna Fi-Card" aria-label="Aggiorna Fi-Card">↻</button><button class="iconbtn" id="installBtn" title="Installa">⇩</button></div>
   </header>
-
-  <main>
-    <section id="homeView" class="view active">
       <div class="smartBlock">
         <div class="smartHead"><h2>Carte rapide</h2><small id="smartOrderLabel">Per distanza</small></div>
         <div id="smartCarousel" class="smartCarousel"></div>
@@ -1041,16 +1040,58 @@ document.getElementById("addBrand").onchange=e=>{const b=BRANDS[e.target.value];
 document.querySelectorAll(".chip[data-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".chip[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.filter==="category"&&currentCategory==="all"){const first=Object.keys(CATEGORIES).find(k=>cards.some(c=>categoryFor(c)===k));if(first)currentCategory=first}renderCategoryChips();renderCards()});
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.onclick=()=>go(b.dataset.view));
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=e=>{e.preventDefault();go(b.dataset.go)});
+const sectionScroll=Object.create(null);
+let scandixitResizeObserver=null;
+function syncScandixitHeight(){
+ const panel=document.getElementById("scandixitPanel");
+ const view=document.getElementById("scandixitView");
+ if(!panel||!panel.contentDocument||!view)return;
+ const doc=panel.contentDocument;
+ try{
+  doc.documentElement.style.overflow="hidden";
+  doc.body.style.overflow="hidden";
+  const h=Math.max(doc.documentElement.scrollHeight,doc.body.scrollHeight,view.clientHeight-document.querySelector(".top")?.offsetHeight||0);
+  panel.style.height=Math.ceil(h)+"px";
+ }catch(e){}
+}
+function attachScandixitSizing(){
+ const panel=document.getElementById("scandixitPanel");
+ if(!panel?.contentDocument)return;
+ if(scandixitResizeObserver){try{scandixitResizeObserver.disconnect()}catch(e){}}
+ syncScandixitHeight();
+ try{
+  scandixitResizeObserver=new ResizeObserver(syncScandixitHeight);
+  scandixitResizeObserver.observe(panel.contentDocument.documentElement);
+  scandixitResizeObserver.observe(panel.contentDocument.body);
+ }catch(e){}
+ setTimeout(syncScandixitHeight,100);
+ setTimeout(syncScandixitHeight,500);
+}
 function go(v){
  const view=document.getElementById(v+"View");if(!view)return;
+ const current=document.querySelector(".view.active");
+ const header=document.querySelector(".top");
+ if(current) sectionScroll[current.id]=current.scrollTop||0;
  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));view.classList.add("active");
+ if(header&&header.parentElement!==view)view.prepend(header);
  document.querySelectorAll(".nav").forEach(x=>{const selected=x.dataset.view===v;x.classList.toggle("active",selected);if(selected)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
  document.body.classList.toggle("scanSectionOpen",v==="scandixit");
  const panel=document.getElementById("scandixitPanel");
  if(v==="scandixit"&&!panel.hasAttribute("src")){
-  panel.onload=()=>{const back=panel.contentDocument?.querySelector("header > a");if(back)back.hidden=true;const theme=panel.contentWindow?.FiCardTheme;if(theme)theme.apply(FiCardTheme.current());};
-  panel.src="./scandixit.html?section=ficard&v=0.9.152";
- }else if(v!=="scandixit"&&panel.hasAttribute("src")){panel.onload=null;panel.removeAttribute("src")}
+  panel.onload=()=>{
+   const back=panel.contentDocument?.querySelector("header > a");if(back)back.hidden=true;
+   const theme=panel.contentWindow?.FiCardTheme;if(theme)theme.apply(FiCardTheme.current());
+   attachScandixitSizing();
+  };
+  panel.setAttribute("scrolling","no");
+  panel.src="./scandixit.html?section=ficard&v=0.9.153";
+ }else if(v==="scandixit"){
+  attachScandixitSizing();
+ }else if(panel.hasAttribute("src")){
+  if(scandixitResizeObserver){try{scandixitResizeObserver.disconnect()}catch(e){}scandixitResizeObserver=null}
+  panel.onload=null;panel.removeAttribute("src");panel.style.height="";
+ }
+ requestAnimationFrame(()=>{view.scrollTop=Math.max(0,Number(sectionScroll[view.id])||0)});
  if(v==="map")setTimeout(renderOverviewMap,80);
 }
 function setDotGrid(enabled){document.body.classList.toggle('dotGridOn',enabled);const button=document.getElementById('gridBtn'),label=enabled?'Nascondi griglia 10 px':'Mostra griglia 10 px';button.setAttribute('aria-pressed',String(enabled));button.setAttribute('aria-label',label);button.title=label}

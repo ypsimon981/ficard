@@ -164,3 +164,21 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .smartCarousel.largeQuickCards.hasShopAddress{padding-bottom:48px!important}
 .smartCarousel.largeQuickCards.hasArrivalMessage{padding-bottom:52px!important}
 .smartCarousel.largeQuickCards.hasShopAddress.hasArrivalMessage{padding-bottom:68px!important}
+
+
+/* Fi-Card v0.9.133: compact home spacing */
+/* 10 px less between the software version/header and the violet-teal divider. */
+.top{padding-bottom:5px!important}
+
+/* 20 px less total whitespace below quick-card distance/meta. */
+.smartBlock{padding-bottom:8px!important}
+.smartBlock .smartCarousel.largeQuickCards{padding-bottom:24px!important}
+.smartBlock .smartCarousel.largeQuickCards.hasShopAddress{padding-bottom:44px!important}
+.smartBlock .smartCarousel.largeQuickCards.hasArrivalMessage{padding-bottom:56px!important}
+.smartBlock .smartCarousel.largeQuickCards.hasShopAddress.hasArrivalMessage{padding-bottom:76px!important}
+
+/* 5 px less between Quick Cards and the ScanDixit banner. */
+#homeView .smartBlock + .promo[data-go="scandixit"]{margin-top:5px!important}
+
+/* Empty category filter row was reserving about 14-15 px before “Le mie carte”. */
+#homeView #categoryChips:empty{display:none!important}

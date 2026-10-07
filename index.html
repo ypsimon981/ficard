@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.80"></script>
+  <script src="./ficard-theme.js?v=0.9.145"></script>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -1010,8 +1010,11 @@ document.getElementById("addBrand").onchange=e=>{const b=BRANDS[e.target.value];
 document.querySelectorAll(".chip[data-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".chip[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.filter==="category"&&currentCategory==="all"){const first=Object.keys(CATEGORIES).find(k=>cards.some(c=>categoryFor(c)===k));if(first)currentCategory=first}renderCategoryChips();renderCards()});
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.onclick=()=>go(b.dataset.view));
 document.querySelectorAll("[data-go]").forEach(b=>b.onclick=e=>{e.preventDefault();go(b.dataset.go)});
+const viewScrollPositions=Object.create(null);
 function go(v){
  const view=document.getElementById(v+"View");if(!view)return;
+ const outgoing=document.querySelector(".view.active");
+ if(outgoing?.id?.endsWith("View"))viewScrollPositions[outgoing.id.slice(0,-4)]=Math.max(0,window.scrollY||0);
  document.querySelectorAll(".view").forEach(x=>x.classList.remove("active"));view.classList.add("active");
  document.querySelectorAll(".nav").forEach(x=>{const selected=x.dataset.view===v;x.classList.toggle("active",selected);if(selected)x.setAttribute("aria-current","page");else x.removeAttribute("aria-current")});
  document.body.classList.toggle("scanSectionOpen",v==="scandixit");
@@ -1021,6 +1024,8 @@ function go(v){
   panel.src="./scandixit.html?section=ficard";
  }else if(v!=="scandixit"&&panel.hasAttribute("src")){panel.onload=null;panel.removeAttribute("src")}
  if(v==="map")setTimeout(renderOverviewMap,80);
+ const targetY=Math.max(0,Number(viewScrollPositions[v])||0);
+ requestAnimationFrame(()=>requestAnimationFrame(()=>window.scrollTo(0,targetY)));
 }
 function setDotGrid(enabled){document.body.classList.toggle('dotGridOn',enabled);const button=document.getElementById('gridBtn'),label=enabled?'Nascondi griglia 10 px':'Mostra griglia 10 px';button.setAttribute('aria-pressed',String(enabled));button.setAttribute('aria-label',label);button.title=label}
 document.getElementById('gridBtn').onclick=()=>{const enabled=!document.body.classList.contains('dotGridOn');setDotGrid(enabled);try{localStorage.setItem('ficard.dot-grid',String(enabled))}catch{}};

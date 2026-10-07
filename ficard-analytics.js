@@ -1,7 +1,7 @@
 /* Fi-Card minimal, optional analytics. No card content or location is accepted. */
 (function(root){
 'use strict';
-const VERSION='0.9.157',CONSENT='ficard.analytics.consent.v1',ID='ficard.analytics.install.v1';
+const VERSION='0.9.158',CONSENT='ficard.analytics.consent.v1',ID='ficard.analytics.install.v1';
 const PAGES=new Set(['home','map','scandixit','profile']);
 let controllers=new Set(),recent=new Map(),lastOpen=0,hiddenAt=0;
 function enabled(){try{return root.localStorage.getItem(CONSENT)==='yes'}catch{return false}}

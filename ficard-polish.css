@@ -243,3 +243,15 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
  #homeView .scanPromo{padding-top:9px;padding-bottom:9px}
  #homeView .scanPromo small{min-height:0;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+
+/* v0.9.158 · Tighten the four home gaps without shrinking main cards. */
+@media(max-width:520px){
+ #homeView .smartHead{margin-bottom:0}
+ #homeView .smartBlock{margin-bottom:0;padding-bottom:0!important}
+ #homeView .smartBlock .smartCarousel.largeQuickCards{padding-top:0!important}
+ #homeView .smartBlock .smartCarousel.largeQuickCards:not(.hasShopAddress):not(.hasArrivalMessage){padding-bottom:26px!important}
+ #homeView .smartCarousel.largeQuickCards .smartCard .smartMeta:not(.arrivalMessage){font-size:16px;line-height:1.25}
+ #homeView .smartBlock + .promo[data-go="scandixit"]{margin-top:2px!important}
+ #homeView>.chips:not(#categoryChips){padding-bottom:2px}
+ #homeView>.sectionTitle{margin-top:0}
+}

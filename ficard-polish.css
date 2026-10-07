@@ -155,3 +155,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
   height:auto!important;
   min-height:0!important;
 }
+
+
+/* Fi-Card v0.9.133: compact quick-card footer spacing */
+/* Keep just enough room for distance below the CR80 card, then close the block quickly. */
+.smartBlock{padding:14px 14px 4px!important}
+.smartBlock .smartCarousel.largeQuickCards{padding-top:12px!important;padding-bottom:31px!important}
+.smartCarousel.largeQuickCards.hasShopAddress{padding-bottom:48px!important}
+.smartCarousel.largeQuickCards.hasArrivalMessage{padding-bottom:52px!important}
+.smartCarousel.largeQuickCards.hasShopAddress.hasArrivalMessage{padding-bottom:68px!important}

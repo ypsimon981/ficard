@@ -198,3 +198,11 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .top{padding-top:3px!important;align-items:flex-start!important}
 /* The action buttons align with the visual centre of the Fi-Card logo, not with logo + metadata block. */
 .topActions{padding-top:17px!important;margin-top:0!important;align-self:flex-start!important}
+
+
+/* Fi-Card v0.9.136: compact bottom menu */
+/* Remove about 20 px of white from the lower part of the nav without shrinking icons/labels. */
+.bottom{
+  min-height:58px!important;
+  padding-bottom:max(0px,calc(12px + env(safe-area-inset-bottom) - 20px))!important;
+}

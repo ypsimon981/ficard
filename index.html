@@ -565,6 +565,7 @@ Object.assign(BRANDS,{
  globalpet:{name:"Global Pet",mark:"GLOBAL PET",color:"#5B3DF5",category:"petstore",domain:"globalpet.it"},
  emark:{name:"Emark",mark:"EMARK",color:"#5B3DF5",category:"casalinghi",domain:"emarksupermercati.it"}
 });
+BRANDS.scarpescarpe={name:'Scarpe & Scarpe',mark:'SCARPE & SCARPE',logo:'./logos-hq/scarpescarpe.png',color:'#B8BDC4',category:'abbigliamento'};
 Object.assign(BRANDS.awlab,{logo:'./logos-hq/awlab.png',color:'#FFFFF0'});
 Object.assign(BRANDS.elite,{logo:'./logos-hq/elite.svg',color:'#5AAE32'});
 Object.assign(BRANDS.arcaplanet,{logo:'./logos-hq/arcaplanet.png'});
@@ -594,6 +595,7 @@ function inferredBrandKey(c){
  const name=String(c.name||"").toLocaleLowerCase("it").normalize("NFD").replace(/[\u0300-\u036f]/g,""),target=name.replace(/[^a-z0-9]/g,"");
  const exact=Object.entries(BRANDS).find(([k,b])=>String(b.name||"").toLocaleLowerCase("it").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z0-9]/g,"")===target);
  if(exact)return exact[0];
+ if(target==="scarpeescarpe")return "scarpescarpe";
  if(/^\s*idro\s*market(?:$|[^a-z0-9])/i.test(name))return "idromarket";
  return ""
 }
@@ -605,6 +607,7 @@ function normalizeCategories(){
  cards.forEach(c=>{
    const key=inferredBrandKey(c);if(key&&c.brandKey!==key){c.brandKey=key;changed=true}
    const category=categoryFor(c);if(c.category!==category){c.category=category;changed=true}
+   if(key==='scarpescarpe'&&(!c.color||c.color.toUpperCase()==='#5B3DF5')){c.color=BRANDS.scarpescarpe.color;changed=true}
    if(key==='elite'&&(!c.color||c.color.toUpperCase()==='#5B3DF5')){c.color=BRANDS.elite.color;changed=true}
    if(key==='awlab'&&(!c.color||['#111111','#5B3DF5'].includes(c.color.toUpperCase()))){c.color=BRANDS.awlab.color;changed=true}
  });

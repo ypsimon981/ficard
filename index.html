@@ -565,6 +565,7 @@ Object.assign(BRANDS,{
  globalpet:{name:"Global Pet",mark:"GLOBAL PET",color:"#5B3DF5",category:"petstore",domain:"globalpet.it"},
  emark:{name:"Emark",mark:"EMARK",color:"#5B3DF5",category:"casalinghi",domain:"emarksupermercati.it"}
 });
+Object.assign(BRANDS.elite,{logo:'./logos-hq/elite.png',color:'#5AAE32'});
 Object.assign(BRANDS.arcaplanet,{logo:'./logos-hq/arcaplanet.png'});
 Object.assign(BRANDS.risparmiocasa,{category:'casalinghi',logo:'./logos-hq/risparmiocasa.png'});BRANDS.maurys.category='casalinghi';
 
@@ -603,6 +604,7 @@ function normalizeCategories(){
  cards.forEach(c=>{
    const key=inferredBrandKey(c);if(key&&c.brandKey!==key){c.brandKey=key;changed=true}
    const category=categoryFor(c);if(c.category!==category){c.category=category;changed=true}
+   if(key==='elite'&&(!c.color||c.color.toUpperCase()==='#5B3DF5')){c.color=BRANDS.elite.color;changed=true}
  });
  if(changed)save()
 }

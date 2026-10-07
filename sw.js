@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.148";
+const APP_VERSION="0.9.149";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -6,13 +6,13 @@ const CORE=[
   "./ficard-theme.js?v="+APP_VERSION,
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
-  "./ficard-i18n.js?v=2.0.2",
+  "./ficard-i18n.js?v=2.0.3",
   "./ficard-polish.css?v=0.9.138",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-stores.js?v=0.9.127",
   "./ficard-stores-ui.js?v=0.9.138",
-  "./ficard-theme.css?v=0.9.148",
+  "./ficard-theme.css?v=0.9.149",
   "./ficard-reader.js?v=1.1.1",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",
@@ -43,7 +43,7 @@ function latestShellRequest(url){
   if(path.endsWith("/ficard-theme.js"))return "./ficard-theme.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-runtime.js"))return "./ficard-runtime.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-navigation.js"))return "./ficard-navigation.js?v="+APP_VERSION;
-  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.2";
+  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.3";
   return "";
 }
 

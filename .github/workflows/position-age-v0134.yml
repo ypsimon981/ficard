@@ -1,0 +1,31 @@
+name: Apply FiCard position age v0.9.134
+
+on:
+  push:
+    paths:
+      - '.github/workflows/position-age-v0134.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Apply position age
+        run: python .github/scripts/position_age_v0134.py
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html ficard-polish.css
+          if git diff --cached --quiet; then
+            echo "Nothing to commit"
+          else
+            git commit -m "Show GPS age beside FiCard version"
+            git push origin main
+          fi

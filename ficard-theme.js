@@ -18,34 +18,15 @@ function apply(id,persist=false){current=valid(id);const p=presets.find(p=>p.id=
 function loadI18n(){
  if(!root.document||root.FiCardI18n||root.document.querySelector('script[data-ficard-i18n]'))return;
  const script=root.document.createElement('script');
- script.src='./ficard-i18n.js?v=1.0.1';
+ script.src='./ficard-i18n.js?v=2.0.0';
  script.dataset.ficardI18n='1';
  script.async=true;
  (root.document.head||root.document.documentElement).appendChild(script);
 }
-function installLanguageSwitchGuard(){
- if(!root.document||root.__ficardLanguageSwitchGuard)return;
- root.__ficardLanguageSwitchGuard=true;
- root.document.addEventListener('change',event=>{
-  const select=event.target;
-  if(!select||select.id!=='ficardLanguageSelect')return;
-  const next=String(select.value||'it').toLowerCase().split('-')[0];
-  try{root.localStorage.setItem('ficard.language.v1',next);root.sessionStorage.setItem('ficard.language.returnSettings','1')}catch{}
-  event.preventDefault();event.stopImmediatePropagation();
-  root.location.reload();
- },true);
-}
-function restoreSettingsAfterLanguageChange(){
- let reopen=false;try{reopen=root.sessionStorage.getItem('ficard.language.returnSettings')==='1';if(reopen)root.sessionStorage.removeItem('ficard.language.returnSettings')}catch{}
- if(!reopen)return;
- setTimeout(()=>root.document?.querySelector('.bottom [data-view="profile"]')?.click(),30);
-}
 try{current=valid(root.localStorage.getItem(KEY));}catch{}
 root.FiCardTheme={presets,apply,current:()=>current};
 apply(current);
-installLanguageSwitchGuard();
 loadI18n();
-root.document?.addEventListener('DOMContentLoaded',()=>{apply(current);restoreSettingsAfterLanguageChange()},{once:true});
+root.document?.addEventListener('DOMContentLoaded',()=>apply(current),{once:true});
 root.addEventListener?.('storage',e=>{if(e.key===KEY||e.key===null)apply(e.newValue);});
-root.addEventListener?.('ficard:languagechange',()=>apply(current));
 })(typeof window==='undefined'?globalThis:window);

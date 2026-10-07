@@ -191,3 +191,10 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .headerMeta .positionAge[data-age="warm"]{color:var(--warning)}
 .headerMeta .positionAge[data-age="old"]{color:var(--danger)}
 @media(max-width:390px){.headerMeta{column-gap:7px}.headerMeta .release,.headerMeta .positionAge{font-size:9px}}
+
+
+/* Fi-Card v0.9.135: tighter top spacing */
+/* Keep iPhone safe-area from .app, but remove 15 px of extra header air above the logo. */
+.top{padding-top:3px!important;align-items:flex-start!important}
+/* The action buttons align with the visual centre of the Fi-Card logo, not with logo + metadata block. */
+.topActions{padding-top:17px!important;margin-top:0!important;align-self:flex-start!important}

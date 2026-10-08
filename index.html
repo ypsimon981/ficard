@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.173"></script>
+  <script src="./ficard-theme.js?v=0.9.174"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.173">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.173">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.174">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.174">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -498,7 +498,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.07-launch-review-v0.9.173";
+const RELEASE="2026.10.07-launch-review-v0.9.174";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -701,10 +701,18 @@ const smartDepthBox=document.getElementById('smartCarousel');
 smartDepthBox.addEventListener('scroll',queueSmartDepth,{passive:true});
 if(window.ResizeObserver)new ResizeObserver(queueSmartDepth).observe(smartDepthBox);
 window.addEventListener('resize',queueSmartDepth);
+function smartMallPages(previews,nearCount){
+ const groups=[previews.slice(0,nearCount),previews.slice(nearCount)],pages=[];
+ for(const group of groups)for(let i=0;i<group.length;i+=4){
+  const tiles=group.slice(i,i+4);while(tiles.length<4)tiles.push('<div class="smartBlank" aria-hidden="true"></div>');
+  pages.push('<div class="smartMallPage">'+tiles.join('')+'</div>');
+ }
+ return pages.join('');
+}
 function renderSmartCarousel(){
  const box=document.getElementById("smartCarousel"),label=document.getElementById("smartOrderLabel");if(!box||!label)return;
  const {ordered,geoReady}=smartOrder();
- box.classList.add('largeQuickCards');
+ box.classList.add('largeQuickCards');box.classList.remove('mallGrid');
  if(!geoReady){
    label.textContent="Posizione necessaria";
    box.classList.remove("denseNearby","proximityFocus","hasArrivalMessage","hasShopAddress","depthCarousel");
@@ -724,7 +732,8 @@ function renderSmartCarousel(){
  box.classList.toggle("denseNearby",dense);box.classList.toggle("proximityFocus",!!focusCard);box.classList.toggle("hasArrivalMessage",!!arrival);box.classList.toggle("hasShopAddress",displayCards.some(c=>String(nearestFor(c,currentPos)?.address||'').trim()));
  label.textContent=focusCard?(ordered.length>1?"Più vicina · scorri →":"Negozio a meno di 50 m"):"Per distanza";
  const previews=displayCards.map(c=>{const b=brandFor(c),n=nearestFor(c,currentPos),meta=c===arrival?"Non cercare la tua card, è lei che trova te.":n.d<1000?Math.round(n.d)+" m":(n.d/1000).toFixed(1)+" km";const address=String(n?.address||'').trim();return '<div class="smartCard '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button class="smartCardOpen cardOpen" data-card-open="'+c.id+'" aria-label="Apri '+esc(c.name)+'"><span class="brandMark" aria-hidden="true">'+brandLogoHtml(b,'wallet')+'</span></button><div class="smartMeta'+(c===arrival?' arrivalMessage':'')+'"><span class="smartDistance">'+esc(meta)+'</span>'+(address?'<span class="smartAddress" title="'+esc(address)+'">'+esc(address)+'</span>':'')+'</div></div>'});
- box.innerHTML=previews.join("");
+ const mallGrid=dense&&nearCount>=3;box.classList.toggle('mallGrid',mallGrid);
+ box.innerHTML=mallGrid?smartMallPages(previews,nearCount):previews.join("");
  bindCardInteractions(box);updateSmartDepth();queueSmartDepth()
 }
 
@@ -1126,7 +1135,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.173";
+  panel.src="./scandixit.html?section=ficard&v=0.9.174";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1291,12 +1300,12 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.173"></script>
+<script src="./ficard-stores-ui.js?v=0.9.174"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.173"></script>
-<script src="./ficard-analytics.js?v=0.9.173"></script>
+<script src="./ficard-analytics-config.js?v=0.9.174"></script>
+<script src="./ficard-analytics.js?v=0.9.174"></script>
 </body>
 </html>
 

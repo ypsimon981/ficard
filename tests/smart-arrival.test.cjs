@@ -6,7 +6,7 @@ test('GPS focus keeps all cards and enables the depth carousel',()=>{
  const box={innerHTML:'',scrollLeft:0,classList:{add:k=>classes.add(k),contains:k=>classes.has(k),remove(...keys){keys.forEach(k=>classes.delete(k))},toggle(k,v){if(v)classes.add(k);else classes.delete(k)}},querySelectorAll:()=>items},label={};
  c.cards=[card('near','a'),card('far','b'),card('third','b')];c.cards.forEach((x,i)=>x.locations=[point(i?500+i*100:5)]);
  Object.assign(c,{document:{getElementById:id=>id==='smartCarousel'?box:label},brandFor:()=>({}),brandLogoHtml:()=>'',cardInk:()=>'',esc:String,bindCardInteractions(){},queueSmartDepth(){},refreshPosition(){}});
- vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function renderSmartCarousel(){','function renderAll(){'),c);
+ vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function smartMallPages(','function renderAll(){'),c);
  c.renderSmartCarousel();
  assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,3);assert.ok(classes.has('proximityFocus'));assert.ok(classes.has('depthCarousel'));assert.match(label.textContent,/scorri/);
  assert.equal(items[0].style['--smart-scale'],'1');assert.equal(items[1].style['--smart-scale'],'0.85');
@@ -20,7 +20,7 @@ test('quick cards require precise GPS and show all located cards',()=>{
   const box={innerHTML:'',scrollLeft:0,classList:{add:k=>classes.add(k),contains:k=>classes.has(k),remove(...keys){keys.forEach(k=>classes.delete(k))},toggle(k,v){if(v)classes.add(k);else classes.delete(k)}},querySelectorAll:()=>items},label={};
   c.cards=['a','b','c'].map(id=>({...card(id,'a'),locations:[point(60)]}));if(!gps)c.currentPos=null;
   Object.assign(c,{document:{getElementById:id=>id==='smartCarousel'?box:label},brandFor:()=>({}),brandLogoHtml:()=>'',cardInk:()=>'',esc:String,bindCardInteractions(){},queueSmartDepth(){},refreshPosition(){}});
-  vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function renderSmartCarousel(){','function renderAll(){'),c);c.renderSmartCarousel();
+  vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function smartMallPages(','function renderAll(){'),c);c.renderSmartCarousel();
   assert.ok(classes.has('largeQuickCards'));assert.equal(classes.has('denseNearby'),gps);assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,gps?3:0);assert.doesNotMatch(box.innerHTML,/class="name"/);
  }
 });

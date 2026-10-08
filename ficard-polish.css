@@ -338,3 +338,9 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #pickerCoords.duplicateWarning{color:#8A3B00;background:#FFF1DB;border:2px solid #E88B20;border-radius:12px;padding:12px 14px;font-size:14px;font-weight:700;line-height:1.4;animation:duplicatePointPulse 2.4s ease-in-out infinite}
 @keyframes duplicatePointPulse{0%,100%{box-shadow:0 0 0 0 rgba(232,139,32,.08)}50%{box-shadow:0 0 0 4px rgba(232,139,32,.24)}}
 @media(prefers-reduced-motion:reduce){#pickerCoords.duplicateWarning{animation:none}}
+
+/* v0.9.174 · Three/four nearby cards share a two-row page; far cards follow. */
+#homeView #smartCarousel.largeQuickCards.denseNearby.mallGrid{align-items:flex-start;padding-bottom:48px!important}
+.smartMallPage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 8px;flex:0 0 100%;min-width:0;scroll-snap-align:start;align-content:start}
+#homeView #smartCarousel.largeQuickCards.denseNearby.mallGrid .smartCard{width:100%!important;scroll-snap-align:none!important;overflow:visible}
+#homeView #smartCarousel.largeQuickCards.denseNearby.mallGrid .smartBlank{aspect-ratio:85.6/53.98}

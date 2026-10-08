@@ -3,7 +3,7 @@
 ## Cosa è pronto
 Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup/condivisione tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
 
-Identificativo provvisorio: `app.ficard.mobile`. Confermarlo PRIMA del primo caricamento su Google Play: dopo la pubblicazione non è modificabile per la stessa app. Versione iniziale 0.9.178, versionCode 1; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
+Identificativo provvisorio: `app.ficard.mobile`. Confermarlo PRIMA del primo caricamento su Google Play: dopo la pubblicazione non è modificabile per la stessa app. Versione iniziale 0.9.179, versionCode 1; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
 
 Statistiche aggregate attive dal primo avvio con toggle per disattivarle, senza identificativo dell’installazione; scelta esplicita del titolare. Verificare minimizzazione, trattamento/log del fornitore e informativa prima dell’invio. Il consenso pubblicitario è separato. Pubblicità attualmente disattivata: nessun SDK AdMob incluso. Nella Console dichiarare quanto fa questa build, non funzioni future.
 

@@ -11,6 +11,7 @@ function nativeHtml(html,name){
  backup=replaceOnce(backup,download,"if(window.FiCardNative){await window.FiCardNative.saveFile(blob,filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json');}else{"+download+'}');
  html=html.slice(0,start)+backup+html.slice(end);
  html=replaceOnce(html,'if(navigator.canShare?.({files:[file]}))','if(window.FiCardNative){await window.FiCardNative.saveFile(blob,file.name)}\n   else if(navigator.canShare?.({files:[file]}))');
+ html=replaceOnce(html,"'Scopri FiCard: '+new URL('./',location.href).href","'Scopri FiCard: https://fi-card.app/'");
  // Stop a replacement restore if the safety backup share is cancelled/fails.
  html=replaceOnce(html,'document.getElementById("replaceBackup").onclick=()=>','document.getElementById("replaceBackup").onclick=async()=>');
  html=replaceOnce(html,'downloadBackup(cards,"fi-card-prima-del-ripristino.json");','try{await downloadBackup(cards,"fi-card-prima-del-ripristino.json");}catch{toast("Backup non completato");return;}');

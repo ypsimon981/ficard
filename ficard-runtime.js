@@ -1,7 +1,7 @@
-/* Fi-Card runtime v0.9.168 */
+/* Fi-Card runtime v0.9.169 */
 (function(root){
 'use strict';
-const VERSION='0.9.168';
+const VERSION='0.9.169';
 const LANGUAGE_KEY='ficard.language.v2';
 const LEGACY_LANGUAGE_KEY='ficard.language.v1';
 const RETURN_VIEW_KEY='ficard.language.returnView';
@@ -20,4 +20,31 @@ function forceVersion(){const release=root.document?.querySelector('.release');i
 function installVersionSync(){let attempts=0;const timer=root.setInterval(()=>{attempts++;if(forceVersion()||attempts>80)root.clearInterval(timer);},50);const observer=new MutationObserver(()=>forceVersion());const attach=()=>{const release=root.document?.querySelector('.release');if(release)observer.observe(release,{childList:true,characterData:true,subtree:true});else root.setTimeout(attach,100);};attach();}
 function init(){installAutomaticLanguage();installVersionSync();}
 if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init,{once:true});else init();
+})(typeof window==='undefined'?globalThis:window);
+
+/* Trusted user actions only; native Haptics when installed, brief web fallback. */
+(function(root){
+'use strict';
+if(root.FiCardHaptics)return;
+let last=-Infinity;
+function web(){try{root.navigator?.vibrate?.(10);}catch{}}
+function light(){
+ const now=Date.now();if(now-last<80)return;last=now;
+ try{
+  const cap=root.Capacitor;
+  if(cap?.isNativePlatform?.()&&cap.isPluginAvailable?.('Haptics')){
+   const plugin=cap.Plugins?.Haptics||cap.registerPlugin?.('Haptics');
+   if(plugin?.impact){Promise.resolve(plugin.impact({style:'LIGHT'})).catch(web);return;}
+  }
+ }catch{}
+ web();
+}
+root.FiCardHaptics={light};
+root.document?.addEventListener('click',event=>{
+ if(!event.isTrusted)return;
+ const button=event.target?.closest?.('[data-card-open],[data-toggle-fav],.nav[data-view],[data-go],[data-shop-open],[data-shop-nav],[data-shop-fav],[data-nav-loc],#addFab,#saveCard,#favBtn,#searchToggle,.chip[data-filter],.close');
+ if(!button||button.disabled||button.getAttribute('aria-disabled')==='true')return;
+ if(button.matches('.nav.active,.chip.active[data-filter]'))return;
+ light();
+},true);
 })(typeof window==='undefined'?globalThis:window);

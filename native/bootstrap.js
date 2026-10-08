@@ -8,7 +8,11 @@ import {Browser} from '@capacitor/browser';
 
 if(Capacitor.isNativePlatform()){
  const CardScreen=registerPlugin('CardScreen');
+ const BackupFiles=registerPlugin('BackupFiles');
  window.FiCardNative={
+  async saveBackup(blob,name){
+   await BackupFiles.saveBackup({data:await blob.text(),name});
+  },
   setFullScreen(active){return CardScreen.setFullScreen({active});},
   async getPosition(){
    const permission=await Geolocation.requestPermissions({permissions:['location']});

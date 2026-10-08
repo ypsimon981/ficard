@@ -1,9 +1,9 @@
 # Fi-Card: Android e Google Play
 
 ## Cosa è pronto
-Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup/condivisione tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
+Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup con selettore di destinazione Android, condivisione tessera tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
 
-Identificativo provvisorio: `app.ficard.mobile`. Confermarlo PRIMA del primo caricamento su Google Play: dopo la pubblicazione non è modificabile per la stessa app. Versione iniziale 0.9.180, versionCode 1; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
+Identificativo provvisorio: `app.ficard.mobile`. Confermarlo PRIMA del primo caricamento su Google Play: dopo la pubblicazione non è modificabile per la stessa app. Versione iniziale 0.9.181, versionCode 1; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
 
 Statistiche aggregate attive dal primo avvio con toggle per disattivarle, senza identificativo dell’installazione; scelta esplicita del titolare. Verificare minimizzazione, trattamento/log del fornitore e informativa prima dell’invio. Il consenso pubblicitario è separato. Pubblicità attualmente disattivata: nessun SDK AdMob incluso. Nella Console dichiarare quanto fa questa build, non funzioni future.
 
@@ -27,7 +27,7 @@ Attendere la sincronizzazione Gradle. Collegare il telefono Android con debug US
 - Aggiunta manuale, barcode live e importazione foto/screenshot; permessi fotocamera accettati e negati.
 - GPS preciso, app senza permesso posizione, riapertura dopo standby, distanze e mappa, centro commerciale.
 - Carte in modalità aereo dopo riavvio; inserimento/modifica senza rete.
-- Backup salvato effettivamente in File/Drive e ripristinato; il pannello di condivisione NON garantisce che l’utente abbia conservato il file. Prima di un ripristino sostitutivo tenere una copia verificata del backup.
+- Backup esportato scegliendo cartella/nome nel selettore Android e poi ripristinato; annullamento e scrittura fallita non devono aggiornare la data del backup. Il ripristino sostitutivo deve fermarsi se il salvataggio della copia di sicurezza viene annullato o fallisce.
 - Condivisione tessera, apertura navigatore, email supporto, link privacy e Indietro Android.
 - Statistiche disattivate: nessuna nuova richiesta; annunci sempre disattivati in questa build.
 

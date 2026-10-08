@@ -21,7 +21,7 @@ test('quick cards require precise GPS and show all located cards',()=>{
   c.cards=['a','b','c'].map(id=>({...card(id,'a'),locations:[point(60)]}));if(!gps)c.currentPos=null;
   Object.assign(c,{document:{getElementById:id=>id==='smartCarousel'?box:label},brandFor:()=>({}),brandLogoHtml:()=>'',cardInk:()=>'',esc:String,bindCardInteractions(){},queueSmartDepth(){},refreshPosition(){}});
   vm.runInContext(section(html,'function nearbyCardCount()','let smartDepthFrame=')+section(html,'function renderSmartCarousel(){','function renderAll(){'),c);c.renderSmartCarousel();
-  assert.ok(classes.has('largeQuickCards'));assert.ok(!classes.has('denseNearby'));assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,gps?3:0);assert.doesNotMatch(box.innerHTML,/class="name"/);
+  assert.ok(classes.has('largeQuickCards'));assert.equal(classes.has('denseNearby'),gps);assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,gps?3:0);assert.doesNotMatch(box.innerHTML,/class="name"/);
  }
 });
 function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0,accuracy:10},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);

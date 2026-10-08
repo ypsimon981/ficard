@@ -322,3 +322,14 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #mapView .mapLegend .chip{margin:0;font-size:10px;line-height:1.3;padding:0}
 /* Leaflet resets marker image max-width; keep the mini-card artwork contained. */
 .leaflet-container .mapCardFace .brandLogo{width:78%!important;max-width:78%!important;height:82%!important;max-height:82%!important;object-fit:contain!important}
+
+/* v0.9.171 · Multiple shops within 100m: show two complete cards per page. */
+#homeView #smartCarousel.largeQuickCards.denseNearby{gap:8px!important;padding:0 0 30px!important;scroll-padding:0}
+#homeView #smartCarousel.largeQuickCards.denseNearby::before,#homeView #smartCarousel.largeQuickCards.denseNearby::after{display:none}
+#homeView #smartCarousel.largeQuickCards.denseNearby .smartCard{flex:0 0 calc((100% - 8px)/2)!important;width:calc((100% - 8px)/2)!important;height:auto!important;min-height:0!important;aspect-ratio:85.6/53.98!important;margin-left:0!important;transform:none!important;border-radius:16px;scroll-snap-align:none!important;box-shadow:0 4px 8px rgba(31,41,55,.12)!important}
+#homeView #smartCarousel.largeQuickCards.denseNearby .smartCard:nth-child(odd){scroll-snap-align:start!important}
+#homeView #smartCarousel.largeQuickCards.denseNearby .smartCardOpen{padding:0!important}
+#homeView #smartCarousel.largeQuickCards.denseNearby .brandMark .brandLogo{width:78%!important;max-width:78%!important;height:82%!important;max-height:82%!important}
+#homeView #smartCarousel.largeQuickCards.denseNearby .smartMeta{font-size:13px;line-height:1.3}
+#homeView #smartCarousel.largeQuickCards.denseNearby.hasShopAddress{padding-bottom:48px!important}
+#homeView #smartCarousel.largeQuickCards.denseNearby .smartAddress{font-size:10px;max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}

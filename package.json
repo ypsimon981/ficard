@@ -1,0 +1,24 @@
+{
+  "name": "fi-card",
+  "version": "0.9.178",
+  "private": true,
+  "description": "Fi-Card Android and offline web bundle",
+  "engines": {"node": ">=22"},
+  "scripts": {
+    "test": "node --test tests/*.test.cjs",
+    "build": "node scripts/build-native.cjs",
+    "android:prepare": "npm run build && node scripts/prepare-android.cjs",
+    "android:open": "cap open android"
+  },
+  "dependencies": {
+    "@capacitor/core": "8.5.3",
+    "@capacitor/android": "8.5.3",
+    "@capacitor/app": "^8.0.0",
+    "@capacitor/browser": "^8.0.0",
+    "@capacitor/filesystem": "^8.0.0",
+    "@capacitor/geolocation": "^8.0.0",
+    "@capacitor/haptics": "^8.0.0",
+    "@capacitor/share": "^8.0.0"
+  },
+  "devDependencies": {"@capacitor/cli": "8.5.3", "esbuild": "^0.25.0", "sharp": "^0.34.0"}
+}

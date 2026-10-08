@@ -1,0 +1,7 @@
+{
+  "appId": "app.ficard.mobile",
+  "appName": "Fi-Card",
+  "webDir": "www",
+  "android": {"allowMixedContent": false},
+  "server": {"androidScheme": "https"}
+}

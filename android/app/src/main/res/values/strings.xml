@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Fi-Card</string>
+    <string name="title_activity_main">Fi-Card</string>
+    <string name="package_name">app.ficard.mobile</string>
+    <string name="custom_url_scheme">app.ficard.mobile</string>
+</resources>

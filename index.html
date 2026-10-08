@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.179"></script>
+  <script src="./ficard-theme.js?v=0.9.180"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.179">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.179">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.180">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.180">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -383,7 +383,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
       <div class="sectionTitle"><h2>Impostazioni</h2></div>
       <div class="panel">
         <div class="profileBrand"><img src="data:image/png;base64,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" alt="Fi-Card"><div><strong>Fi-Card</strong><span>Non devi cercare la card giusta, è lei che trova te.</span></div></div>
-        <p class="hint softwareVersion"><span id="softwareVersionLabel">Versione software</span> · <span class="release">v0.9.179</span></p>
+        <p class="hint softwareVersion"><span id="softwareVersionLabel">Versione software</span> · <span class="release">v0.9.180</span></p>
         <div class="settingsFacts">
           <div class="settingsFact"><span class="factIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8 12 3 3 5-6"/></svg></span><div><b>Nessun account, nessuna registrazione</b><p>Non servono dati personali per gestire le tue carte.</p></div></div>
           <div class="settingsFact"><span class="factIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4M9 9l2 2 4-4"/></svg></span><div><b>Le tue carte, anche offline</b><p>Carte e negozi salvati restano sul telefono, pronti da consultare anche senza rete o se i server non rispondono.</p></div></div>
@@ -423,8 +423,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 
 <nav class="bottom">
   <button class="nav active" data-view="home"><span class="navIcon navHome" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M6 10h12M7 14v2M10 14v2M13 14v2M16 14v2"/></svg></span>Card</button>
-  <button class="nav" data-view="map"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11Z"/><circle cx="12" cy="10" r="2.3"/></svg></span>Mappa</button>
-  <button class="fab addCardStack" id="addFab" aria-label="Aggiungi una carta"><svg viewBox="0 0 82 68" aria-hidden="true"><rect x="10" y="17" width="54" height="34" rx="6" fill="var(--teal)" transform="rotate(-20 37 34)"/><rect x="15" y="22" width="54" height="34" rx="6" fill="var(--teal)" stroke="rgba(255,255,255,.65)" stroke-width="1.5" transform="rotate(-10 42 39)"/><rect x="20" y="27" width="54" height="34" rx="6" fill="var(--violet)"/><path d="M47 35v18M38 44h18" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg><span class="addCardLabel">Aggiungi carta</span></button>
+  <button class="nav" data-view="map"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z"/><path d="M9 3v16M15 5v16"/></svg></span>Mappa</button>
+  <button class="fab addCardStack" id="addFab" aria-label="Aggiungi una carta"><svg viewBox="0 0 82 68" aria-hidden="true"><rect x="10" y="17" width="54" height="34" rx="6" fill="var(--teal)" transform="rotate(-20 37 34)"/><rect x="15" y="22" width="54" height="34" rx="6" fill="var(--teal)" stroke="rgba(255,255,255,.65)" stroke-width="1.5" transform="rotate(-10 42 39)"/><rect x="20" y="27" width="54" height="34" rx="6" fill="var(--violet)"/><path d="M47 35v18M38 44h18" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></svg></button>
   <button class="nav" data-view="scandixit"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 8v8M10 7v10M14 7v10M17 8v8"/></svg></span>ScanDixit</button>
   <button class="nav" data-view="profile"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 3-.5 2-2 1-2-.5-2 3 1.5 1.5v3L2.5 15l2 3 2-.5 2 1L9 21h6l.5-2 2-1 2 .5 2-3-1.5-2v-3L21.5 9l-2-3-2 .5-2-1L15 3Z"/><circle cx="12" cy="12" r="3"/></svg></span>Impostazioni</button>
 </nav>
@@ -494,15 +494,15 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
 
-<script src="./ficard-content.js?v=0.9.179"></script>
-<script src="./ficard-ads-config.js?v=0.9.179"></script>
-<script src="./ficard-ads.js?v=0.9.179"></script>
+<script src="./ficard-content.js?v=0.9.180"></script>
+<script src="./ficard-ads-config.js?v=0.9.180"></script>
+<script src="./ficard-ads.js?v=0.9.180"></script>
 <script>
 const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.07-launch-review-v0.9.179";
+const RELEASE="2026.10.07-launch-review-v0.9.180";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -536,7 +536,7 @@ const BRANDS={
  md:{name:"MD",color:"#F7B500",mark:"MD",category:"supermercati"},
  pam:{name:"Pam Panorama",color:"#E31E24",mark:"PAM",category:"supermercati"},
  despar:{name:"Despar",color:"#00843D",mark:"DESPAR",category:"supermercati"},
- todis:{name:"Todis",color:"#007A4D",mark:"TODIS",category:"supermercati"},
+ todis:{name:"Todis",color:"#F5F2E4",mark:"TODIS",category:"supermercati"},
  idromarket:{name:"Idromarket",color:"#006B4F",mark:"IDROMARKET",category:"supermercati"},
  decathlon:{name:"Decathlon",color:"#1675E0",mark:"DECATHLON",category:"sport"},
  cisalfa:{name:"Cisalfa",color:"#E31B23",mark:"CISALFA",category:"sport"},
@@ -644,6 +644,7 @@ function normalizeCategories(){
  cards.forEach(c=>{
    const key=inferredBrandKey(c);if(key&&c.brandKey!==key){c.brandKey=key;changed=true}
    const category=categoryFor(c);if(c.category!==category){c.category=category;changed=true}
+   if(key==='todis'&&(!c.color||['#007A4D','#FFFF00','#FFF000','#F9E900','#FFEB00'].includes(c.color.toUpperCase()))){c.color=BRANDS.todis.color;changed=true}
    if(key==='nike'&&(!c.color||['#5B3DF5','#111111','#000000'].includes(c.color.toUpperCase()))){c.color=BRANDS.nike.color;changed=true}
    if(key==='adidas'&&(!c.color||['#5B3DF5','#111111','#000000'].includes(c.color.toUpperCase()))){c.color=BRANDS.adidas.color;changed=true}
    if(key==='leroymerlin'&&(!c.color||['#78BE20','#62A744','#5B3DF5'].includes(c.color.toUpperCase()))){c.color=BRANDS.leroymerlin.color;changed=true}
@@ -908,6 +909,7 @@ let cardWakeLock=null,cardWakePending=false;
 function cardScreenVisible(){return document.getElementById("detailModal").classList.contains("show")||document.getElementById("fullBarcode").classList.contains("show")}
 function screenAwakeStatus(message){document.querySelectorAll('[data-screen-awake]').forEach(el=>el.textContent=message)}
 async function syncCardScreen(){
+ if(window.FiCardNative?.setFullScreen){try{await window.FiCardNative.setFullScreen(document.getElementById('fullBarcode').classList.contains('show')&&document.visibilityState==='visible')}catch(e){console.warn('Fi-Card luminosità:',e)}}
  if(!cardScreenVisible()||document.visibilityState!=="visible"){
   const lock=cardWakeLock;cardWakeLock=null;if(lock)try{await lock.release()}catch(e){}return;
  }
@@ -1140,7 +1142,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.179";
+  panel.src="./scandixit.html?section=ficard&v=0.9.180";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1211,7 +1213,7 @@ function catalogOptions(selected=''){return '<option value="">Carta personalizza
 let imageImportDefaults=null;
 function captureImageImportDefaults(){return {brandKey:document.getElementById('addBrand').value,name:document.getElementById('addName').value.trim(),category:document.getElementById('addCategory').value,color:document.getElementById('addColor').value}}
 function initCatalog(){document.getElementById('addFormat').innerHTML=codeFormatOptions('',true);document.getElementById('addBrand').innerHTML=catalogOptions();document.getElementById('brandSearch').oninput=renderBrandResults;renderBrandResults();document.getElementById('imageScanBtn').onclick=()=>{clearNewCardDraft();document.getElementById('imageFiles').click()};document.getElementById('importImagesProfile').onclick=()=>{imageImportDefaults=null;document.getElementById('imageFiles').click()};document.getElementById('imageFiles').onchange=importImages;document.getElementById('saveImages').onclick=saveImageDrafts;const date=localStorage.getItem('ficard.lastBackup');if(date)document.getElementById('backupInfo').textContent='Ultimo backup creato: '+new Date(date).toLocaleString('it-IT')+'. Salvalo in File o iCloud Drive.'}
-function renderBrandResults(){const q=document.getElementById('brandSearch').value.toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const popular=['conad','coop','esselunga','tigota','carrefour','ikea','mediaworld','decathlon','lidl','unieuro','acquaesapone','eurospin'];const matches=Object.entries(BRANDS).filter(([k,b])=>(b.name+' '+CATEGORIES[b.category]).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).sort((a,b)=>q?a[1].name.localeCompare(b[1].name,'it'):(popular.includes(a[0])?popular.indexOf(a[0]):99)-(popular.includes(b[0])?popular.indexOf(b[0]):99));const box=document.getElementById('brandResults');box.innerHTML=(q?matches:matches.slice(0,12)).map(([k,b])=>'<button type="button" class="brandPick" data-brand="'+esc(k)+'"><span class="catalogLogo">'+brandLogoHtml(b)+'</span><span>'+esc(b.name)+'</span></button>').join('')||'<p class="hint">Nessun marchio trovato. Puoi creare una carta personalizzata.</p>';box.querySelectorAll('[data-brand]').forEach(btn=>btn.onclick=()=>{const el=document.getElementById('addBrand');el.value=btn.dataset.brand;el.dispatchEvent(new Event('change'));document.getElementById('addName').scrollIntoView({behavior:'smooth',block:'center'})})}
+function renderBrandResults(){const q=document.getElementById('brandSearch').value.toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const popular=['conad','coop','esselunga','tigota','carrefour','ikea','mediaworld','decathlon','lidl','unieuro','acquaesapone','eurospin'];const matches=Object.entries(BRANDS).filter(([k,b])=>(b.name+' '+CATEGORIES[b.category]).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).sort((a,b)=>q?a[1].name.localeCompare(b[1].name,'it'):(popular.includes(a[0])?popular.indexOf(a[0]):99)-(popular.includes(b[0])?popular.indexOf(b[0]):99));const box=document.getElementById('brandResults');box.innerHTML=(q?matches:matches.slice(0,12)).map(([k,b])=>'<button type="button" class="brandPick" data-brand="'+esc(k)+'"><span class="catalogLogo" style="background:'+esc(b.color)+';color:'+cardInk(b.color)+'">'+brandLogoHtml(b,'wallet')+'</span><span>'+esc(b.name)+'</span></button>').join('')||'<p class="hint">Nessun marchio trovato. Puoi creare una carta personalizzata.</p>';box.querySelectorAll('[data-brand]').forEach(btn=>btn.onclick=()=>{const el=document.getElementById('addBrand');el.value=btn.dataset.brand;el.dispatchEvent(new Event('change'));document.getElementById('addName').scrollIntoView({behavior:'smooth',block:'center'})})}
 
 function downloadBackup(data,filename=''){const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);localStorage.setItem('ficard.lastBackup',payload.exportedAt);document.getElementById('backupInfo').textContent='Backup creato: '+new Date().toLocaleString('it-IT')+'. Conserva il file per ripristinare le carte.';toast('Backup pronto da salvare in File')}
 function validateBackup(data){if(!Array.isArray(data)&&(!data||data.app!=='Fi-Card'||![1,2].includes(data.version)))throw Error('Questo file non è un backup Fi-Card compatibile');const arr=Array.isArray(data)?data:data.cards;if(!Array.isArray(arr)||arr.length>10000)throw Error('Elenco carte non valido');return arr.map((c,i)=>{if(!c||typeof c.name!=='string'||!c.name.trim()||c.name.length>200||typeof c.code!=='string'||!c.code||c.code.length>4096)throw Error('Carta '+(i+1)+' non valida: nessun dato è stato modificato');if(c.format&&!Object.prototype.hasOwnProperty.call({QR_CODE:1,AZTEC:1,CODABAR:1,CODE39:1,CODE93:1,CODE128:1,DATA_MATRIX:1,ITF:1,EAN13:1,EAN8:1,PDF417:1,UPCA:1,UPCE:1,RSS14:1,RSS_EXPANDED:1},normalizeFormat(c.format)))throw Error('Formato codice non supportato nella carta '+(i+1));const locations=c.locations||[];if(!Array.isArray(locations)||locations.some(l=>!l||typeof l.lat!=='number'||!Number.isFinite(l.lat)||Math.abs(l.lat)>90||typeof l.lng!=='number'||!Number.isFinite(l.lng)||Math.abs(l.lng)>180))throw Error('Posizione non valida nella carta '+(i+1));if(c.photo&&(!(typeof c.photo==='string')||!/^data:image\/(jpeg|png|webp);base64,[A-Za-z0-9+/=]+$/.test(c.photo)||c.photo.length>2000000))throw Error('Foto non valida nella carta '+(i+1));return {id:crypto.randomUUID(),notes:typeof c.notes==='string'?c.notes.slice(0,2000):'',photo:c.photo||'',lastUsed:Number.isFinite(c.lastUsed)&&c.lastUsed>=0?c.lastUsed:0,useCount:Number.isInteger(c.useCount)&&c.useCount>=0?c.useCount:0,name:c.name.trim(),code:c.code,brandKey:Object.hasOwn(BRANDS,c.brandKey)?c.brandKey:'',category:c.category==='calzature'?'abbigliamento':Object.hasOwn(CATEGORIES,c.category)?c.category:'altro',color:/^#[0-9a-f]{6}$/i.test(c.color)?c.color:'#5B3DF5',format:normalizeFormat(c.format||inferManualFormat(c.code)),fav:c.fav===true,locations:locations.map(l=>({lat:l.lat,lng:l.lng,favorite:l.favorite===true,osmId:typeof l.osmId==="string"?l.osmId.slice(0,100):"",name:typeof l.name==="string"?l.name.slice(0,200):"",address:typeof l.address==="string"?l.address.slice(0,300):"",source:l.source==="osm-favorite"?"osm-favorite":l.source==="osm-auto"?"osm-auto":"manual"}))}})}
@@ -1299,13 +1301,13 @@ if(scannerBridge){
 </script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
-<script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.179"></script>
+<script src="./ficard-stores.js?v=0.9.180"></script>
+<script src="./ficard-stores-ui.js?v=0.9.180"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.179"></script>
-<script src="./ficard-analytics.js?v=0.9.179"></script>
+<script src="./ficard-analytics-config.js?v=0.9.180"></script>
+<script src="./ficard-analytics.js?v=0.9.180"></script>
 </body>
 </html>
 

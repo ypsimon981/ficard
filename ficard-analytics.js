@@ -1,7 +1,7 @@
 /* Fi-Card daily aggregate counters. No installation ID or individual event archive. */
 (function(root){
 'use strict';
-const VERSION='0.9.179',PREFERENCE='ficard.analytics.aggregate.v1',LEGACY='ficard.analytics.consent.v1';
+const VERSION='0.9.180',PREFERENCE='ficard.analytics.aggregate.v1',LEGACY='ficard.analytics.consent.v1';
 const PAGES=new Set(['home','map','scandixit','profile']);
 let controllers=new Set(),recent=new Map(),lastOpen=0,hiddenAt=0,memoryChoice=null;
 function enabled(){

@@ -72,11 +72,11 @@ renderOverviewMap=function(){
  if(currentPos){if(currentPosLayer)currentPosLayer.setLatLng([currentPos.lat,currentPos.lng]);else currentPosLayer=L.circleMarker([currentPos.lat,currentPos.lng],{radius:9,weight:3,fillOpacity:.6}).addTo(overviewMap).bindTooltip('La tua posizione')}
  setTimeout(()=>{overviewMap.invalidateSize();if(!mapFramed){if(currentPos){overviewMap.setView([currentPos.lat,currentPos.lng],13);mapFramed=true}else if(items.length){overviewMap.fitBounds(items.map(x=>[x.l.lat,x.l.lng]),{maxZoom:14,padding:[25,25]});mapFramed=true}}},80);
 };
-function renderShopUpdates(){renderSmartCarousel();renderLocations();renderOverviewMap();renderDetail()}
+function renderShopUpdates(){renderSmartCarousel();renderCards();renderLocations();renderOverviewMap();renderDetail()}
 async function search(center,force=false,bounds=null){
  matchCachedShops();const ds=descriptors(),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
- let query;try{query=S.query(center,allNames,3000,bounds)}catch(e){status=e.message;renderLocations();return}
- const area=bounds||S.boundsFor(center),needed=bounds||S.boundsFor(center,1000),key=area.map(n=>n.toFixed(5)).join(',');
+ let query;try{query=S.query(center,allNames,1500,bounds)}catch(e){status=e.message;renderLocations();return}
+ const area=bounds||S.boundsFor(center,1500),needed=bounds||S.boundsFor(center,1000),key=area.map(n=>n.toFixed(5)).join(',');
  searchCenter={lat:center.lat,lng:center.lng};
  // Small GPS movements and card changes reuse the same stored geographic area.
  if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();return}
@@ -85,7 +85,7 @@ async function search(center,force=false,bounds=null){
  try{const data=await S.request(query,active.signal);if(id!==requestId)return;
   shopCache=S.mergeCache(shopCache,data,area);matchCachedShops(true);
   const stored=S.writeCache(localStorage,shopCache);status='Negozi aggiornati'+(stored?' e salvati sul dispositivo.':'. Cache piena: risultati disponibili in questa sessione.');
- }catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status='Mostro i negozi già disponibili. '+(e.message||'Ricerca non disponibile.');}
+ }catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status='Mostro i negozi già disponibili. Ricerca temporaneamente non disponibile: riprova tra poco.';}
  finally{if(id===requestId){busy=false;renderShopUpdates()}}
 }
 function renderDetail(){if(!document.getElementById('detailModal')?.classList.contains('show'))return;const el=document.getElementById('cardNearbyStores');if(!el)return;const c=cards.find(c=>c.id===currentCardId);if(!c)return;const items=shops(c.id),favorites=items.filter(x=>x.favorite),nearby=items.filter(x=>!x.favorite);el.replaceChildren();for(const [title,rows] of [['Negozi preferiti',favorites],['Altri negozi vicini',nearby]]){const h=document.createElement('h3');h.textContent=title==='Negozi preferiti'?'♥ '+title:title;const section=document.createElement('section');if(title==='Negozi preferiti'){section.className='favoriteStoresSection';section.setAttribute('aria-label',title)}section.append(h);el.append(section);const box=document.createElement('div');list(box,rows,busy?'Cerco i negozi…':title==='Negozi preferiti'?'Tocca il cuore su un negozio per salvarlo.':'Nessun altro negozio trovato in questa zona.');section.append(box)}const button=document.createElement('button');button.className='secondary';button.textContent='Trova negozi vicini';button.onclick=async()=>{try{const p=currentPos||await getPosition();currentPos=p;await search(p,true)}catch(e){toast(e.message)}};el.append(button)}
@@ -101,6 +101,18 @@ const baseRefresh=refreshPosition;refreshPosition=async function(){await baseRef
 const baseGo=go;go=function(v){baseGo(v);if(v==='map'){matchCachedShops();renderLocations();renderOverviewMap();if(currentPos&&!busy)search(currentPos);if(!currentPos&&!busy){status='Usa La mia posizione oppure sposta la mappa e cerca nella zona.';renderLocations()}}};
 const baseAppendLocation=appendUniqueLocation;appendUniqueLocation=function(c,point){const added=baseAppendLocation(c,point);if(added&&isManualLocation(point))findAddress({c,l:point});return added};
 matchCachedShops();S.writeCache(localStorage,shopCache);populate();renderLocations();
+// Card insertion/import stays immediate; geographic discovery runs after saving.
+let discoveryTimer=null,discoverySignature=JSON.stringify(descriptors());
+function scheduleDiscovery(){
+ clearTimeout(discoveryTimer);
+ discoveryTimer=setTimeout(async()=>{
+  if(busy){scheduleDiscovery();return;}
+  if(navigator.onLine===false)return;
+  try{const p=currentPos||await getPosition();currentPos=p;await search(p)}catch(e){console.warn('Fi-Card ricerca in background:',e)}
+ },600);
+}
+const baseSave=save;save=function(){const pending=baseSave(),next=JSON.stringify(descriptors());if(next!==discoverySignature){discoverySignature=next;matchCachedShops(true);scheduleDiscovery()}return pending};
+window.addEventListener('online',scheduleDiscovery);
 function openMapForCard(c){
  matchCachedShops();document.getElementById('shopCategory').value='';document.getElementById('shopFavorites').checked=false;populate();document.getElementById('shopCard').value=storeBrand(c).key;mapFramed=false;hideModal('detailModal');go('map');
 }

@@ -1,4 +1,4 @@
-import {Capacitor} from '@capacitor/core';
+import {Capacitor,registerPlugin} from '@capacitor/core';
 import {Geolocation} from '@capacitor/geolocation';
 import {Haptics} from '@capacitor/haptics';
 import {Filesystem,Directory} from '@capacitor/filesystem';
@@ -7,7 +7,9 @@ import {App} from '@capacitor/app';
 import {Browser} from '@capacitor/browser';
 
 if(Capacitor.isNativePlatform()){
+ const CardScreen=registerPlugin('CardScreen');
  window.FiCardNative={
+  setFullScreen(active){return CardScreen.setFullScreen({active});},
   async getPosition(){
    const permission=await Geolocation.requestPermissions({permissions:['location']});
    if(permission.location!=='granted'&&permission.coarseLocation!=='granted')throw Error('Permesso di posizione negato. Abilitalo nelle impostazioni del telefono.');
@@ -37,10 +39,13 @@ if(Capacitor.isNativePlatform()){
  },true);
  if(window===window.top){
   App.addListener('backButton',()=>{
+   const full=document.getElementById('fullBarcode');
+   if(full?.classList.contains('show')){document.getElementById('closeFull')?.click();return;}
    const modal=[...document.querySelectorAll('.modal.show')].pop();
    if(modal){window.hideModal?.(modal.id);return;}
    if(!document.getElementById('homeView')?.classList.contains('active')){window.go?.('home');return;}
    App.exitApp();
   });
+  App.addListener('appStateChange',({isActive})=>{if(isActive)window.syncCardScreen?.();});
  }
 }

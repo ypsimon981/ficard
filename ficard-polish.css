@@ -373,3 +373,9 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .addCardLabel{position:static;display:block;max-width:100%;white-space:normal;overflow-wrap:anywhere;line-height:1.2;}
 .empty .emptyAddCard{display:block;width:auto;max-width:100%;min-height:44px;margin:16px auto 0;padding:12px 22px;}
 @media(max-width:360px){.addCardStack svg{width:68px;height:52px;}}
+
+/* Leave a further 2% breathing room on both phone and tablet wallets. */
+#homeView #cardGrid{box-sizing:border-box;padding-inline:1%;width:100%;margin-inline:0;}
+#homeView #cardGrid .walletTile,#homeView #cardGrid .card{min-width:0;max-width:100%;box-sizing:border-box;}
+.brandPick .catalogLogo{border-radius:7px;padding:5px;box-sizing:border-box;}
+.brandPick .catalogLogo .brandLogo{max-width:100%;max-height:100%;object-fit:contain;}

@@ -1,5 +1,5 @@
 {
-  "appId": "app.ficard.mobile",
+  "appId": "fi_card.app",
   "appName": "Fi-Card",
   "webDir": "www",
   "android": {"allowMixedContent": false},

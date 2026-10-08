@@ -1,4 +1,4 @@
-package app.ficard.mobile;
+package fi_card.app;
 
 import android.app.Activity;
 import android.content.Intent;

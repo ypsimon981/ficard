@@ -1,4 +1,4 @@
-package fi_card.app;
+package fi.card.app;
 
 import android.app.Activity;
 import android.content.Intent;

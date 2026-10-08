@@ -3,7 +3,7 @@
 ## Cosa è pronto
 Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup con selettore di destinazione Android, condivisione tessera tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
 
-Identificativo richiesto dalla scheda Google Play esistente: `fi_card.app`. Versione 0.9.181, versionCode 5; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
+Identificativo richiesto dalla scheda Google Play esistente: `fi.card.app`. Versione 0.9.181, versionCode 5; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
 
 Statistiche aggregate attive dal primo avvio con toggle per disattivarle, senza identificativo dell’installazione; scelta esplicita del titolare. Verificare minimizzazione, trattamento/log del fornitore e informativa prima dell’invio. Il consenso pubblicitario è separato. Pubblicità attualmente disattivata: nessun SDK AdMob incluso. Nella Console dichiarare quanto fa questa build, non funzioni future.
 
@@ -34,7 +34,7 @@ Attendere la sincronizzazione Gradle. Collegare il telefono Android con debug US
 Le tessere già presenti nella webapp non passano automaticamente nell’app Android: prima esportare dalla webapp, poi importare nell’app.
 
 ## AAB firmato per Google Play
-L'AAB release **0.9.181, versionCode 5**, con identificativo **fi_card.app**, è stato compilato dal workflow `Build Android release bundle` e firmato separatamente con una upload key. Il pacchetto firmato e il backup privato della chiave sono stati consegnati al titolare: conservarli fuori da GitHub. Il controllo con `jarsigner -verify -strict` è passato. Questo non equivale al caricamento o all'approvazione di Google Play.
+L'AAB release **0.9.181, versionCode 5**, con identificativo **fi.card.app**, è stato compilato dal workflow `Build Android release bundle` e firmato separatamente con una upload key. Il pacchetto firmato e il backup privato della chiave sono stati consegnati al titolare: conservarli fuori da GitHub. Il controllo con `jarsigner -verify -strict` è passato. Questo non equivale al caricamento o all'approvazione di Google Play.
 
 Per aggiornamenti: GitHub Actions → **Build Android release bundle** → **Run workflow**. L'artifact **Fi-Card-Android-release-unsigned** contiene un AAB non firmato. Firmarlo con la stessa upload key prima del caricamento; le istruzioni sono nel backup privato. Prima di ogni nuova release aumentare `versionCode` in `android/app/build.gradle`. Non generare una nuova chiave a ogni build.
 

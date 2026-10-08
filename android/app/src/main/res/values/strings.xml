@@ -2,6 +2,6 @@
 <resources>
     <string name="app_name">Fi-Card</string>
     <string name="title_activity_main">Fi-Card</string>
-    <string name="package_name">fi_card.app</string>
-    <string name="custom_url_scheme">fi_card.app</string>
+    <string name="package_name">fi.card.app</string>
+    <string name="custom_url_scheme">fi.card.app</string>
 </resources>

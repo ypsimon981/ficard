@@ -1,4 +1,4 @@
-package fi_card.app;
+package fi.card.app;
 
 import com.getcapacitor.BridgeActivity;
 import android.os.Bundle;

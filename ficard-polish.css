@@ -291,3 +291,8 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .searchToggle[aria-expanded="true"]{background:var(--theme-soft,#F0EDFF);border-color:var(--violet)}
 @media(max-width:520px){#homeView .homeFilters .chip[data-filter]{padding:9px;font-size:12px}}
 @media(max-width:380px){#homeView .homeFilters .chip[data-filter]{padding:9px 7px;font-size:11px}}
+
+/* v0.9.163 · Main cards are 2% wider while retaining CR80 proportions.
+   Old card width=(container-12px)/2; new=(1.02*container-4.24px-8px)/2. */
+#homeView #cardGrid{width:calc(102% - 4.24px);margin-inline:calc(2.12px - 1%)}
+#homeView #cardGrid.usageGrid,#homeView #cardGrid .cardShelf{column-gap:8px}

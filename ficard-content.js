@@ -1,4 +1,4 @@
-/* Fi-Card v0.9.177 · Local daily cap, stable session content, offline tips. */
+/* Fi-Card v0.9.178 · Local daily cap, stable session content, offline tips. */
 (function(root){
 'use strict';
 const DAILY='ficard.content.day.v1',SESSION='ficard.content.session.v1',IDLE=30*60*1000;
@@ -26,7 +26,7 @@ function session(now=Date.now()){
  }catch{count=3;}
  last=now;
 }
-function copy(){return COPY[root.FiCardI18n?.language?.()||'it']||COPY.en;}
+function copy(){let lang=root.FiCardI18n?.language?.();if(!lang){try{lang=root.localStorage.getItem('ficard.language.v2')||root.localStorage.getItem('ficard.language.v1');}catch{}if(!lang){lang=(root.navigator?.languages||[root.navigator?.language]).map(x=>String(x||'').toLowerCase().split('-')[0]).find(x=>COPY[x]);}}return COPY[String(lang||'en').toLowerCase().split('-')[0]]||COPY.en;}
 function adAvailable(){return root.navigator?.onLine!==false&&count<=2;}
 function slotAllowsAd(slot){model(slot);return adAvailable()&&choices[slot].ad;}
 function model(slot){

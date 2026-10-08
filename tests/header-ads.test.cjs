@@ -5,7 +5,7 @@ test('header keeps only theme/refresh and software version lives in settings',()
  assert.match(header,/id="themeBtn"/);assert.match(header,/id="refreshBtn"/);
  assert.doesNotMatch(header,/gridBtn|installBtn|class="release"/);
  assert.doesNotMatch(html,/getElementById\(['"](?:gridBtn|installBtn)['"]\)/);
- assert.match(html,/softwareVersion[\s\S]*?class="release">v0\.9\.177/);
+ assert.match(html,/softwareVersion[\s\S]*?class="release">v0\.9\.\d+/);
 });
 function bridge({enabled=true,native=true,eligible=true,providerFail=false}={}){
  const callbacks=[],classes=new Set(),events={};

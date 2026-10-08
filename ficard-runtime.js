@@ -1,7 +1,7 @@
-/* Fi-Card runtime v0.9.177 */
+/* Fi-Card runtime v0.9.178 */
 (function(root){
 'use strict';
-const VERSION='0.9.177';
+const VERSION='0.9.178';
 const LANGUAGE_KEY='ficard.language.v2';
 const LEGACY_LANGUAGE_KEY='ficard.language.v1';
 const RETURN_VIEW_KEY='ficard.language.returnView';

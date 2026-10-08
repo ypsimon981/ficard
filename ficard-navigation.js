@@ -1,4 +1,4 @@
-/* Fi-Card navigation/runtime patch v0.9.177
+/* Fi-Card navigation/runtime patch v0.9.178
  * Per-view scroll positions are stored before navigation and restored after the
  * destination view has actually become active.
  * GPS is refreshed after 3 minutes in background/standby.
@@ -6,7 +6,7 @@
 (function(root){
 'use strict';
 
-const VERSION='0.9.177';
+const VERSION='0.9.178';
 const STANDBY_MS=3*60*1000;
 const BG_KEY='ficard.nav.backgroundAt';
 

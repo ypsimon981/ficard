@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.177";
+const APP_VERSION="0.9.178";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -6,16 +6,16 @@ const CORE=[
   "./ficard-theme.js?v="+APP_VERSION,
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
-  "./ficard-i18n.js?v=2.0.7",
-  "./ficard-polish.css?v=0.9.177",
+  "./ficard-i18n.js?v=2.0.8",
+  "./ficard-polish.css?v=0.9.178",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-content.js?v=0.9.177",
-  "./ficard-ads-config.js?v=0.9.177",
-  "./ficard-ads.js?v=0.9.177",
+  "./ficard-content.js?v=0.9.178",
+  "./ficard-ads-config.js?v=0.9.178",
+  "./ficard-ads.js?v=0.9.178",
   "./ficard-stores.js?v=0.9.127",
-  "./ficard-stores-ui.js?v=0.9.177",
-  "./ficard-theme.css?v=0.9.177",
+  "./ficard-stores-ui.js?v=0.9.178",
+  "./ficard-theme.css?v=0.9.178",
   "./ficard-reader.js?v=1.1.1",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",
@@ -25,8 +25,8 @@ const CORE=[
   "./scandixit-i18n.js?v=1.0.0",
   "./manifest.webmanifest",
   "./privacy.html",
-  "./ficard-analytics-config.js?v=0.9.177",
-  "./ficard-analytics.js?v=0.9.177",
+  "./ficard-analytics-config.js?v=0.9.178",
+  "./ficard-analytics.js?v=0.9.178",
   "./vendor/leaflet.js","./vendor/leaflet.css",
   "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
@@ -52,7 +52,7 @@ function latestShellRequest(url){
   if(path.endsWith("/ficard-theme.js"))return "./ficard-theme.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-runtime.js"))return "./ficard-runtime.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-navigation.js"))return "./ficard-navigation.js?v="+APP_VERSION;
-  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.7";
+  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.8";
   return "";
 }
 

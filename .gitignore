@@ -9,6 +9,8 @@ android/app/src/main/assets/capacitor.config.json
 android/app/src/main/assets/capacitor.plugins.json
 *.keystore
 *.jks
+*.p12
+*.pfx
 keystore.properties
 *.apk
 *.aab

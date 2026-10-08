@@ -34,7 +34,11 @@ Attendere la sincronizzazione Gradle. Collegare il telefono Android con debug US
 Le tessere già presenti nella webapp non passano automaticamente nell’app Android: prima esportare dalla webapp, poi importare nell’app.
 
 ## AAB firmato per Google Play
-In Android Studio: Build → Generate Signed App Bundle / APK → **Android App Bundle**. Creare una upload key e conservarne file/password in un posto sicuro, fuori da GitHub. La firma release non è configurata nella build automatica e nessuna chiave è stata generata per conto del titolare.
+L'AAB release **0.9.181, versionCode 4**, con identificativo **app.ficard.mobile**, è stato compilato dal workflow `Build Android release bundle` e firmato separatamente con una upload key. Il pacchetto firmato e il backup privato della chiave sono stati consegnati al titolare: conservarli fuori da GitHub. Il controllo con `jarsigner -verify -strict` è passato. Questo non equivale al caricamento o all'approvazione di Google Play.
+
+Per aggiornamenti: GitHub Actions → **Build Android release bundle** → **Run workflow**. L'artifact **Fi-Card-Android-release-unsigned** contiene un AAB non firmato. Firmarlo con la stessa upload key prima del caricamento; le istruzioni sono nel backup privato. Prima di ogni nuova release aumentare `versionCode` in `android/app/build.gradle`. Non generare una nuova chiave a ogni build.
+
+Per la prima distribuzione: Play Console → crea/seleziona **Fi-Card** → **Test e release → Test → Test interno** → crea una release → scegli una chiave di firma gestita da Google (Play App Signing) → carica soltanto l'AAB firmato. Aggiungi i tester, controlla la release e avvia il test interno. Non caricare chiave privata/password tra i materiali dello store. Il caricamento automatico della Console non è stato possibile in questa sessione; questi passaggi vanno completati dal titolare.
 
 Caricare l’AAB in un test interno/chiuso, completare scheda store, icona, screenshot, classificazione, pubblico, sicurezza dei dati, dichiarazione pubblicità e URL privacy. Contatto pubblico: info@fi-card.app. Non dichiarare “nessun dato raccolto” se sono attivi i conteggi remoti: verificare categorie e modalità reali prima di compilare Sicurezza dei dati. Prima del lancio controllare anche che la privacy pubblicata sia quella aggiornata.
 

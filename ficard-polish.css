@@ -344,3 +344,11 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .smartMallPage{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:48px 8px;flex:0 0 100%;min-width:0;scroll-snap-align:start;align-content:start}
 #homeView #smartCarousel.largeQuickCards.denseNearby.mallGrid .smartCard{width:100%!important;scroll-snap-align:none!important;overflow:visible}
 #homeView #smartCarousel.largeQuickCards.denseNearby.mallGrid .smartBlank{aspect-ratio:85.6/53.98}
+
+/* v0.9.175 · A single distance-ordered wallet, without duplicated quick cards. */
+#homeView .smartBlock{display:none!important}
+#homeView #cardGrid .walletTile{min-width:0}
+#homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1}
+#homeView #cardGrid .walletDistance{text-align:center;font-size:16px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
+#homeView #cardGrid .nearbyHero .walletDistance{font-size:20px}
+#homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:12px;margin-top:3px}

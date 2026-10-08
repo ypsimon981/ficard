@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.174"></script>
+  <script src="./ficard-theme.js?v=0.9.175"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.174">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.174">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.175">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.175">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -345,7 +345,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
       <a class="promo scanPromo" href="#scandixit" data-go="scandixit" aria-label="Scansiona un prodotto con ScanDixit" style="display:flex;text-decoration:none;color:inherit"><div class="promoIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 8v8M10 7v10M14 7v10M17 8v8"/></svg></div><div class="grow"><b>Scansiona un prodotto con ScanDixit</b><small id="scanPromoMessage">Individua gli allergeni indicati prima di acquistare del cibo.</small></div><span class="badge">Prova</span></a>
       <div class="chips homeFilters">
         <button class="chip" data-filter="all">Tutte</button>
-        <button class="chip active" data-filter="used">Più usate</button>
+        <button class="chip active" data-filter="used">Per distanza</button>
         <button class="chip" data-filter="fav">Preferite</button>
         <button class="chip" data-filter="category">Per categoria</button>
         <button class="chip searchToggle" id="searchToggle" type="button" aria-label="Cerca una carta…" title="Cerca una carta…" aria-expanded="false" aria-controls="cardSearchRow"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
@@ -498,7 +498,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.07-launch-review-v0.9.174";
+const RELEASE="2026.10.07-launch-review-v0.9.175";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -765,34 +765,34 @@ function cardHtml(c){
 function advertisingPreviewHtml(){
  return '<aside class="card advertisingCard" aria-label="Pubblicità · anteprima" style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">Pubblicità</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m4 10 13-5v14L4 14v-4Zm13-2 3 1v6l-3 1M6 15l2 5h3l-2-4"/></svg><strong>Spazio pubblicitario</strong><small>Anteprima · annuncio non attivo</small></div></aside>'
 }
-function mainCardTiles(list,showAdvertising){
+function mainCardTiles(list,showAdvertising,focusId){
  const hasFourthAd=showAdvertising&&list.length>=4;
- const tiles=list.map((c,i)=>(hasFourthAd&&i===3?advertisingPreviewHtml():'')+cardHtml(c)).join('');
- const occupied=list.length+(hasFourthAd?1:0),lastPosition=occupied+1;
+ const tiles=list.map((c,i)=>(hasFourthAd&&i===3?advertisingPreviewHtml():'')+unifiedCardHtml(c,c.id===focusId)).join('');
+ const occupied=list.length+(hasFourthAd?1:0)+(focusId?1:0),lastPosition=occupied+1;
  return tiles+(showAdvertising&&lastPosition>=16&&lastPosition%2===0?advertisingPreviewHtml():'');
 }
 function mostUsedFirst(a,b){return (Number(b.useCount)||0)-(Number(a.useCount)||0)||(Number(b.lastUsed)||0)-(Number(a.lastUsed)||0)||a.name.localeCompare(b.name,"it")}
+function unifiedCardHtml(c,focus){
+ let html=cardHtml(c);if(focus)html=html.replace('card cardItem ','card cardItem nearbyHero ');
+ const n=quickPositionReady()?nearestFor(c,currentPos):null;
+ const meta=n&&Number.isFinite(n.d)?'<div class="walletDistance">'+esc(distanceLabel(n.d))+'</div>'+(focus?'<div class="walletArrival">Non cercare la tua card, è lei che trova te.</div>':''):'';
+ return '<div class="walletTile'+(focus?' nearbyHero':'')+'">'+html+meta+'</div>';
+}
+function distanceOrderedCards(list){
+ if(!quickPositionReady())return list.slice().sort(mostUsedFirst);
+ return list.slice().sort((a,b)=>(nearestFor(a,currentPos)?.d??Infinity)-(nearestFor(b,currentPos)?.d??Infinity)||mostUsedFirst(a,b));
+}
 function renderCards(){
  const q=document.getElementById("search").value.toLowerCase().trim(),active=document.querySelector(".chip[data-filter].active")?.dataset.filter||"used";
  let list=cards.filter(c=>c.name.toLowerCase().includes(q)||c.code.toLowerCase().includes(q));
  if(active==="fav")list=list.filter(c=>c.fav);
  if(active==="category"&&currentCategory!=="all")list=list.filter(c=>categoryFor(c)===currentCategory);
  const grid=document.getElementById("cardGrid");
- grid.classList.toggle("usageGrid",active==="used");
+ grid.classList.add("usageGrid");
  if(!list.length){grid.innerHTML='<div class="empty"><strong>Nessuna carta qui</strong>Tocca ＋ per aggiungerne una.</div>';return}
- if(active==="used"){
-   list.sort(mostUsedFirst);grid.innerHTML=mainCardTiles(list,!q);
-   bindCardInteractions(grid);return
- }
- const grouped={};list.forEach(c=>{const k=categoryFor(c);(grouped[k]||(grouped[k]=[])).push(c)});
- Object.values(grouped).forEach(arr=>arr.sort((a,b)=>a.name.localeCompare(b.name,"it")));
- const order=Object.keys(CATEGORIES).filter(k=>grouped[k]?.length);
- grid.innerHTML=order.map(k=>{
-   const arr=grouped[k];
-   return '<section class="categorySection"><div class="categoryHead"><h3>'+esc(CATEGORIES[k])+' <span class="categoryCount">'+arr.length+'</span></h3>'+(active==="all"?'<button class="categoryMore" data-open-category="'+k+'">Vedi tutte</button>':'')+'</div><div class="cardShelf">'+arr.map(cardHtml).join("")+'</div></section>'
- }).join("");
+ const ordered=distanceOrderedCards(list),focus=active==='used'&&!q&&quickPositionReady()?arrivalCard(ordered,currentPos):null;
+ grid.innerHTML=mainCardTiles(ordered,active==='used'&&!q,focus?.id);
  bindCardInteractions(grid);
- grid.querySelectorAll("[data-open-category]").forEach(x=>x.onclick=()=>{currentCategory=x.dataset.openCategory;document.querySelectorAll(".chip[data-filter]").forEach(b=>b.classList.toggle("active",b.dataset.filter==="category"));renderCategoryChips();renderCards();document.getElementById("cardGrid").scrollIntoView({behavior:"smooth",block:"start"})});
 }
 function distanceLabel(m){
  if(!Number.isFinite(m))return "Distanza non disponibile";
@@ -1135,7 +1135,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.174";
+  panel.src="./scandixit.html?section=ficard&v=0.9.175";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1300,12 +1300,12 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.174"></script>
+<script src="./ficard-stores-ui.js?v=0.9.175"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.174"></script>
-<script src="./ficard-analytics.js?v=0.9.174"></script>
+<script src="./ficard-analytics-config.js?v=0.9.175"></script>
+<script src="./ficard-analytics.js?v=0.9.175"></script>
 </body>
 </html>
 

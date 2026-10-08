@@ -305,3 +305,6 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 /* v0.9.165 · The same logo footprint on map and shop-list mini cards. */
 .mapCardFace{padding:0}
 .mapCardFace .brandLogo{width:78%;max-width:78%;height:82%;max-height:82%}
+
+/* v0.9.166 · Preserve the multicolour Conad artwork on dark main cards. */
+#homeView #cardGrid .cardItem[data-brand="conad"] .brandLogo{filter:drop-shadow(0 1px 1px rgba(0,0,0,.10))!important}

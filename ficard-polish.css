@@ -352,3 +352,14 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView #cardGrid .walletDistance{text-align:center;font-size:16px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
 #homeView #cardGrid .nearbyHero .walletDistance{font-size:20px}
 #homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:12px;margin-top:3px}
+
+/* v0.9.176 · Shared advertising/tips placements. */
+.contentBanner{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:12px 0 14px;border:1px solid #BFEFE8;border-radius:18px;background:#E4F8F3;color:#4324BC;text-decoration:none}
+.contentBanner .advertisingContent{position:static;padding:0;display:flex;align-items:flex-start;gap:4px;flex:1;min-width:0;text-align:left}
+.contentBanner .advertisingLabel{position:static;font-size:9px;padding:2px 5px}
+.contentBanner strong{font-size:14px;line-height:1.3}.contentBanner small{font-size:12px;line-height:1.35}
+#homeView #cardGrid .contentTile{display:block;text-decoration:none;color:#4324BC}
+#homeView #cardGrid .contentTile .advertisingContent{gap:3px;padding:8px}
+#homeView #cardGrid .contentTile .advertisingLabel{position:static;font-size:8px;padding:2px 5px}
+#homeView #cardGrid .contentTile strong{font-size:12px;line-height:1.15}
+#homeView #cardGrid .contentTile small{font-size:10px;line-height:1.2;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}

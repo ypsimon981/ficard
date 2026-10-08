@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.1"></script>
-  <script src="./ficard-theme.js?v=0.9.164"></script>
+  <script src="./ficard-theme.js?v=0.9.165"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.164">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.164">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.165">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.165">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -498,7 +498,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.07-launch-review-v0.9.164";
+const RELEASE="2026.10.07-launch-review-v0.9.165";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -1122,7 +1122,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.164";
+  panel.src="./scandixit.html?section=ficard&v=0.9.165";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1287,12 +1287,12 @@ if(scannerBridge){
 <script src="./barcode-crops.js?v=0.9.35"></script>
 <script src="./merchant-ocr.js?v=0.9.34"></script>
 <script src="./ficard-stores.js?v=0.9.127"></script>
-<script src="./ficard-stores-ui.js?v=0.9.164"></script>
+<script src="./ficard-stores-ui.js?v=0.9.165"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.164"></script>
-<script src="./ficard-analytics.js?v=0.9.164"></script>
+<script src="./ficard-analytics-config.js?v=0.9.165"></script>
+<script src="./ficard-analytics.js?v=0.9.165"></script>
 </body>
 </html>
 

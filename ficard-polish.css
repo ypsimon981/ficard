@@ -301,3 +301,7 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
    Quick cards use 88% of an inset area: approximately 78% x 82% overall. */
 #homeView #cardGrid .cardItem .brandMark{padding:0!important}
 #homeView #cardGrid .cardItem .brandMark .brandLogo{width:78%!important;max-width:78%!important;height:82%!important;max-height:82%!important}
+
+/* v0.9.165 · The same logo footprint on map and shop-list mini cards. */
+.mapCardFace{padding:0}
+.mapCardFace .brandLogo{width:78%;max-width:78%;height:82%;max-height:82%}

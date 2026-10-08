@@ -363,3 +363,6 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView #cardGrid .contentTile .advertisingLabel{position:static;font-size:8px;padding:2px 5px}
 #homeView #cardGrid .contentTile strong{font-size:12px;line-height:1.15}
 #homeView #cardGrid .contentTile small{font-size:10px;line-height:1.2;display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:3;overflow:hidden}
+.softwareVersion{margin:0 0 16px!important;font-variant-numeric:tabular-nums}
+.headerMeta{grid-template-columns:1fr}
+.nativeAdLoaded>.advertisingContent,.nativeAdLoaded>.badge{visibility:hidden}

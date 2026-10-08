@@ -1,4 +1,4 @@
-/* Fi-Card v0.9.176 · Local daily cap, stable session content, offline tips. */
+/* Fi-Card v0.9.177 · Local daily cap, stable session content, offline tips. */
 (function(root){
 'use strict';
 const DAILY='ficard.content.day.v1',SESSION='ficard.content.session.v1',IDLE=30*60*1000;
@@ -28,6 +28,7 @@ function session(now=Date.now()){
 }
 function copy(){return COPY[root.FiCardI18n?.language?.()||'it']||COPY.en;}
 function adAvailable(){return root.navigator?.onLine!==false&&count<=2;}
+function slotAllowsAd(slot){model(slot);return adAvailable()&&choices[slot].ad;}
 function model(slot){
  const c=copy();let chosen=choices[slot];
  if(!chosen){chosen=choices[slot]={tip:Math.floor(Math.random()*4),ad:slot==='banner'||Math.random()<.5};}
@@ -38,11 +39,11 @@ function model(slot){
 }
 function html(slot,banner=false){
  const m=model(slot),action=m.advert?'href="'+esc(m.url)+'" target="_blank" rel="noopener noreferrer"':'href="#'+m.view+'" data-content-view="'+m.view+'"';
- return '<a class="'+(banner?'contentBanner':'card advertisingCard contentTile')+'" '+action+' style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">'+esc(m.label)+'</span><strong>'+esc(m.title)+'</strong><small>'+esc(m.text)+'</small></div>'+(banner?'<span class="badge">'+esc(copy()[2])+'</span>':'')+'</a>';
+ return '<a data-ad-slot="'+esc(slot)+'" data-ad-format="'+(banner?'banner':'native')+'" class="'+(banner?'contentBanner':'card advertisingCard contentTile')+'" '+action+' style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">'+esc(m.label)+'</span><strong>'+esc(m.title)+'</strong><small>'+esc(m.text)+'</small></div>'+(banner?'<span class="badge">'+esc(copy()[2])+'</span>':'')+'</a>';
 }
 function render(){const banner=root.document?.getElementById('homeContentBanner');if(banner)banner.innerHTML=html('banner',true);root.renderCards?.();}
-root.FiCardContent={html,model,session,adAvailable};session();
-root.document?.addEventListener('click',e=>{const link=e.target?.closest?.('[data-content-view]');if(!link)return;e.preventDefault();root.go?.(link.dataset.contentView);});
+root.FiCardContent={html,model,session,adAvailable,slotAllowsAd};session();
+root.document?.addEventListener('click',e=>{const link=e.target?.closest?.('[data-content-view]');if(!link)return;e.preventDefault();if(!link.classList.contains('nativeAdLoaded'))root.go?.(link.dataset.contentView);});
 root.document?.addEventListener('visibilitychange',()=>{if(root.document.hidden){try{root.sessionStorage.setItem(SESSION,JSON.stringify({day:day(Date.now()),count,last:Date.now()}));}catch{}}else{session();render();}});
 root.document?.addEventListener('pointerdown',()=>{if(Date.now()-last>60000){try{root.sessionStorage.setItem(SESSION,JSON.stringify({day:day(Date.now()),count,last:Date.now()}));}catch{}last=Date.now();}},{passive:true});
 root.addEventListener?.('offline',render);root.addEventListener?.('online',render);root.addEventListener?.('ficard:languagechange',render);

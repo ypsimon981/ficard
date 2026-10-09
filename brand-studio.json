@@ -1,0 +1,258 @@
+{
+  "schema": 1,
+  "source": "Fi-Card-BrandStudio",
+  "brands": [
+    {
+      "key": "action",
+      "name": "Action",
+      "color": "#FFFFFF",
+      "category": "casa",
+      "logoScale": 64,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T21:58:12+00:00",
+      "logo": "./logos-hq/studio/action-86b81bbf8080.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#005EB8"
+      ]
+    },
+    {
+      "key": "aldi",
+      "name": "ALDI",
+      "color": "#001E50",
+      "category": "supermercati",
+      "logoScale": 26,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-09T21:59:54+00:00",
+      "logo": "./logos-hq/studio/aldi-42f288f8353a.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#001E50"
+      ]
+    },
+    {
+      "key": "autogrill",
+      "name": "Autogrill",
+      "color": "#ED1C2E",
+      "category": "ristorazione",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:03:01+00:00",
+      "logo": "./logos-hq/studio/autogrill-d21fe6ba0d04.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "bata",
+      "name": "Bata",
+      "color": "#F5F4F4",
+      "category": "abbigliamento",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:04:58+00:00",
+      "logo": "./logos-hq/studio/bata-526585a9ed91.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#D71920"
+      ]
+    },
+    {
+      "key": "benetton",
+      "name": "Benetton",
+      "color": "#139B41",
+      "category": "abbigliamento",
+      "logoScale": 52,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-09T22:08:07+00:00",
+      "logo": "./logos-hq/studio/benetton-63529418e41e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#008450"
+      ]
+    },
+    {
+      "key": "bennet",
+      "name": "Bennet",
+      "color": "#FE0101",
+      "category": "supermercati",
+      "logoScale": 81,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:10:00+00:00",
+      "logo": "./logos-hq/studio/bennet-e9a78c7ceca7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "benu",
+      "name": "BENU",
+      "color": "#FFFFFF",
+      "category": "farmacia",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:12:49+00:00",
+      "logo": "./logos-hq/studio/benu-63f44d3b239f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#00A878"
+      ]
+    },
+    {
+      "key": "bershka",
+      "name": "Bershka",
+      "color": "#000000",
+      "category": "abbigliamento",
+      "logoScale": 60,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:14:49+00:00",
+      "logo": "./logos-hq/studio/bershka-a8f3d6099578.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "bottegaverde",
+      "name": "Bottega Verde",
+      "color": "#5C7E51",
+      "category": "beauty",
+      "logoScale": 95,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:16:23+00:00",
+      "logo": "./logos-hq/studio/bottegaverde-f1d0cd5c8c0e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#2E7D32"
+      ]
+    },
+    {
+      "key": "bricocenter",
+      "name": "Bricocenter",
+      "color": "#D1D1D1",
+      "category": "casa",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:17:39+00:00",
+      "logo": "./logos-hq/studio/bricocenter-a873489253d3.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "burgerking",
+      "name": "Burger King",
+      "color": "#F5EBDC",
+      "category": "ristorazione",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:20:37+00:00",
+      "logo": "./logos-hq/studio/burgerking-606520e7e02a.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#D62300"
+      ]
+    },
+    {
+      "key": "calzedonia",
+      "name": "Calzedonia",
+      "color": "#000000",
+      "category": "abbigliamento",
+      "logoScale": 89,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:23:01+00:00",
+      "logo": "./logos-hq/studio/calzedonia-61541208b47f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "carrefour",
+      "name": "Carrefour",
+      "color": "#FAFAFA",
+      "category": "supermercati",
+      "logoScale": 50,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:23:41+00:00",
+      "logo": "./logos-hq/studio/carrefour-3af7fef84fcc.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#1D4E9E"
+      ]
+    },
+    {
+      "key": "cisalfa",
+      "name": "Cisalfa",
+      "color": "#FFFFFF",
+      "category": "sport",
+      "logoScale": 70,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:24:11+00:00",
+      "logo": "./logos-hq/studio/cisalfa-8ebb69ffddcc.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "coin",
+      "name": "Coin",
+      "color": "#FFFFFF",
+      "category": "abbigliamento",
+      "logoScale": 55,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-09T22:24:30+00:00",
+      "logo": "./logos-hq/studio/coin-dd6f4581057c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "conad",
+      "name": "Conad",
+      "color": "#FFC547",
+      "category": "supermercati",
+      "logoScale": 58,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-09T22:30:55+00:00",
+      "logo": "./logos-hq/studio/conad-1debb7736974.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E3202A"
+      ]
+    },
+    {
+      "key": "crai",
+      "name": "Crai",
+      "color": "#007F00",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:32:02+00:00",
+      "logo": "./logos-hq/studio/crai-7aea931bd451.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "comet",
+      "name": "Comet",
+      "color": "#FFFFFF",
+      "category": "elettronica",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-09T22:33:55+00:00",
+      "logo": "./logos-hq/studio/comet-1ee9980021fb.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    }
+  ]
+}

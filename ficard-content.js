@@ -1,4 +1,4 @@
-/* Fi-Card v0.9.186 · Local daily cap, stable session content, offline tips. */
+/* Fi-Card v0.9.187 · Local daily cap, stable session content, offline tips. */
 (function(root){
 'use strict';
 const DAILY='ficard.content.day.v1',SESSION='ficard.content.session.v1',IDLE=30*60*1000;

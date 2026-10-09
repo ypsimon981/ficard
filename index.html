@@ -15,7 +15,7 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.2"></script>
-  <script src="./ficard-theme.js?v=0.9.184"></script>
+  <script src="./ficard-theme.js?v=0.9.185"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
   <link rel="stylesheet" href="./vendor/MarkerCluster.css">
@@ -318,8 +318,8 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.184">
-<link rel="stylesheet" href="./ficard-polish.css?v=0.9.184">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.185">
+<link rel="stylesheet" href="./ficard-polish.css?v=0.9.185">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -346,7 +346,6 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
       <div class="chips homeFilters">
         <button class="chip" data-filter="all">Tutte</button>
         <button class="chip active" data-filter="used">Per distanza</button>
-        <button class="chip" data-filter="fav">Preferite</button>
         <button class="chip" data-filter="category">Per categoria</button>
         <button class="chip searchToggle" id="searchToggle" type="button" aria-label="Cerca una carta…" title="Cerca una carta…" aria-expanded="false" aria-controls="cardSearchRow"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 5 5"/></svg></button>
       </div>
@@ -363,11 +362,10 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
         <div id="overviewMap" class="locationMap" aria-label="Mappa dei negozi delle tue tessere"></div>
         <div class="shopFilters">
           <label for="shopCategory">Di che negozio hai bisogno?</label>
-          <div class="shopFilterRow"><select id="shopCategory" class="field"><option value="">Tutte le categorie</option></select><button type="button" id="shopReset" class="chip" aria-label="Azzera tutti i filtri dei negozi">Reset</button></div>
           <label for="shopCard">Hai un marchio in mente?</label>
-          <div class="shopFilterRow"><select id="shopCard" class="field"><option value="">Tutti i marchi</option></select><label class="shopFavoriteFilter" title="Mostra solo negozi preferiti"><input type="checkbox" id="shopFavorites" aria-label="Solo negozi preferiti"><span>Solo ❤️</span></label></div>
+          <div class="shopFilterRow"><select id="shopCategory" class="field"><option value="">Tutte le categorie</option></select><select id="shopCard" class="field"><option value="">Tutti i marchi</option></select><label class="shopFavoriteFilter" title="Mostra solo negozi preferiti"><input type="checkbox" id="shopFavorites" aria-label="Solo negozi preferiti"><span aria-hidden="true">♥</span></label></div>
         </div>
-        <button type="button" id="shopSearchHere" class="secondary">Cerca in questa zona</button>
+        <div class="shopSearchActions"><button type="button" id="shopSearchHere" class="secondary">Cerca in questa zona</button><button type="button" id="shopReset" class="chip" aria-label="Azzera tutti i filtri dei negozi">Reset</button></div>
         <div id="mapInfo" class="hint" role="status" aria-live="polite">Usa la tua posizione o cerca nella zona della mappa.</div>
         <div class="mapLegend"><span class="chip">📍 Punto vendita</span><span class="chip">◎ La tua posizione</span><span class="chip">Tocca un gruppo per vedere i negozi</span></div>
       </div>
@@ -383,7 +381,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
       <div class="sectionTitle"><h2>Impostazioni</h2></div>
       <div class="panel">
         <div class="profileBrand"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAACgCAMAAAC8EZcfAAABIFBMVEVj3NxcFvWj4eiRZPbc4/dbGfNeF/Wtj/hbFvICtLUAqr0rBLQd1tI8AfYJ088lrsh3Tu4G088G19Bp+fie+vdNuNDDq/n4+P0lC6AmDKMEAH9WA6gAf3+CI/0oDaYJs86Q8+uL8uoNs8li6+H/AP86DtQEtcXc4/Vi7OI9ENo8EN1x/7iqAP/m7vEAf/8A/38A/6p/f39qtLSqqqoAf78RqL8A/wAAwr9/AH95vNSqqv8AAABYF/RnGvn5+fwByMkB1c8qDawkDJgBnMIBuMUBp8Q6EM5NCfJz6+Lu7PsAAP9CEtoAlruK8ulQ5twN4dgw5NoA//83AemF7eU2CdV/AP/XyPlUAP5pJfbJtfkxELvN6vFwNPVZJuq5pvSOZvV7nEGQAAAAYHRSTlP6o/z9+iBh/doE/ArsBiT1/GClBg79/QjJnwIDAv5lHl+ZlF0Bal6onaHuAwNUAgIDAgMDBIUB/QIqAwD8/P38+/z8/Pz8/P38/QH8/Pv8/PwB/fz8Av0D/f38/f39/f3973ByAAANO0lEQVR42u3cZ1fbSBcAYGG54gqmhBISUjbb69tHNthgFBtjYseN/v//xXvvzEiaGWkkubDkg+ec9SZwDn5yyzQ5Mcg3PowVcAVcAVfAFXAFXAFXwBVwBXyWUd36aeunP7d2v01g34Nt/fHtAXe3EPb2+Pj47Rb8cusbA1a3qO6KjcTxFql+S8DqT8hLXF19vXLG20ViaCy59DC3GDyPt6DQWHLp7WJuv8JwXrnwr5cHVqHStt4bDIYyAXi11a++LLBf/YPyDOMzHWj7KgiPyYsCaXiq33/mOia8YkYnhPMKjeXktvpe4qGQRdAhvn0x4J+UZ7jJFYMoCI9fBtiv9jG3gAsAciLP8xbZ/duB/Ry8vP++Z/R6PSNQyIzKXNjP5fowcv1nBvZZbimvR4mBQNYjxtXxbpXjvJ/w+/MB+9XfCClh6fXcEQhEnGFcJRLvSZXjSqWNTRgbJfgxh88D7OMblTa/FL70xMGFMhRxyXq9nvzFwRVOYVxfX59ubhCSewYg8qobyMMhCalNyDVsZhDHxlsH547rzVKkcGbg78ArbRQKjOcTCuETcfWEIdu48LRE+ssE8txeuzqfEALY6/lxJ+5QjSVyuDTgbyy31wUoIJ0QdF+1uADg9WbEdBMfmMvR3FKeTmh8vlJw5+cnocDT643wJBtxc4ult8lxKrFHXxScAThVFyQslBYHHuZ46V3T+cEv/GKIeYXInZ+vB/MCq7C/GJDnFlrulM9gHhBfe58F3F2CRs4ZJ7ohADdCpxojMreHrPSu3aIRh6HgztfX18+lEU3cXADIp5XTa7Gq3QAaVxKufO4bJychRLcI565B5OU2ZB71nfpw/si5xugYhk6FRuhmSsqtS1RxrfVWq6XRnZ9EhzB0otECc77cstFLSGltQehApxOGh5ArQ7vE0PoCeV8SEq4lDQ0wapxu7joR7MQG9slGwc87vfJwXUWnF0YRT9+R/ofRZDSagG80OogDBF/A3uMLLb3EdivAFhHFQGShYMDCfde+++QcV1iz/BwJDPb1KK/c7bZaMwJF1b8pDFaeu7u2W827qVQ6vbaWzWbX1lKEfOiEAw9JSeczwnkhvYJKgCUA5q3Y9fb4JmOaZjY7ndbYeF3LpoEYCuznNgPyiz9vu3vWOjubQUinxyBY8iaDsntwZbM1ebyGKI5CgJDggP7A+it3gYcj1Edf6LxNYQkZNt7JMJdt26iZTt3gecJsqjMKAeYCducJGj/uA6HGyGbFchAMcvnkyCzq8MGEGE4mHR0wF9QhBq2/M2GoLpA5sHZbiRjCLAtcllWLN16vkYkO2CcBFYj9q/Wdl7dVWN2NGLgc2XRaiz+cMgxIsT/DJ59pAZ75hd3WdkKYLmgqHzNOxBDmxCx28NwQ/hwM7AfNMUk1gNxXdgsNZBxmeyGrWTX2C3ixZlRmU2zhiwXsBQaw22IL8zjzVMGIsSLzDapjobRmCSPPcSzgVwjg2ZkC7G5japOZeyeXPEba4XwzZo7TLMexgEm1hcF3huFLPlm2984xR8wIpjURDFrnfBmGaRB9maltaXC1BXkYQV2K1S4+KYDlrCuFD31t0w5xLOjTA2Gi3jylO11nS34CPXLXlesPffd2Te+iDetPfm3xFNO9Ft9JnrizoDTJtLqGxuf0qxivmMDsDMCSfKw5MWQg9C/k3LRr+px6/apOODXVB1MAbGemr83XcYF0rZOAaorP7vw+7cSnqUE6nwPs3nzK7Nwkcca6eR0TmHNzzIgYQRGICR7b2s7w0lrz0Sw6ncO0iTAzczNOtsUtzzRuBEvSmUYBdlv18ACKgXNS6sBqU9ilZnYEWBsH+1U9k40FBGHhVCQqQPjtjj3DrMdgNJdixDyZO8bxIijnmAM9X5dWYOxpz7LNzOPNOBTm7tFqcSNYko+HCHRC2C3DnzTuvIwZfhRcGtisEaRbQhmYdIHrEM+MrdkI1Pxfv+G0CButQTM7jQcUJhoO9JY6XERMW19x8uRim44vnEi/nazFjWBfLkIZeAfTQVD4vB8tAjPhQPHL4+kMwDcFBdjqepNMMii/zm5ZyfOOBij9lh2tYq8k3obBmQlFIPTIjS2vXrXAKZB+QYpgW+0Ufko24TTFT8nxgRs64La/R6TDhvwtqQbb8imZnt8t95RcmwUoTzTihjWoRwKrT8qxCKNHq5plRx2T0+xkrL0fFHOsAO9tdXbhbRLY2plkWz6+2/E2rqmwCCo5TrrAbusOZgPfOcgKOZXY03vv+O6eRuMeOzsa4KGUYxEo9YgAq0UflXytz+fNwOHcfejuqA/JZiBwO2gdmXfUQo4pNMMdMtFfom8EAOlm/+nvALIATkhaB5T6OEmvLikQeqSyFKDS974A0gvCECDpdwp+YNBCtxjSC2bQHNMhayEPcrwcJxwg9sjYWiaQR1G5VkqTIokCijn2gGX/bnpxoy/Jji8U+C/YFJ6wBxznHnBbv9daVOj1BzRwJxoIIXzHn6aue8DE0oFql+BzkmKHxABiEbLnG+tfndstBE6fB1bLrq2tpdMpfBrmGiIi+OZcAeKBKblUGfw/i650KpVibzuZCIZQIITwHQshB3bVzeBCgwfMcaGmCEN+3hkO7JPvODDhABdf6AJco3wxPxnh87lOR3keGwV8w59nsdujLj2z63rkckYXGU2KxcloJJFUYTiQ9rEMlDaDsg9GgCvLXUX3LSeYyMmoE+vzRBHAHM8xB4b1yKUClAufFxgksuPL4iLAQ55jD6jrkctLUZhNe50IBYbxmkUVH0j6/fKJCCxreuRSAiIP62sy+k+kK0IeBeQ5doHbgZvBS3FYsFXfL8aOWETGIyPIcuwCAzeDlxeiz0oJC1X4m3/APi5OFgFCDMtCFwOw/eD3XQhCy92IaD5lwmHu42CohtECQL6YFDjwzr8ZRJ8ntNZIXp/N0QRkLiyFH6Rgi+8iQMxxq0CvWLFHHu0gn2u0Up0D/7uMDgA2kmD4CQ9hdzV/iskbyPF6mQH9m0HPR4VWVpyAMWT5vBuykSPznUD0wmjgG/KOA88CFjrRh0SeYQiZACMCLPjCJJvStVOMJiHf4ac9GVBd6BTfxeXFEYTMn8vA+wa8M7LULf7swA72MQKT/oXuQvUNm0euTAfjT72n96Y5dcPofoJijhqEPnaAyq3HxdDna+59/PjDmgbGbNOnJ9vM2Hizfu/eImUXaJJ/QI5bDIibwYE+fo1XzWZj+GMAC2D2g/lgm+Op/VQf2zfjwQ4C3VrMdoKnzDhA2DC0EFin1/tPA239NZownPkmOxiwMnvAxyQ748ogU59C2Ka2CVm4AaMHtDDFczcJLHe7MNFQIPbIQBe/2yYFXlJg1nqoWHblZtyGiR0/U4VAvFDHCHpA2wPOX4O0CM/x9giAbo9c3F5IJch9HDjMtPHPYtbpffuYAk3AZcCEwB05gtYiXUw3DC0KhCZ2euTiFkZDEDaaHMi6hbbA4KlOn4piBE2I4IMbwUcGdM+vITN1DCDp/1Vu3WGK3R4BXwOJt5w3dHwi8IECk06KTT/QnVOdz/DMCcyRf3Y/QQTLGAjHh8MVuj4B2H5QU6wF6kswVorJryS3/t9k/Z2B70N9Do8DXV9DjiAD2pFAa5G12FmRd5MHnyAqtuvzAuj5GnINmrQGPeCAAwcKUB/AeClm+85d8oltBh0fC+FQyK8KfPIDH0TglAO9T1vOC4Qsb5F8km4GGw0R2PD6A4ENH1CoQcsB2jIwNIAxgRjBThL3Wg15KL5GUBePnYnaBTpLnc1aOPQQHx8IKa4Mb/U+P1BqEgZ0a9ADpkIDOAvwl/pDQwGqvlAgq0GzvsNrMIk7CSsd6uvEB/6P/JIUZLeBvsbFcOgAs3IXcyB8ESMIKW5XmK8Y/r7p+BHcrXgBvFV4HvDCA9IuFjYLDhCaZPD4aMXyzfD36vJkT+xgxceBw6GvSZQIVjCCN/aDzXz5qLedxP+Lf7uvxOq7bTYDIzh0l7qhrwYfoQYrY3Pw4C7B+ei3jQvcJ3mRdxvEk4HOWsw3C2NrUKmwMwk7lsCRvUiWBzwgR5r2lYC4TZSaZDDIPJpPD5RkD7yTwFrojcIcwLwE1PicaeaGpriSeaqAbIBDuXjFC49JvBuw+BHc0/okIEawAjLLGuKwfvRdVqOOTPZjvvE8wGazGZLiIf6Hr9Lhjl9W82eE+fg3rsbss4zexyI4HAr31c41urs2HOQnIzLDmL0GmyFADN0AD8LDYVZ57nCQn++uemagH9dsiMAff/jh48d00QsZveGa8xJ9lpWE5F+F9gcdH4tFd+7t5PPzX+/PvdSF5RdGfgkhmxdIl5IIXyM/ypMlj/gphrUkgocR7LwcEJOs8uQWaeyRpQdwFuB+J/8qPMd5cvCSQCzDvTDgHtknLwqE998/CvF1RuSFgRghDCKbb5QGOVp+g8wOxE4h+aO9vb1X0tjbO8o/j2/2f85lP6+dhr4NIK5h+539Druz6bBHqvv5g+eJ3+of6VwBV8AVcAVcAVfAlx7/BwYwKYJUVKbtAAAAAElFTkSuQmCC" alt="Fi-Card"><div><strong>Fi-Card</strong><span>Non devi cercare la card giusta, è lei che trova te.</span></div></div>
-        <p class="hint softwareVersion"><span id="softwareVersionLabel">Versione software</span> · <span class="release">v0.9.184</span></p>
+        <p class="hint softwareVersion"><span id="softwareVersionLabel">Versione software</span> · <span class="release">v0.9.185</span></p>
         <div class="settingsFacts">
           <div class="settingsFact"><span class="factIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 3 4 6v6c0 5 8 9 8 9s8-4 8-9V6Z"/><path d="m8 12 3 3 5-6"/></svg></span><div><b>Nessun account, nessuna registrazione</b><p>Non servono dati personali per gestire le tue carte.</p></div></div>
           <div class="settingsFact"><span class="factIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="6" y="2" width="12" height="20" rx="3"/><path d="M10 18h4M9 9l2 2 4-4"/></svg></span><div><b>Le tue carte, anche offline</b><p>Carte e negozi salvati restano sul telefono, pronti da consultare anche senza rete o se i server non rispondono.</p></div></div>
@@ -406,9 +404,13 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
           <div class="backupHeading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg><span>I tuoi dati, la tua copia di sicurezza</span></div>
           <p class="hint">Crea ogni tanto un backup e conservalo in File, iCloud o in un posto sicuro, soprattutto prima di cambiare telefono o cancellare i dati dell’app.</p>
           <button class="secondary" id="exportData">Esporta backup carte</button>
-          <button class="secondary" id="shareBackup">Condividi tutte le carte</button>
-          <p class="hint">Invia le tue carte a un familiare, che potrà aggiungerle alla sua Fi-Card. Include anche alias, note, foto e posizioni associate.</p>
-          <button class="secondary" id="importData">Ripristina o unisci un backup</button>
+          <div class="cardSetSharing">
+            <svg class="cardSetGraphic" viewBox="0 0 280 84" aria-hidden="true"><g fill="#E8E2FF" stroke="#5B3DF5" stroke-width="2"><rect x="18" y="9" width="68" height="44" rx="7"/><rect x="27" y="18" width="68" height="44" rx="7"/><rect x="36" y="27" width="68" height="44" rx="7" fill="#5B3DF5"/></g><path d="M121 42h38m-9-9 9 9-9 9" fill="none" stroke="#5B3DF5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="176" y="27" width="68" height="44" rx="7" fill="#E8E2FF" stroke="#5B3DF5" stroke-width="2"/><rect x="192" y="9" width="68" height="44" rx="7" fill="#D7FAF3" stroke="#159D89" stroke-width="2"/><path d="m214 31 7 7 13-14" fill="none" stroke="#159D89" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><g stroke="#fff" stroke-width="2"><path d="M49 41v17m5-17v17m4-17v17m6-17v17m4-17v17m7-17v17m5-17v17m5-17v17"/></g></svg>
+            <button class="secondary" id="shareBackup">Condividi tutte le tue carte</button>
+            <strong class="sharingTagline">Importa solo quelle mancanti.</strong>
+            <p class="hint">Scambiatevi i backup in famiglia: Fi-Card aggiunge le carte mancanti senza duplicare quelle già presenti. Il file include anche alias, note, foto e punti vendita.</p>
+            <button class="secondary" id="importData">Importa carte da un backup</button>
+          </div>
           <p class="hint" id="backupInfo">Puoi salvare il backup anche in iCloud Drive tramite File.</p>
         </div>
         <button class="secondary" id="importImagesProfile">Importa carte da screenshot</button>
@@ -497,15 +499,15 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
 
-<script src="./ficard-content.js?v=0.9.184"></script>
-<script src="./ficard-ads-config.js?v=0.9.184"></script>
-<script src="./ficard-ads.js?v=0.9.184"></script>
+<script src="./ficard-content.js?v=0.9.185"></script>
+<script src="./ficard-ads-config.js?v=0.9.185"></script>
+<script src="./ficard-ads.js?v=0.9.185"></script>
 <script>
 const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.09-release2-web-v0.9.184";
+const RELEASE="2026.10.09-release2-web-v0.9.185";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -770,7 +772,7 @@ function cardAliasHtml(c){return c.alias?'<span class="cardAlias" title="'+esc(c
 function cardDisplayName(c){return c.name+(c.alias?' · '+c.alias:'')}
 function cardHtml(c){
  const b=brandFor(c),label=c.fav?"Rimuovi dai preferiti":"Aggiungi ai preferiti";
- return '<div class="card cardItem '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button class="cardOpen" data-card-open="'+c.id+'" aria-label="Apri '+esc(cardDisplayName(c))+'"><span class="brandMark" aria-hidden="true">'+brandLogoHtml(b,'wallet')+'</span>'+cardAliasHtml(c)+'<div class="name">'+esc(c.name)+'</div><div class="type">'+esc(categoryLabel(c))+'</div></button><button type="button" class="favoriteToggle cardFavorite '+(c.fav?"isFavorite":"")+'" data-toggle-fav="'+c.id+'" aria-label="'+label+'" aria-pressed="'+(c.fav?"true":"false")+'" title="'+label+'">'+favoriteStarSvg(c.fav)+'</button></div>'
+ return '<div class="card cardItem '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button class="cardOpen" data-card-open="'+c.id+'" aria-label="Apri '+esc(cardDisplayName(c))+'"><span class="brandMark" aria-hidden="true">'+brandLogoHtml(b,'wallet')+'</span>'+cardAliasHtml(c)+'<div class="name">'+esc(c.name)+'</div><div class="type">'+esc(categoryLabel(c))+'</div></button></div>'
 }
 function advertisingPreviewHtml(slot='fourth'){
  if(window.FiCardContent)return window.FiCardContent.html(slot);
@@ -786,7 +788,7 @@ function mainCardTiles(list,showAdvertising,focusId){
 let arrivalFitFrame=0;
 function fitArrivalMessages(){
  document.querySelectorAll('#cardGrid .walletArrival').forEach(el=>{
-  const width=el.clientWidth;if(!width)return;
+  const width=el.clientWidth*.95;if(!width)return;
   const range=document.createRange();range.selectNodeContents(el);
   let low=0,high=width;
   for(let i=0;i<14;i++){
@@ -959,10 +961,8 @@ function openCard(id,recordUse=true){
  const c=cards.find(x=>x.id===id);if(!c)return;currentCardId=id;if(overviewMap)overviewMap.closePopup();if(overviewLayer?.unspiderfy)overviewLayer.unspiderfy();if(recordUse){c.lastUsed=Date.now();c.useCount=(c.useCount||0)+1;save();renderCards()}
  const b=brandFor(c),n=nearestFor(c,currentPos),locs=(c.locations||[]).map((l,i)=>({l,i,d:currentPos?distanceM(currentPos,l):Infinity})).sort((a,b)=>a.d-b.d||a.i-b.i);
  const locHtml=locs.length?'<div class="panel" style="margin-top:12px"><b>Punti vendita associati</b>'+locs.map(x=>'<div class="promo" style="margin-bottom:0"><div class="locationBrandIcon" style="background:'+esc(c.color||"#5B3DF5")+'"><span>'+mapBrandInnerHtml(c)+'</span></div><div class="grow"><small>'+esc(distanceLabel(x.d))+'</small></div><button class="chip" title="Naviga" aria-label="Naviga" data-nav-loc="'+x.i+'">'+pinSvg()+'</button><button class="chip" data-remove-loc="'+x.i+'">Dissocia</button></div>').join("")+'</div>':'<p class="hint">Vuoi ritrovare questa carta quando sei in negozio? Tocca “Associa posizione attuale”: dalla prossima visita la vedrai tra le carte vicine.</p>';
- document.getElementById("detailContent").innerHTML='<div class="detailHero"><div class="detailBrandHeader '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><button type="button" id="favBtn" class="detailFavorite" aria-label="'+(c.fav?'Rimuovi dai preferiti':'Aggiungi ai preferiti')+'" aria-pressed="'+String(!!c.fav)+'" title="Preferita">'+favoriteStarSvg(c.fav)+'</button><span class="detailLogo">'+brandLogoHtml(b,'wallet')+'</span><h2>'+esc(c.name)+'</h2>'+cardAliasHtml(c)+'<p>'+esc(categoryLabel(c))+'</p></div><div class="barcodeBox"><canvas id="detailSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>'+
- '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="cardMapBtn" type="button" aria-label="Mappa dei negozi di questa carta" title="Mappa dei negozi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button></div><div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>'+
- 
- '<button class="danger" id="deleteBtn">Elimina carta</button>';
+ document.getElementById("detailContent").innerHTML='<div class="detailHero"><div class="detailBrandHeader '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><span class="detailLogo">'+brandLogoHtml(b,'wallet')+'</span><h2>'+esc(c.name)+'</h2>'+cardAliasHtml(c)+'<p>'+esc(categoryLabel(c))+'</p></div><div class="barcodeBox"><canvas id="detailSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>'+
+ '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="cardMapBtn" type="button" aria-label="Mappa dei negozi di questa carta" title="Mappa dei negozi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button></div><div class="detailDeleteRow"><button class="chip" id="deleteBtn">Elimina carta</button></div><div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>';
  drawBarcode("detailSvg",c);showModal("detailModal");
  document.querySelector("#detailContent .barcodeBox").insertAdjacentHTML("beforeend",'<p class="hint" data-screen-awake role="status"></p>');syncCardScreen();
  document.getElementById("fullBtn").onclick=()=>showFull(c);
@@ -970,7 +970,6 @@ function openCard(id,recordUse=true){
  document.getElementById("editBtn").onclick=()=>openEditCard(c);
  document.getElementById('photoBtn').onclick=()=>{document.getElementById('cardExtras').innerHTML='<div class="panel">'+(c.photo?'<img class="originalPhoto" src="'+esc(c.photo)+'" alt="Foto della tessera originale">':'<p class="hint">Conserva una foto della tessera originale su questo dispositivo.</p>')+'<label for="cardPhoto">Scegli o scatta una foto</label><input id="cardPhoto" type="file" accept="image/*" class="field">'+(c.photo?'<button class="secondary" id="removePhoto">Rimuovi foto</button>':'')+'</div>';document.getElementById('cardPhoto').onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{c.photo=await resizeCardPhoto(file);save();openCard(c.id,false);document.getElementById('photoBtn').click();toast('Foto salvata sul dispositivo')}catch(err){toast(err.message)}};const remove=document.getElementById('removePhoto');if(remove)remove.onclick=()=>{delete c.photo;save();openCard(c.id,false);toast('Foto rimossa')}};
  document.getElementById('shareBtn').onclick=()=>shareCard(c);
- document.getElementById("favBtn").onclick=()=>toggleFavorite(c.id);
  document.getElementById("assocBtn").onclick=()=>associateLocation(c.id);
  document.getElementById("mapAssocBtn").onclick=()=>openLocationPicker(c.id);
  document.querySelectorAll("[data-remove-loc]").forEach(btn=>btn.onclick=()=>{removeLocation(c.id,Number(btn.dataset.removeLoc));openCard(c.id,false);toast("Posizione dissociata")});document.querySelectorAll("[data-nav-loc]").forEach(btn=>btn.onclick=()=>openNavigation(c.id,Number(btn.dataset.navLoc)));
@@ -1167,7 +1166,7 @@ function go(v){
    attachScandixitSizing();
   };
   panel.setAttribute("scrolling","no");
-  panel.src="./scandixit.html?section=ficard&v=0.9.184";
+  panel.src="./scandixit.html?section=ficard&v=0.9.185";
  }else if(v==="scandixit"){
   attachScandixitSizing();
  }else if(panel.hasAttribute("src")){
@@ -1337,14 +1336,14 @@ if(scannerBridge){
 }else{load();setTimeout(()=>refreshPosition(),700);}
 </script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
-<script src="./merchant-ocr.js?v=0.9.184"></script>
-<script src="./ficard-stores.js?v=0.9.184"></script>
-<script src="./ficard-stores-ui.js?v=0.9.184"></script>
+<script src="./merchant-ocr.js?v=0.9.185"></script>
+<script src="./ficard-stores.js?v=0.9.185"></script>
+<script src="./ficard-stores-ui.js?v=0.9.185"></script>
 <script src="./ficard-promo.js?v=0.9.120"></script>
 <script src="./ficard-viewport.js?v=0.9.119"></script>
 
-<script src="./ficard-analytics-config.js?v=0.9.184"></script>
-<script src="./ficard-analytics.js?v=0.9.184"></script>
+<script src="./ficard-analytics-config.js?v=0.9.185"></script>
+<script src="./ficard-analytics.js?v=0.9.185"></script>
 </body>
 </html>
 

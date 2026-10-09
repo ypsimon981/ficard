@@ -26,3 +26,13 @@ test('sharing a card set uses a compatible file without marking a backup saved',
  await ctx.shareBackup([{name:'Elite',alias:'Famiglia',code:'0408630088892',format:'EAN13',locations:[{lat:41,lng:12}]}]);
  assert.equal(calls.length,1);assert.equal(calls[0].data.version,2);assert.equal(calls[0].data.cards[0].alias,'Famiglia');assert.equal(calls[0].data.cards[0].code,'0408630088892');assert.match(calls[0].name,/\.json$/);assert.equal(messages.length,0);
 });
+test('number OCR retries an independent crop only when the first crop fails',async()=>{
+ const crops=[],answers=[{data:{text:'',confidence:0}},{data:{text:'0 408 630 088 892',confidence:94}}];
+ const ctx=vm.createContext({setTimeout,clearTimeout,numberImage:async(_,broad)=>{crops.push(broad);return broad},getMerchantOcrWorker:async()=>({recognize:async()=>answers.shift()}),inferManualFormat:()=> 'EAN13',releaseMerchantOcr:async()=>{}});
+ vm.runInContext(extract(ocr,'function numberFromOcr(','async function numberImage('),ctx);
+ vm.runInContext(ocr.slice(ocr.indexOf('async function fillNumberFromImage(')),ctx);
+ const draft={};await ctx.fillNumberFromImage({},draft);
+ assert.deepEqual(crops,[false,true]);assert.equal(draft.code,'0408630088892');assert.equal(draft.ocrRecovered,true);
+ crops.length=0;answers.push({data:{text:'0401011025646',confidence:95}});
+ await ctx.fillNumberFromImage({},{});assert.deepEqual(crops,[false]);
+});

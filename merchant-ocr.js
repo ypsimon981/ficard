@@ -85,10 +85,13 @@ function numberFromOcr(text,confidence){
  const unique=[...new Set(values.filter(s=>s.length>=6&&s.length<=32&&!/^(\d)\1+$/.test(s)))];
  return unique.length===1?unique[0]:null;
 }
-async function numberImage(file){
+async function numberImage(file,broad=false){
  const url=URL.createObjectURL(file),img=new Image();
  try{
   img.src=url;await img.decode();
+  // The barcode detector may select a partial band after resizing/compression.
+  // An independent, unsharpened lower-image pass must not reuse that band.
+  if(broad)return FiCardReader.canvasFrom(img,0,{x:0,y:img.naturalHeight*.55,w:img.naturalWidth,h:img.naturalHeight*.45},false,1800);
   const full=FiCardReader.canvasFrom(img,0,null,false,1800),band=FiCardReader.bandCrop(full);
   // Include the printed number below the bars, without merchant header or phone UI.
   const region=band?{x:0,y:Math.max(0,band.y+band.h*.65),w:full.width,h:Math.min(full.height-(band.y+band.h*.65),Math.max(band.h*.7,full.height*.12))}:{x:0,y:full.height*.55,w:full.width,h:full.height*.45};
@@ -97,10 +100,14 @@ async function numberImage(file){
 }
 async function fillNumberFromImage(file,draft){
  try{
-  const image=await numberImage(file),worker=await getMerchantOcrWorker();let timer;
+  const worker=await getMerchantOcrWorker();
+  for(const broad of [false,true]){
+  const image=await numberImage(file,broad);let timer;
   const data=await Promise.race([worker.recognize(image),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Lettura numero scaduta')),30000)})]).finally(()=>clearTimeout(timer));
-  const code=numberFromOcr(data.data.text,data.data.confidence);if(!code)return;
+  const code=numberFromOcr(data.data.text,data.data.confidence);if(!code)continue;
   draft.code=code;draft.format=inferManualFormat(code);draft.ocrRecovered=true;
   draft.error='Numero recuperato dal testo: verifica le cifre, lo zero iniziale e il formato proposto. Seleziona “Importa questa carta” per confermare.';
+  return;
+  }
  }catch(e){await releaseMerchantOcr()}
 }

@@ -25,6 +25,7 @@ test('quick cards require precise GPS and show all located cards',()=>{
  }
 });
 function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0,accuracy:10},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);
+vm.runInContext(section(html,'function cardAliasHtml(','function cardHtml('),ctx);
 vm.runInContext(section(html,'function distanceM(','function smartCard()')+section(html,'function quickPositionReady()','function nearbyCardCount()'),ctx);
 vm.runInContext(section(ui,'function savedAt(','function storeBrand(')+section(ui,'smartShopCandidates=function()','function resetShopFilters()'),ctx);return ctx}
 const card=(id,key)=>({id,name:id,brandKey:key,locations:[]});const point=(meters,id)=>({lat:meters/6371000*180/Math.PI,lng:0,osmId:id});

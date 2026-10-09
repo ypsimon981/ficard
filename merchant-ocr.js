@@ -51,7 +51,7 @@ async function merchantHeaderImage(file){
    if(isBarcode&&start<0)start=y;
    if(!isBarcode&&start>=0){if(y-start>=Math.max(8,h*.012)){band=start/h;break}start=-1}
   }
-  const top=band===null?0:Math.max(0,band-.15),bottom=band===null?.40:Math.max(top+.03,band-.025);
+  const top=0,bottom=band===null?.50:Math.max(.03,band-.025);
   const out=document.createElement('canvas');out.width=Math.min(1800,img.naturalWidth);out.height=Math.max(1,Math.round(img.naturalHeight*(bottom-top)*out.width/img.naturalWidth));
   const oc=out.getContext('2d',{willReadFrequently:true});oc.drawImage(img,0,img.naturalHeight*top,img.naturalWidth,img.naturalHeight*(bottom-top),0,0,out.width,out.height);
   const data=oc.getImageData(0,0,out.width,out.height);let sum=0;
@@ -77,3 +77,30 @@ async function fillMerchantFromImage(file,draft){
  }catch(e){draft.merchantNote='OCR non disponibile: puoi comunque importare il codice e compilare il negozio.'}
 }
 async function releaseMerchantOcr(){const worker=merchantOcrWorker;merchantOcrWorker=null;if(worker)try{await worker.terminate()}catch(e){}}
+
+// Recover printed digits only as a suggestion; they do not identify the symbology.
+function numberFromOcr(text,confidence){
+ if(confidence<60)return null;
+ const values=String(text||'').split(/\n/).map(s=>s.trim()).filter(s=>/^[0-9][0-9 \t]{4,}[0-9]$/.test(s)).map(s=>s.replace(/\s/g,''));
+ const unique=[...new Set(values.filter(s=>s.length>=6&&s.length<=32&&!/^(\d)\1+$/.test(s)))];
+ return unique.length===1?unique[0]:null;
+}
+async function numberImage(file){
+ const url=URL.createObjectURL(file),img=new Image();
+ try{
+  img.src=url;await img.decode();
+  const full=FiCardReader.canvasFrom(img,0,null,false,1800),band=FiCardReader.bandCrop(full);
+  // Include the printed number below the bars, without merchant header or phone UI.
+  const region=band?{x:0,y:Math.max(0,band.y+band.h*.65),w:full.width,h:Math.min(full.height-(band.y+band.h*.65),Math.max(band.h*.7,full.height*.12))}:{x:0,y:full.height*.55,w:full.width,h:full.height*.45};
+  return FiCardReader.canvasFrom(full,0,region,true,2000);
+ }finally{URL.revokeObjectURL(url)}
+}
+async function fillNumberFromImage(file,draft){
+ try{
+  const image=await numberImage(file),worker=await getMerchantOcrWorker();let timer;
+  const data=await Promise.race([worker.recognize(image),new Promise((_,reject)=>{timer=setTimeout(()=>reject(Error('Lettura numero scaduta')),30000)})]).finally(()=>clearTimeout(timer));
+  const code=numberFromOcr(data.data.text,data.data.confidence);if(!code)return;
+  draft.code=code;draft.format=inferManualFormat(code);draft.ocrRecovered=true;
+  draft.error='Numero recuperato dal testo: verifica le cifre, lo zero iniziale e il formato proposto. Seleziona “Importa questa carta” per confermare.';
+ }catch(e){await releaseMerchantOcr()}
+}

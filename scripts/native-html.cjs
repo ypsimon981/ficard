@@ -11,7 +11,7 @@ function nativeHtml(html,name){
  backup=replaceOnce(backup,download,"if(window.FiCardNative){await window.FiCardNative.saveBackup(blob,filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json');}else{"+download+'}');
  backup=replaceOnce(backup,"toast('Backup pronto da salvare in File')","toast(window.FiCardNative?'Backup salvato':'Backup pronto da salvare in File')");
  html=html.slice(0,start)+backup+html.slice(end);
- html=replaceOnce(html,'if(navigator.canShare?.({files:[file]}))','if(window.FiCardNative){await window.FiCardNative.saveFile(blob,file.name)}\n   else if(navigator.canShare?.({files:[file]}))');
+ html=replaceOnce(html,'if(navigator.canShare?.({files:[file]})){await navigator.share({title:c.name','if(window.FiCardNative){await window.FiCardNative.saveFile(blob,file.name)}\n   else if(navigator.canShare?.({files:[file]})){await navigator.share({title:c.name');
  html=replaceOnce(html,"'Scopri FiCard: '+new URL('./',location.href).href","'Scopri FiCard: https://fi-card.app/'");
  // Stop a replacement restore if saving the safety backup is cancelled/fails.
  html=replaceOnce(html,'document.getElementById("replaceBackup").onclick=()=>','document.getElementById("replaceBackup").onclick=async()=>');

@@ -349,8 +349,8 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView .smartBlock{display:none!important}
 #homeView #cardGrid .walletTile{min-width:0}
 #homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1}
-#homeView #cardGrid .walletDistance{text-align:center;font-size:16px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
-#homeView #cardGrid .nearbyHero .walletDistance{font-size:20px}
+#homeView #cardGrid .walletDistance{text-align:center;font-size:14px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
+#homeView #cardGrid .nearbyHero .walletDistance{font-size:18px}
 #homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:12px;margin-top:3px}
 
 /* v0.9.176 · Shared advertising/tips placements. */
@@ -379,3 +379,11 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView #cardGrid .walletTile,#homeView #cardGrid .card{min-width:0;max-width:100%;box-sizing:border-box;}
 .brandPick .catalogLogo{border-radius:7px;padding:5px;box-sizing:border-box;}
 .brandPick .catalogLogo .brandLogo{max-width:100%;max-height:100%;object-fit:contain;}
+
+/* Optional personal label, inside the existing card footprint. */
+.cardItem .cardOpen,.smartCardOpen{position:relative}
+.cardAlias{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:650;line-height:1.25}
+.cardItem .cardAlias,.smartCardOpen .cardAlias{position:absolute;bottom:9px;left:12px;right:12px;text-align:center;color:var(--card-ink);padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent)}
+.cardItem:has(.cardAlias) .brandMark{transform:translateY(-8px)}
+.detailBrandHeader .cardAlias{font-size:16px;margin-top:4px;color:var(--card-ink)}
+@media(max-width:360px){.cardItem .cardAlias{font-size:12px;bottom:6px}}

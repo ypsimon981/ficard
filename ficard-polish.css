@@ -350,8 +350,7 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView #cardGrid .walletTile{min-width:0}
 #homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1}
 #homeView #cardGrid .walletDistance{text-align:center;font-size:14px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
-#homeView #cardGrid .nearbyHero .walletDistance{font-size:18px}
-#homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:12px;margin-top:3px}
+#homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:16px;font-weight:650;line-height:1.3;margin-top:6px;white-space:nowrap}
 
 /* v0.9.176 · Shared advertising/tips placements. */
 .contentBanner{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:12px 0 14px;border:1px solid #BFEFE8;border-radius:18px;background:#E4F8F3;color:#4324BC;text-decoration:none}

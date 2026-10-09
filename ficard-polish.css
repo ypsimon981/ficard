@@ -348,9 +348,25 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 /* v0.9.175 · A single distance-ordered wallet, without duplicated quick cards. */
 #homeView .smartBlock{display:none!important}
 #homeView #cardGrid .walletTile{min-width:0}
-#homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1}
+#homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1;margin-bottom:24px}
 #homeView #cardGrid .walletDistance{text-align:center;font-size:14px;line-height:1.3;color:var(--violet);margin-top:6px;font-weight:650;font-variant-numeric:tabular-nums}
 #homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:16px;font-weight:650;line-height:1.3;margin-top:6px;white-space:nowrap}
+.cardSetSharing{margin:14px 0;padding:14px;border:1px solid #CFC4FF;border-radius:14px;background:linear-gradient(135deg,#F3F0FF,#EDFCF8);text-align:center}
+.cardSetGraphic{display:block;width:min(100%,280px);height:84px;margin:0 auto 8px}
+.cardSetSharing .sharingTagline{display:block;margin:8px 0;color:var(--violet);font-size:16px}
+#mapView .shopSearchActions{display:flex;align-items:center;gap:8px;margin-top:8px}
+#mapView .shopFilters .shopFilterRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;min-width:0}
+#mapView .shopFilters .shopFilterRow .field{width:100%;min-width:0;max-width:100%;padding:8px 6px}
+#mapView .shopFilters .shopFilterRow .shopFavoriteFilter{width:44px;min-width:0;padding:0;box-sizing:border-box}
+#mapView .shopSearchActions #shopSearchHere{flex:1;margin:0}
+#mapView .shopFavoriteFilter{position:relative;flex:0 0 44px;justify-content:center;border-radius:12px;background:var(--surface);border:1px solid var(--line);color:var(--violet)}
+#mapView .shopFavoriteFilter input{position:absolute;opacity:0;width:100%;height:100%;margin:0;cursor:pointer}
+#mapView .shopFavoriteFilter span{font-size:22px;pointer-events:none;opacity:.45}
+#mapView .shopFavoriteFilter:has(input:checked){background:#E8E2FF;border-color:var(--violet)}
+#mapView .shopFavoriteFilter:has(input:checked) span{opacity:1}
+#mapView .shopFavoriteFilter:focus-within{outline:2px solid var(--violet);outline-offset:2px}
+.detailDeleteRow{display:flex;justify-content:flex-end;margin:4px 0 12px}
+.detailDeleteRow #deleteBtn{width:auto;min-height:36px;margin:0;padding:6px 10px;font-size:12px;color:#B42334;border-color:#EFCBD0;background:transparent}
 
 /* v0.9.176 · Shared advertising/tips placements. */
 .contentBanner{display:flex;align-items:center;gap:12px;padding:12px 14px;margin:12px 0 14px;border:1px solid #BFEFE8;border-radius:18px;background:#E4F8F3;color:#4324BC;text-decoration:none}

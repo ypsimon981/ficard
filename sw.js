@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.184";
+const APP_VERSION="0.9.185";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./",
@@ -6,27 +6,27 @@ const CORE=[
   "./ficard-theme.js?v="+APP_VERSION,
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
-  "./ficard-i18n.js?v=2.0.9",
-  "./ficard-polish.css?v=0.9.184",
+  "./ficard-i18n.js?v=2.0.10",
+  "./ficard-polish.css?v=0.9.185",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-content.js?v=0.9.184",
-  "./ficard-ads-config.js?v=0.9.184",
-  "./ficard-ads.js?v=0.9.184",
-  "./ficard-stores.js?v=0.9.184",
-  "./ficard-stores-ui.js?v=0.9.184",
-  "./ficard-theme.css?v=0.9.184",
+  "./ficard-content.js?v=0.9.185",
+  "./ficard-ads-config.js?v=0.9.185",
+  "./ficard-ads.js?v=0.9.185",
+  "./ficard-stores.js?v=0.9.185",
+  "./ficard-stores-ui.js?v=0.9.185",
+  "./ficard-theme.css?v=0.9.185",
   "./ficard-reader.js?v=1.1.2",
   "./scandixit-scanner.js?v=1.1.0",
   "./nav-barcode.svg?v=0.9.43",
   "./barcode-crops.js?v=0.9.35",
-  "./merchant-ocr.js?v=0.9.184",
+  "./merchant-ocr.js?v=0.9.185",
   "./scandixit.html",
   "./scandixit-i18n.js?v=1.0.0",
   "./manifest.webmanifest",
   "./privacy.html",
-  "./ficard-analytics-config.js?v=0.9.184",
-  "./ficard-analytics.js?v=0.9.184",
+  "./ficard-analytics-config.js?v=0.9.185",
+  "./ficard-analytics.js?v=0.9.185",
   "./vendor/leaflet.js","./vendor/leaflet.css",
   "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
@@ -52,7 +52,7 @@ function latestShellRequest(url){
   if(path.endsWith("/ficard-theme.js"))return "./ficard-theme.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-runtime.js"))return "./ficard-runtime.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-navigation.js"))return "./ficard-navigation.js?v="+APP_VERSION;
-  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.9";
+  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.10";
   return "";
 }
 

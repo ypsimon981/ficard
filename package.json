@@ -1,6 +1,6 @@
 {
   "name": "fi-card",
-  "version": "0.9.193",
+  "version": "0.9.194",
   "private": true,
   "description": "Fi-Card Android and offline web bundle",
   "engines": {"node": ">=22"},

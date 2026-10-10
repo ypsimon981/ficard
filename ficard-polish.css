@@ -350,7 +350,7 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #homeView #cardGrid .walletTile{min-width:0}
 #homeView #cardGrid.usageGrid{--wallet-row-gap:12px;row-gap:var(--wallet-row-gap)}
 #homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1;margin-bottom:calc(50px - var(--wallet-row-gap,12px))}
-#homeView #cardGrid .cardItem .walletDistance{position:absolute;z-index:5;bottom:8px;left:12px;right:12px;text-align:center;font-size:13px;line-height:1.3;color:var(--card-ink);margin:0;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent);font-weight:650;font-variant-numeric:tabular-nums;pointer-events:none}
+#homeView #cardGrid .cardItem .walletDistance{position:absolute;z-index:5;bottom:8px;left:auto;right:10px;width:max-content;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;font-size:13px;line-height:1.3;color:var(--card-ink);margin:0;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent);font-weight:650;font-variant-numeric:tabular-nums;pointer-events:none}
 #homeView #cardGrid .walletArrival{text-align:center;color:var(--violet);font-size:16px;font-weight:400;line-height:1.3;margin-top:6px;white-space:nowrap}
 .cardSetSharing{margin:14px 0;padding:14px;border:1px solid #CFC4FF;border-radius:14px;background:linear-gradient(135deg,#F3F0FF,#EDFCF8);text-align:center}
 .cardSetGraphic{display:block;width:min(100%,280px);height:84px;margin:0 auto 8px}
@@ -407,7 +407,7 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 /* Optional personal label, inside the existing card footprint. */
 .cardItem .cardOpen,.smartCardOpen{position:relative}
 .cardAlias{position:relative;z-index:5;display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px;font-weight:650;line-height:1.25}
-.cardItem .cardAlias,.smartCardOpen .cardAlias{position:absolute;top:8px;bottom:auto;left:12px;right:12px;text-align:center;color:var(--card-ink);padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent)}
+.cardItem .cardAlias,.smartCardOpen .cardAlias{position:absolute;top:8px;bottom:auto;left:10px;right:auto;width:max-content;max-width:calc(100% - 20px);text-align:left;color:var(--card-ink);padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent)}
 .cardItem:has(.cardAlias) .brandMark{transform:none}
 .detailBrandHeader .cardAlias{font-size:16px;margin-top:4px;color:var(--card-ink)}
 @media(max-width:360px){.cardItem .cardAlias{font-size:12px;top:6px;bottom:auto}}

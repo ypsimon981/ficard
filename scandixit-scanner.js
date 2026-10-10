@@ -56,6 +56,7 @@ let bridgeFrame=null,bridgeRequest='';
 function closeFiCardReader(){if(bridgeFrame){bridgeFrame.remove();bridgeFrame=null;bridgeRequest='';document.body.style.overflow='';}}
 function start(){
  if(photoBusy||bridgeFrame)return;
+ if(root.ScanDixitStandalone){startStandalone();return;}
  $('codeResult').classList.remove('show');resetCandidate();
  bridgeRequest=crypto.randomUUID();bridgeFrame=document.createElement('iframe');
  bridgeFrame.title='Lettore FiCard';bridgeFrame.allow='camera';
@@ -63,6 +64,15 @@ function start(){
  bridgeFrame.src='./?scanner=scandixit&request='+encodeURIComponent(bridgeRequest)+'&reader=1.1.0';
  document.body.style.overflow='hidden';document.body.append(bridgeFrame);
  status('Lettore FiCard aperto.');
+}
+async function startStandalone(){
+ if(starting||camera)return;
+ const token=++epoch;finishing=false;barcodeVote=consensus();$('scanFrame').classList.add('show');$('stopCamera').hidden=false;$('startCamera').disabled=true;status('Apertura fotocamera…');
+ camera=reader.createDecoder('reader');const decoder=camera;
+ starting=reader.startLive(decoder,(text,result)=>{const item=reader.readBarcode(text,reader.formatName(result));if(item&&token===epoch&&barcodeVote(item.code))accept(item.code,token,item.format)});
+ try{await starting;live=true;status('Inquadra il codice del prodotto.');if(token!==epoch){try{await decoder.stop();decoder.clear()}catch{}}}
+ catch(e){camera=null;$('scanFrame').classList.remove('show');$('stopCamera').hidden=true;status(/NotAllowed|Permission|denied/i.test(String(e))?'Accesso fotocamera negato: usa una foto o abilita il permesso del browser.':'Fotocamera non disponibile: usa una foto o inserisci il codice.');}
+ finally{starting=null;$('startCamera').disabled=false;}
 }
 window.addEventListener('message',event=>{
  if(!bridgeFrame||event.origin!==location.origin||event.source!==bridgeFrame.contentWindow||event.data?.request!==bridgeRequest)return;

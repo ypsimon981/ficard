@@ -1,0 +1,20 @@
+/* Reuse the same ScanDixit code for the independent page-app on fi-card.app. */
+const fs=require('node:fs'),path=require('node:path');
+const root=path.resolve(__dirname,'..'),destination=process.argv[2];
+if(!destination||!path.isAbsolute(destination))throw Error('An absolute output folder is required');
+fs.mkdirSync(destination,{recursive:true});
+const assets=['scandixit-saved.js','scandixit-saved.css','scandixit-scanner.js','scandixit-catalog.js','scandixit-i18n.js','ficard-theme.js','ficard-theme.css','ficard-polish.css','ficard-reader.js','barcode-crops.js','brand-approved.png','icon-32.png'];
+for(const file of assets)fs.copyFileSync(path.join(root,file),path.join(destination,file));
+fs.mkdirSync(path.join(destination,'vendor'),{recursive:true});fs.copyFileSync(path.join(root,'vendor/html5-qrcode.min.js'),path.join(destination,'vendor/html5-qrcode.min.js'));
+let html=fs.readFileSync(path.join(root,'scandixit.html'),'utf8');
+html=html.replace('<title>ScanDixit · FiCard</title>','<title>ScanDixit · Scansiona, salva e approfondisci | Fi-Card</title><meta name="description" content="Scansiona un prodotto, leggi ingredienti e caratteristiche disponibili, salvalo per dopo e consulta le opinioni su Amazon."><link rel="canonical" href="https://fi-card.app/scandixit/"><script>window.ScanDixitStandalone=true;</script>');
+html=html.replace('href="./" class="scanBack"','href="/" class="scanBack"');
+html=html.replace('<h1>Hai un dubbio<br>su un prodotto?</h1>','<h1>Scansiona adesso.<br>Approfondisci dopo.</h1>');
+html=html.replace('Inquadralo. ScanDixit prepara la scheda e ti porta alle recensioni di chi l’ha già acquistato.','Leggi ingredienti e caratteristiche disponibili, salva il prodotto e consulta le opinioni su Amazon. Senza account.');
+html=html.replace('<section class="hero">','<div class="standaloneAppLinks"><a id="standaloneOpenApp" hidden>Apri in Fi-Card</a><a href="/#download">Scopri Fi-Card</a></div><section class="hero">');
+html=html.replace('</body>','<p class="hint" style="text-align:center;padding:0 16px 24px">I cataloghi possono essere incompleti. Controlla sempre l’etichetta originale, soprattutto per ingredienti e allergeni. <a href="/privacy.html">Privacy</a></p><script src="./pageapp.js"></script></body>');
+fs.writeFileSync(path.join(destination,'index.html'),html);
+fs.writeFileSync(path.join(destination,'pageapp.js'),"if('serviceWorker' in navigator)navigator.serviceWorker.register('./sw.js').catch(()=>{});\n");
+const version=require('../package.json').version,core=['./','./index.html','./pageapp.js','./vendor/html5-qrcode.min.js',...assets.map(x=>'./'+x)];
+fs.writeFileSync(path.join(destination,'sw.js'),`const CACHE='scandixit-pageapp-${version}',CORE=${JSON.stringify(core)};self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(CORE)).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('scandixit-pageapp-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;e.respondWith(fetch(e.request).catch(()=>caches.open(CACHE).then(c=>c.match(e.request,{ignoreSearch:true})).then(r=>r||caches.match('./index.html'))))});`);
+console.log('ScanDixit page-app built in '+destination);

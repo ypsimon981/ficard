@@ -10,6 +10,7 @@ if(Capacitor.isNativePlatform()){
  const CardScreen=registerPlugin('CardScreen');
  const BackupFiles=registerPlugin('BackupFiles');
  window.FiCardNative={
+  shareProductLink(title,url){return Share.share({title,text:'Scopri questo prodotto con ScanDixit di Fi-Card',url});},
   async saveBackup(blob,name){
    await BackupFiles.saveBackup({data:await blob.text(),name});
   },
@@ -42,6 +43,10 @@ if(Capacitor.isNativePlatform()){
   if(url.origin!==location.origin&&/^https?:$/.test(url.protocol)){event.preventDefault();Browser.open({url:url.href}).catch(()=>{});}
  },true);
  if(window===window.top){
+  const openProductUrl=({url}={})=>{try{const link=new URL(url);if(link.protocol!=='ficard:'||link.hostname!=='scandixit')return;const code=link.searchParams.get('code');if(!window.FiCardReader?.validGTIN(code))return;window.FiCardOpenProduct?.(code)}catch{}};
+  App.addListener('appUrlOpen',openProductUrl);
+  const launch=()=>App.getLaunchUrl().then(openProductUrl).catch(()=>{});
+  if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',launch,{once:true});else launch();
   App.addListener('backButton',()=>{
    const full=document.getElementById('fullBarcode');
    if(full?.classList.contains('show')){document.getElementById('closeFull')?.click();return;}

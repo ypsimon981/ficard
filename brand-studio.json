@@ -1,6 +1,7 @@
 {
   "schema": 1,
   "source": "Fi-Card-BrandStudio",
+  "exportedAt": "2026-10-10T15:52:08+00:00",
   "brands": [
     {
       "key": "action",
@@ -13,7 +14,8 @@
       "logo": "./logos-hq/studio/action-86b81bbf8080.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#005EB8"
+        "#005EB8",
+        "#FFFFFF"
       ]
     },
     {
@@ -21,9 +23,9 @@
       "name": "ALDI",
       "color": "#001E50",
       "category": "supermercati",
-      "logoScale": 26,
-      "studioRevision": 2,
-      "updatedAt": "2026-10-09T21:59:54+00:00",
+      "logoScale": 32,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-10T15:42:01+00:00",
       "logo": "./logos-hq/studio/aldi-42f288f8353a.png",
       "logoBg": "transparent",
       "previousColors": [
@@ -41,7 +43,8 @@
       "logo": "./logos-hq/studio/autogrill-d21fe6ba0d04.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#ED1C2E"
       ]
     },
     {
@@ -55,7 +58,8 @@
       "logo": "./logos-hq/studio/bata-526585a9ed91.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#D71920"
+        "#D71920",
+        "#F5F4F4"
       ]
     },
     {
@@ -69,7 +73,8 @@
       "logo": "./logos-hq/studio/benetton-63529418e41e.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#008450"
+        "#008450",
+        "#139B41"
       ]
     },
     {
@@ -83,7 +88,8 @@
       "logo": "./logos-hq/studio/bennet-e9a78c7ceca7.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#FE0101"
       ]
     },
     {
@@ -97,7 +103,8 @@
       "logo": "./logos-hq/studio/benu-63f44d3b239f.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#00A878"
+        "#00A878",
+        "#FFFFFF"
       ]
     },
     {
@@ -111,7 +118,8 @@
       "logo": "./logos-hq/studio/bershka-a8f3d6099578.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111"
+        "#111111",
+        "#000000"
       ]
     },
     {
@@ -125,7 +133,8 @@
       "logo": "./logos-hq/studio/bottegaverde-f1d0cd5c8c0e.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#2E7D32"
+        "#2E7D32",
+        "#5C7E51"
       ]
     },
     {
@@ -139,7 +148,8 @@
       "logo": "./logos-hq/studio/bricocenter-a873489253d3.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#D1D1D1"
       ]
     },
     {
@@ -153,7 +163,8 @@
       "logo": "./logos-hq/studio/burgerking-606520e7e02a.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#D62300"
+        "#D62300",
+        "#F5EBDC"
       ]
     },
     {
@@ -167,7 +178,8 @@
       "logo": "./logos-hq/studio/calzedonia-61541208b47f.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111"
+        "#111111",
+        "#000000"
       ]
     },
     {
@@ -181,7 +193,8 @@
       "logo": "./logos-hq/studio/carrefour-3af7fef84fcc.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#1D4E9E"
+        "#1D4E9E",
+        "#FAFAFA"
       ]
     },
     {
@@ -223,7 +236,8 @@
       "logo": "./logos-hq/studio/conad-1debb7736974.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E3202A"
+        "#E3202A",
+        "#FFC547"
       ]
     },
     {
@@ -237,7 +251,8 @@
       "logo": "./logos-hq/studio/crai-7aea931bd451.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#007F00"
       ]
     },
     {
@@ -251,7 +266,400 @@
       "logo": "./logos-hq/studio/comet-1ee9980021fb.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#E30613",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "deco",
+      "name": "Decò",
+      "color": "#1D333E",
+      "category": "supermercati",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T08:57:14+00:00",
+      "logo": "./logos-hq/studio/deco-d9ec5e64f983.png",
+      "logoBg": "transparent",
+      "previousColors": [
         "#E30613"
+      ]
+    },
+    {
+      "key": "deichmann",
+      "name": "Deichmann",
+      "color": "#008E54",
+      "category": "abbigliamento",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T08:58:23+00:00",
+      "logo": "./logos-hq/studio/deichmann-278d8b2b5d2c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#00509D"
+      ]
+    },
+    {
+      "key": "demos",
+      "name": "Dem",
+      "color": "#3D96F5",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T09:00:01+00:00",
+      "logo": "./logos-hq/studio/demos-b5d674729e64.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "despar",
+      "name": "Despar",
+      "color": "#FFFFFF",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T09:01:11+00:00",
+      "logo": "./logos-hq/studio/despar-72f159b0183f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#009640"
+      ]
+    },
+    {
+      "key": "dipiù",
+      "name": "DiPiù",
+      "color": "#FFE100",
+      "category": "supermercati",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T09:03:00+00:00",
+      "logo": "./logos-hq/studio/dipiu-1fe278233fc7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "dm",
+      "name": "dm",
+      "color": "#FFFFFF",
+      "category": "beauty",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T09:04:09+00:00",
+      "logo": "./logos-hq/studio/dm-f429f9fbb4c3.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0075BF"
+      ]
+    },
+    {
+      "key": "douglas",
+      "name": "Douglas",
+      "color": "#C4EBE8",
+      "category": "beauty",
+      "logoScale": 49,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-10T09:06:48+00:00",
+      "logo": "./logos-hq/studio/douglas-79bcb7f082b2.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#231F20"
+      ]
+    },
+    {
+      "key": "drmax",
+      "name": "Dr.Max",
+      "color": "#54D237",
+      "category": "farmacia",
+      "logoScale": 80,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-10T09:08:19+00:00",
+      "logo": "./logos-hq/studio/drmax-a0315b67c4a7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#4EA73B"
+      ]
+    },
+    {
+      "key": "elitepet",
+      "name": "Elite Pet",
+      "color": "#FFFFFF",
+      "category": "petstore",
+      "logoScale": 88,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:25:35+00:00",
+      "logo": "./logos-hq/studio/elitepet-068b93b0ffd2.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "emark",
+      "name": "Emark",
+      "color": "#323096",
+      "category": "casalinghi",
+      "logoScale": 95,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:27:49+00:00",
+      "logo": "./logos-hq/studio/emark-a53ca3e53860.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "eni",
+      "name": "Eni",
+      "color": "#FFFCF0",
+      "category": "carburanti",
+      "logoScale": 49,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:28:47+00:00",
+      "logo": "./logos-hq/studio/eni-25cab6412142.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FFD100"
+      ]
+    },
+    {
+      "key": "euronics",
+      "name": "Euronics",
+      "color": "#224B9B",
+      "category": "elettronica",
+      "logoScale": 95,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:30:25+00:00",
+      "logo": "./logos-hq/studio/euronics-9b8584616927.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0057A8"
+      ]
+    },
+    {
+      "key": "eurospin",
+      "name": "Eurospin",
+      "color": "#3C98D3",
+      "category": "supermercati",
+      "logoScale": 37,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:31:01+00:00",
+      "logo": "./logos-hq/studio/eurospin-f3b1916ebd9e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#00549F"
+      ]
+    },
+    {
+      "key": "expert",
+      "name": "Expert",
+      "color": "#FF6A00",
+      "category": "elettronica",
+      "logoScale": 80,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-10T15:31:50+00:00",
+      "logo": "./logos-hq/studio/expert-4a7610d2c213.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "famila",
+      "name": "Famila",
+      "color": "#FAEDE5",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:32:44+00:00",
+      "logo": "./logos-hq/studio/famila-75cedce0a191.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F28C00"
+      ]
+    },
+    {
+      "key": "farmacia",
+      "name": "Farmacia di fiducia",
+      "color": "#FFFFFF",
+      "category": "farmacia",
+      "logoScale": 69,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:33:50+00:00",
+      "logo": "./logos-hq/studio/farmacia-1f6db5d1ea0d.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "feltrinelli",
+      "name": "Feltrinelli",
+      "color": "#E00024",
+      "category": "altro",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:34:56+00:00",
+      "logo": "./logos-hq/studio/feltrinelli-503ac1604f30.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "flyingtiger",
+      "name": "Flying Tiger Copenhagen",
+      "color": "#F4F4F4",
+      "category": "casa",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:36:23+00:00",
+      "logo": "./logos-hq/studio/flyingtiger-ca8a56dfa5cb.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "footlocker",
+      "name": "Foot Locker",
+      "color": "#474343",
+      "category": "abbigliamento",
+      "logoScale": 60,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:38:31+00:00",
+      "logo": "./logos-hq/studio/footlocker-51a650b22057.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "geox",
+      "name": "Geox",
+      "color": "#F2F2F2",
+      "category": "abbigliamento",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:41:47+00:00",
+      "logo": "./logos-hq/studio/geox-50292b67fe19.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#003E6B"
+      ]
+    },
+    {
+      "key": "globalpet",
+      "name": "Global Pet",
+      "color": "#FFFFFF",
+      "category": "petstore",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:43:49+00:00",
+      "logo": "./logos-hq/studio/globalpet-754e1ce4bde7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "grandvision",
+      "name": "GrandVision",
+      "color": "#EAE5FF",
+      "category": "altro",
+      "logoScale": 76,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:45:10+00:00",
+      "logo": "./logos-hq/studio/grandvision-51e3871c5fee.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "hm",
+      "name": "H&M",
+      "color": "#FFFFFF",
+      "category": "abbigliamento",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:45:33+00:00",
+      "logo": "./logos-hq/studio/hm-450633717fac.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#D50000"
+      ]
+    },
+    {
+      "key": "ikea",
+      "name": "IKEA",
+      "color": "#0058AB",
+      "category": "casa",
+      "logoScale": 61,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:46:45+00:00",
+      "logo": "./logos-hq/studio/ikea-921b25e267eb.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0058A3"
+      ]
+    },
+    {
+      "key": "ins",
+      "name": "IN’S",
+      "color": "#FFED00",
+      "category": "supermercati",
+      "logoScale": 51,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:47:48+00:00",
+      "logo": "./logos-hq/studio/ins-8359876f3ec0.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "intersport",
+      "name": "Intersport",
+      "color": "#F2F2F2",
+      "category": "sport",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:48:49+00:00",
+      "logo": "./logos-hq/studio/intersport-3777fbf9696b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "intimissimi",
+      "name": "Intimissimi",
+      "color": "#E9C4C8",
+      "category": "abbigliamento",
+      "logoScale": 95,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:49:53+00:00",
+      "logo": "./logos-hq/studio/intimissimi-aea5ee9d9ffa.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#7A3E45"
+      ]
+    },
+    {
+      "key": "ip",
+      "name": "IP",
+      "color": "#F28C1B",
+      "category": "carburanti",
+      "logoScale": 39,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-10T15:51:33+00:00",
+      "logo": "./logos-hq/studio/ip-5c8a62be42b8.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F58220"
       ]
     }
   ]

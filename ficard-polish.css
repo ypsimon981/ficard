@@ -348,6 +348,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 /* v0.9.175 · A single distance-ordered wallet, without duplicated quick cards. */
 #homeView .smartBlock{display:none!important}
 #homeView #cardGrid .walletTile{min-width:0}
+#homeView #cardGrid .ghostCard{position:relative;width:100%;height:100%;min-height:112px;padding:0;overflow:hidden;background:transparent;border:1px dashed #B6A7E8;box-shadow:none;cursor:pointer}
+.ghostFace{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;padding:12px 12px 34px;background:var(--card-color);opacity:.5;pointer-events:none}
+#homeView #cardGrid .ghostFace .brandMark{width:100%;background:transparent}
+.ghostPlus{font-size:36px;line-height:1;color:#5B3DF5}
+.ghostAction{position:absolute;bottom:0;left:0;right:0;padding:7px 4px;background:var(--surface,#fff);color:var(--text,#1F2937);font-size:12px;font-weight:650;line-height:1.3;text-align:center}
+.ghostCard:focus-visible{outline:3px solid var(--violet);outline-offset:3px}
 #homeView #cardGrid.usageGrid{--wallet-row-gap:12px;row-gap:var(--wallet-row-gap)}
 #homeView #cardGrid .walletTile.nearbyHero{grid-column:1/-1;margin-bottom:calc(50px - var(--wallet-row-gap,12px))}
 #homeView #cardGrid .cardItem .walletDistance{position:absolute;z-index:5;bottom:8px;left:auto;right:10px;width:max-content;max-width:calc(100% - 20px);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;text-align:right;font-size:13px;line-height:1.3;color:var(--card-ink);margin:0;padding:2px 6px;border-radius:6px;background:color-mix(in srgb,var(--card-color) 90%,transparent);font-weight:650;font-variant-numeric:tabular-nums;pointer-events:none}
@@ -355,6 +361,13 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .cardSetSharing{margin:14px 0;padding:14px;border:1px solid #CFC4FF;border-radius:14px;background:linear-gradient(135deg,#F3F0FF,#EDFCF8);text-align:center}
 .cardSetGraphic{display:block;width:min(100%,280px);height:84px;margin:0 auto 8px}
 .cardSetSharing .sharingTagline{display:block;margin:8px 0;color:var(--violet);font-size:16px}
+#cardSharingMessages{text-align:left;overflow-wrap:anywhere;margin-bottom:14px}
+#cardSharingMessages h3{font-size:17px;line-height:1.35;margin:0 0 12px}
+#cardSharingMessages details{border-top:1px solid #CFC4FF;padding:10px 0}
+#cardSharingMessages summary{cursor:pointer;font-weight:650;font-size:14px;line-height:1.4;min-height:32px}
+#cardSharingMessages p{font-size:13px;line-height:1.5;margin:8px 0}
+#cardSharingMessages .sharingDisclaimer{font-size:12px;line-height:1.5;color:var(--muted);margin:12px 0 0}
+#cardSharingMessages:focus-visible{outline:2px solid var(--violet);outline-offset:4px}
 #mapView .shopSearchActions{display:flex;align-items:center;gap:8px;margin-top:8px}
 #mapView .shopFilters .shopFilterRow{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) 44px;gap:8px;min-width:0}
 #mapView .shopFilters .shopFilterRow .field{width:100%;min-width:0;max-width:100%;padding:8px 6px}

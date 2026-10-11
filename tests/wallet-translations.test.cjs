@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
-const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
+const read=f=>(['ficard-i18n.js','ficard-content.js'].includes(f)?require('./locale-fixture.cjs'):'')+fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 test('wallet, duplicate warning and GPS relative times translate in every supported language',()=>{
  for(const lang of ['en','fr','es','pt','nl','de']){
   const root={localStorage:{getItem:()=>lang},navigator:{language:lang},document:{readyState:'loading',addEventListener(){}},addEventListener(){}};

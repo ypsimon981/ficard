@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
-const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
+const read=f=>(['ficard-i18n.js','ficard-content.js'].includes(f)?require('./locale-fixture.cjs'):'')+fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 const html=read('index.html');
 function ghostContext(){
  const saved={},ctx={localStorage:{getItem:k=>saved[k],setItem:(k,v)=>saved[k]=v,removeItem:k=>delete saved[k]},inferredBrandKey:c=>c.brandKey,esc:String,window:{},BRANDS:{conad:{name:'Conad',color:'#f00'},carrefour:{name:'Carrefour',color:'#fff'}},cardInk:()=> '#000',brandLogoHtml:b=>b.name,unifiedCardHtml:c=>'<real>'+c.id+'</real>',advertisingPreviewHtml:()=>'<ad/>'};

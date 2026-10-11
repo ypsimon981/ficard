@@ -5,7 +5,15 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#5B3DF5">
 <title>ScanDixit · FiCard</title>
-<script src="./ficard-theme.js?v=0.9.198"></script>
+<script>window.ScanDixitPage=true;</script>
+<script src="./locales/it.js?v=0.9.199"></script>
+<script src="./locales/en.js?v=0.9.199"></script>
+<script src="./locales/fr.js?v=0.9.199"></script>
+<script src="./locales/es.js?v=0.9.199"></script>
+<script src="./locales/pt.js?v=0.9.199"></script>
+<script src="./locales/nl.js?v=0.9.199"></script>
+<script src="./locales/de.js?v=0.9.199"></script>
+<script src="./ficard-theme.js?v=0.9.199"></script>
 <link rel="icon" href="./icon-32.png" type="image/png">
 <script src="./vendor/html5-qrcode.min.js"></script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
@@ -30,9 +38,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 body.embeddedInFiCard .scanHeader{display:none}
 @media(max-width:360px){.hero h1{font-size:26px}.app{padding-left:12px;padding-right:12px}.manual button{flex-basis:92px}.scanFiLogo{width:105px}.scanHeaderProduct strong{font-size:13px}}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.198">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.199">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.150">
-<link rel="stylesheet" href="./scandixit-saved.css?v=0.9.198">
+<link rel="stylesheet" href="./scandixit-saved.css?v=0.9.199">
 </head>
 <body class="scanDixitPage">
 <script>if(new URLSearchParams(location.search).get("section")==="ficard")document.body.classList.add("embeddedInFiCard");</script>
@@ -80,15 +88,15 @@ body.embeddedInFiCard .scanHeader{display:none}
 
 <section class="card codeResult" id="codeResult" aria-live="polite">
 <div class="resultKicker">Codice acquisito</div>
-<div class="codeLine" id="resultCode"></div>
+<div class="codeLine" id="resultCode" data-i18n-skip></div>
 <div class="matchNote" id="matchNote"></div>
 <div class="productQuickActions"><button class="primary" id="saveProduct" type="button">Salva per dopo</button><button class="secondary" id="shareProduct" type="button">Condividi prodotto</button></div>
 <div class="card result" id="productSheet" aria-live="polite">
 <div class="resultKicker">Scheda prodotto</div>
-<h2 class="productTitle" id="sheetTitle">Cerco il prodotto…</h2>
-<div class="productSub" id="sheetBrand"></div>
+<h2 class="productTitle" id="sheetTitle" data-i18n-skip>Cerco il prodotto…</h2>
+<div class="productSub" id="sheetBrand" data-i18n-skip></div>
 <img id="sheetImage" class="productImage" alt="" hidden>
-<p id="sheetDescription" class="productDescription" hidden></p>
+<p id="sheetDescription" data-i18n-skip class="productDescription" hidden></p>
 <h3 id="sheetFeaturesTitle" class="sheetSectionHeading" hidden>Caratteristiche principali</h3>
 <div class="specs" id="sheetFields"></div>
 <h3 id="sheetMoreTitle" class="sheetSectionHeading" hidden>Informazioni aggiuntive</h3>
@@ -143,6 +151,7 @@ body.embeddedInFiCard .scanHeader{display:none}
 <div class="toast" id="toast"></div>
 <div id="photoReader" aria-hidden="true" style="position:absolute;left:-10000px;width:1800px"></div>
 <script>
+const tr=(text,vars)=>window.ScanDixitI18n?.t(text,vars)||Object.entries(vars||{}).reduce((s,[k,v])=>s.replaceAll('{'+k+'}',String(v)),text);
 const $=id=>document.getElementById(id);
 let activeTab="barcode",toastTimer;
 function toast(msg){const t=$("toast");t.textContent=msg;t.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>t.classList.remove("show"),2600)}
@@ -150,33 +159,33 @@ function setTab(tab){activeTab=tab;document.querySelectorAll(".tab").forEach(b=>
 document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
 let productLookupId=0,productLookupController;
 function catalogProblem(result,code){
- if(Object.keys(window.ScanDixitSaved?.snapshot(code)?.product||{}).length){$("sheetSource").append(' · Catalogo non raggiungibile: stai consultando la copia salvata.');$("retryProduct").hidden=false;$("retryProduct").onclick=()=>loadProductSheet(code);return}
+ if(Object.keys(window.ScanDixitSaved?.snapshot(code)?.product||{}).length){$("sheetSource").append(tr(' · Catalogo non raggiungibile: stai consultando la copia salvata.'));$("retryProduct").hidden=false;$("retryProduct").onclick=()=>loadProductSheet(code);return}
  const partial=result.state==='partial';
- $("sheetTitle").textContent=partial?'Ricerca incompleta':'Catalogo non raggiungibile';
- $("sheetBrand").textContent=partial?'Alcuni cataloghi non hanno risposto: non posso confermare se il prodotto è presente.':'Il collegamento ai cataloghi non è riuscito, anche dopo un secondo tentativo.';
- $("sheetSource").textContent='Il codice è stato verificato. Puoi riprovare senza scansionarlo di nuovo oppure cercarlo su Amazon.';
+ $("sheetTitle").textContent=partial?tr('Ricerca incompleta'):tr('Catalogo non raggiungibile');
+ $("sheetBrand").textContent=partial?tr('Alcuni cataloghi non hanno risposto: non posso confermare se il prodotto è presente.'):tr('Il collegamento ai cataloghi non è riuscito, anche dopo un secondo tentativo.');
+ $("sheetSource").textContent=tr('Il codice è stato verificato. Puoi riprovare senza scansionarlo di nuovo oppure cercarlo su Amazon.');
  $("retryProduct").hidden=false;$("retryProduct").onclick=()=>loadProductSheet(code);
  $("catalogDiagnostics").hidden=false;
- $("catalogDiagnosticsText").textContent=(result.checks||[]).map(x=>x.host+': '+(x.state==='missing'?'prodotto assente':x.reason==='timeout'?'tempo di risposta scaduto':x.reason==='network'?'errore di connessione dal browser':x.reason==='response'?'risposta non valida':String(x.reason||'errore').replace('http_','HTTP '))).join(' · ');
+ $("catalogDiagnosticsText").textContent=(result.checks||[]).map(x=>x.host+': '+(x.state==='missing'?tr('prodotto assente'):x.reason==='timeout'?tr('tempo di risposta scaduto'):x.reason==='network'?tr('errore di connessione dal browser'):x.reason==='response'?tr('risposta non valida'):String(x.reason||tr('errore')).replace('http_','HTTP '))).join(' · ');
 }
-function sheetField(label,value,additional=false){if(!value)return;const box=document.createElement("div");box.className="spec"+(["Ingredienti","Allergeni","Categoria","Etichette","Confezione"].includes(label)?" specWide":"")+(label==="Allergeni"?" specAllergens":"");const title=document.createElement("small");title.textContent=label;const content=document.createElement("b");content.textContent=Array.isArray(value)?value.filter(Boolean).join(", "):String(value);box.append(title,content);$(additional?"sheetMoreFields":"sheetFields").append(box);if(additional){$("sheetMoreTitle").hidden=false;$("sheetMoreFields").hidden=false}}
+function sheetField(label,value,additional=false){if(!value)return;const box=document.createElement("div");box.className="spec"+([tr("Ingredienti"),tr("Allergeni"),tr("Categoria"),tr("Etichette"),tr("Confezione")].includes(label)?" specWide":"")+(label===tr("Allergeni")?" specAllergens":"");const title=document.createElement("small");title.textContent=label;const content=document.createElement("b");content.setAttribute('data-i18n-skip','');content.textContent=Array.isArray(value)?value.filter(Boolean).join(", "):String(value);box.append(title,content);$(additional?"sheetMoreFields":"sheetFields").append(box);if(additional){$("sheetMoreTitle").hidden=false;$("sheetMoreFields").hidden=false}}
 function renderProductSheet(product,host,code,saved=false){
-  const name=product.product_name||product.product_name_en||product.generic_name||"Prodotto identificato";
-  $("sheetTitle").textContent=name;$("sheetBrand").textContent=product.brands||"Marca non indicata";
+  const name=product.product_name||product.product_name_en||product.generic_name||tr("Prodotto identificato");
+  $("sheetTitle").textContent=name;$("sheetBrand").textContent=product.brands||tr("Marca non indicata");
   const picture=product.image_front_small_url||product.image_front_url;
   if(picture&&/^https:\/\//i.test(picture)){const image=$("sheetImage");image.alt=name;image.onerror=()=>{image.hidden=true};image.src=picture;image.hidden=false}
   if(product.generic_name&&product.generic_name!==name){$("sheetDescription").textContent=product.generic_name;$("sheetDescription").hidden=false}
   $("sheetFeaturesTitle").hidden=false;
-  sheetField("Formato",product.quantity);sheetField("Tipo",product.product_type);sheetField("Categoria",product.categories);
-  sheetField("Ingredienti",product.ingredients_text);sheetField("Allergeni",product.allergens);sheetField("Codice EAN/UPC",product.code||code,true);sheetField("Origine",product.origins||product.countries,true);sheetField("Etichette",product.labels,true);sheetField("Confezione",product.packaging,true);
-  const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString("it-IT"):"non indicato";
-  const source=document.createElement("span");source.textContent=(saved?"Copia salvata sul dispositivo. ":"")+"Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: "+stamp+". Fonte: ";
-  const link=document.createElement("a");link.href="https://"+host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent="database del prodotto";source.append(link);$("sheetSource").replaceChildren(source);
+  sheetField(tr("Formato"),product.quantity);sheetField(tr("Tipo"),product.product_type);sheetField(tr("Categoria"),product.categories);
+  sheetField(tr("Ingredienti"),product.ingredients_text);sheetField(tr("Allergeni"),product.allergens);sheetField(tr("Codice EAN/UPC"),product.code||code,true);sheetField(tr("Origine"),product.origins||product.countries,true);sheetField(tr("Etichette"),product.labels,true);sheetField(tr("Confezione"),product.packaging,true);
+  const stamp=product.last_modified_t?new Date(Number(product.last_modified_t)*1000).toLocaleDateString(window.ScanDixitI18n?.language?.()||'it'):tr("non indicato");
+  const source=document.createElement("span");source.textContent=(saved?tr("Copia salvata sul dispositivo. "):"")+tr("Dati Open Facts. Verifica sempre l’etichetta del prodotto. Ultimo aggiornamento: {date}. Fonte: ",{date:stamp});
+  const link=document.createElement("a");link.href="https://"+host+"/product/"+encodeURIComponent(code);link.target="_blank";link.rel="noopener noreferrer";link.textContent=tr("database del prodotto");source.append(link);$("sheetSource").replaceChildren(source);
 }
 async function loadProductSheet(code){
  productLookupController?.abort();productLookupController=new AbortController();
  $("retryProduct").hidden=true;$("catalogDiagnostics").hidden=true;
- const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent="Cerco il prodotto nel catalogo…";$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";$("sheetImage").hidden=true;$("sheetImage").src="";$("sheetDescription").hidden=true;$("sheetDescription").textContent="";$("sheetFeaturesTitle").hidden=true;$("sheetMoreFields").replaceChildren();$("sheetMoreFields").hidden=true;$("sheetMoreTitle").hidden=true;
+ const lookup=++productLookupId,sheet=$("productSheet");sheet.classList.add("show");$("sheetTitle").textContent=tr("Cerco il prodotto nel catalogo…");$("sheetBrand").textContent="";$("sheetFields").replaceChildren();$("sheetSource").textContent="";$("sheetImage").hidden=true;$("sheetImage").src="";$("sheetDescription").hidden=true;$("sheetDescription").textContent="";$("sheetFeaturesTitle").hidden=true;$("sheetMoreFields").replaceChildren();$("sheetMoreFields").hidden=true;$("sheetMoreTitle").hidden=true;
  const cached=window.ScanDixitSaved?.snapshot(code);if(cached&&Object.keys(cached.product).length)renderProductSheet(cached.product,cached.host,code,true);
  try{
   const result=await FiCardCatalog.lookup(code,{signal:productLookupController.signal});
@@ -184,25 +193,25 @@ async function loadProductSheet(code){
   const product=found?.data.product,data=found?.data;
   if(lookup!==productLookupId)return;
   if(result.state==='cancelled')return;
-  if(!found){if(result.state!=='missing'){catalogProblem(result,code);return}if(cached&&Object.keys(cached.product).length){$("sheetSource").append(' · La scheda online non è più disponibile.');return}$("sheetTitle").textContent="Scheda non trovata nel catalogo";$("sheetBrand").textContent="Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.";sheetField("Codice",code);$("sheetSource").textContent="Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.";return}
+  if(!found){if(result.state!=='missing'){catalogProblem(result,code);return}if(cached&&Object.keys(cached.product).length){$("sheetSource").append(tr(' · La scheda online non è più disponibile.'));return}$("sheetTitle").textContent=tr("Scheda non trovata nel catalogo");$("sheetBrand").textContent=tr("Il codice è valido, ma il prodotto non ha ancora una scheda condivisa.");sheetField(tr("Codice"),code);$("sheetSource").textContent=tr("Puoi comunque aprire la ricerca Amazon qui sotto. I dati del prodotto non vengono inventati.");return}
   $("sheetFields").replaceChildren();$("sheetMoreFields").replaceChildren();
   renderProductSheet(product,found.host,code);window.ScanDixitSaved?.capture(product,found.host,code);
  }catch(e){if(lookup!==productLookupId)return;catalogProblem({state:'unavailable',checks:[]},code)}
 }
-function showCode(value,source,format=''){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value,format);if(!code)return toast("Verifica le cifre: il codice EAN/UPC non è valido");if(source!=="ocr")$("scanStatus").textContent="";$("amazonLabel").textContent=source==="ocr"?"Leggi opinioni del prodotto":"Leggi opinioni del prodotto";$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?"Testo acquisito":source==="ocr-code"?"Codice OCR confermato":"Codice acquisito";$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?"Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa.":"Codice letto con cifra di controllo valida.";const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");const productCode=source!=="ocr"&&FiCardReader.readBarcode(code,format)?.productCode;
+function showCode(value,source,format=''){const code=source==="ocr"?String(value||"").trim():ScanDixit.normalizeBarcode(value,format);if(!code)return toast(tr("Verifica le cifre: il codice EAN/UPC non è valido"));if(source!=="ocr")$("scanStatus").textContent="";$("amazonLabel").textContent=source==="ocr"?tr("Leggi opinioni del prodotto"):tr("Leggi opinioni del prodotto");$("codeResult").querySelector(".resultKicker").textContent=source==="ocr"?tr("Testo acquisito"):source==="ocr-code"?tr("Codice OCR confermato"):tr("Codice acquisito");$("resultCode").textContent=code;$("matchNote").textContent=source==="ocr"?tr("Testo modello acquisito. Usa il codice a barre per una scheda tecnica più precisa."):tr("Codice letto con cifra di controllo valida.");const q=encodeURIComponent(code);$("amazonSearch").href="https://www.amazon.it/s?k="+q;$("codeResult").classList.add("show");const productCode=source!=="ocr"&&FiCardReader.readBarcode(code,format)?.productCode;
 $("amazonSearch").hidden=source!=="ocr"&&!productCode;
-window.ScanDixitSaved?.begin({code,source,format,productCode});if(productCode)loadProductSheet(productCode);else{++productLookupId;$("productSheet").classList.remove("show");if(source!=="ocr")$("matchNote").textContent="Codice letto correttamente · "+(format||"barcode")+". Questo codice non è un identificativo prodotto EAN/UPC: la ricerca nei cataloghi non si applica.";}$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
+window.ScanDixitSaved?.begin({code,source,format,productCode});if(productCode)loadProductSheet(productCode);else{++productLookupId;$("productSheet").classList.remove("show");if(source!=="ocr")$("matchNote").textContent=tr("Codice letto correttamente · {format}. Questo codice non è un identificativo prodotto EAN/UPC: la ricerca nei cataloghi non si applica.",{format:format||"barcode"});}$("codeResult").scrollIntoView({behavior:"smooth",block:"nearest"})}
 $("lookupCode").addEventListener("click",()=>showCode($("codeInput").value,"barcode"));
 $("codeInput").addEventListener("keydown",e=>{if(e.key==="Enter")showCode(e.currentTarget.value,"barcode")});
-$("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast("Fotografa l’etichetta o inserisci il modello");showCode(text,"ocr")});
+$("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.trim();if(!text)return toast(tr("Fotografa l’etichetta o inserisci il modello"));showCode(text,"ocr")});
 
 </script>
-<script src="./scandixit-i18n.js?v=1.0.1"></script>
-<script src="./scandixit-scanner.js?v=1.1.0"></script>
-<script src="./scandixit-saved.js?v=0.9.198"></script>
-<script src="./scandixit-links.js?v=0.9.198"></script>
-<script src="./ficard-content.js?v=0.9.198"></script>
-<script src="./ficard-promos.js?v=0.9.198"></script>
+<script src="./scandixit-i18n.js?v=2.1.0"></script>
+<script src="./scandixit-scanner.js?v=1.1.1"></script>
+<script src="./scandixit-saved.js?v=0.9.199"></script>
+<script src="./scandixit-links.js?v=0.9.199"></script>
+<script src="./ficard-content.js?v=0.9.199"></script>
+<script src="./ficard-promos.js?v=0.9.199"></script>
 </body>
 </html>
 

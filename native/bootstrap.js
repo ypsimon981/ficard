@@ -10,7 +10,7 @@ if(Capacitor.isNativePlatform()){
  const CardScreen=registerPlugin('CardScreen');
  const BackupFiles=registerPlugin('BackupFiles');
  window.FiCardNative={
-  shareProductLink(title,url){return Share.share({title,text:'Scopri questo prodotto con ScanDixit di Fi-Card',url});},
+  shareProductLink(title,url){return Share.share({title,text:window.FiCardI18n?.translateText('Scopri questo prodotto con ScanDixit di Fi-Card')||'Scopri questo prodotto con ScanDixit di Fi-Card',url});},
   async saveBackup(blob,name){
    await BackupFiles.saveBackup({data:await blob.text(),name});
   },

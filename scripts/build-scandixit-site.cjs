@@ -4,6 +4,8 @@ const root=path.resolve(__dirname,'..'),destination=process.argv[2];
 if(!destination||!path.isAbsolute(destination))throw Error('An absolute output folder is required');
 fs.mkdirSync(destination,{recursive:true});
 const assets=['scandixit-links.js','ficard-content.js','ficard-promos.js','scandixit-saved.js','scandixit-saved.css','scandixit-scanner.js','scandixit-catalog.js','scandixit-i18n.js','ficard-theme.js','ficard-theme.css','ficard-polish.css','ficard-reader.js','barcode-crops.js','brand-approved.png','icon-32.png'];
+for(const lang of ['it','en','fr','es','pt','nl','de'])assets.push('locales/'+lang+'.js');
+fs.mkdirSync(path.join(destination,'locales'),{recursive:true});
 for(const file of assets)fs.copyFileSync(path.join(root,file),path.join(destination,file));
 fs.mkdirSync(path.join(destination,'vendor'),{recursive:true});fs.copyFileSync(path.join(root,'vendor/html5-qrcode.min.js'),path.join(destination,'vendor/html5-qrcode.min.js'));
 let html=fs.readFileSync(path.join(root,'scandixit.html'),'utf8');

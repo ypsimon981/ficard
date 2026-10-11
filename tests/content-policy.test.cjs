@@ -1,5 +1,5 @@
 const test=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
-const source=fs.readFileSync(path.join(__dirname,'../ficard-content.js'),'utf8');
+const source=require('./locale-fixture.cjs')+fs.readFileSync(path.join(__dirname,'../ficard-content.js'),'utf8');
 function storage(){const items={};return {getItem:k=>items[k]||null,setItem:(k,v)=>items[k]=v};}
 function start(local,session,now){const root={localStorage:local,sessionStorage:session,navigator:{onLine:true},FiCardAdContent:[{title:'Ad',url:'https://example.com/'}],document:{readyState:'loading',addEventListener(){}},addEventListener(){}};const NativeDate=Date;class Clock extends NativeDate{constructor(...args){super(...(args.length?args:[now]));}static now(){return now;}}vm.runInNewContext(source,{window:root,Date:Clock,Math});return root;}
 test('first two daily sessions can show ads, third uses tips, next day resets',()=>{

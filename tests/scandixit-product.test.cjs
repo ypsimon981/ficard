@@ -5,7 +5,7 @@ const html=fs.readFileSync(require('node:path').join(__dirname,'../scandixit.htm
 const inline=[...html.matchAll(/<script>([\s\S]*?)<\/script>/g)].map(m=>m[1]).find(s=>s.includes('function showCode('));
 const nodes=new Map();
 function makeNode(tag='div'){
- return {tag,value:'',textContent:'',href:'',target:'',rel:'',children:[],listeners:{},classes:new Set(),classList:{add(x){this.owner.classes.add(x)},remove(x){this.owner.classes.delete(x)},contains(x){return this.owner.classes.has(x)}},append(...xs){this.children.push(...xs)},appendChild(x){this.children.push(x)},replaceChildren(...xs){this.children=[...xs]},addEventListener(k,fn){this.listeners[k]=fn},querySelector(q){if(q==='.resultKicker')return this.kicker||=makeNode('div');return null},scrollIntoView(){}};
+ return {tag,value:'',textContent:'',href:'',target:'',rel:'',children:[],listeners:{},setAttribute(){},classes:new Set(),classList:{add(x){this.owner.classes.add(x)},remove(x){this.owner.classes.delete(x)},contains(x){return this.owner.classes.has(x)}},append(...xs){this.children.push(...xs)},appendChild(x){this.children.push(x)},replaceChildren(...xs){this.children=[...xs]},addEventListener(k,fn){this.listeners[k]=fn},querySelector(q){if(q==='.resultKicker')return this.kicker||=makeNode('div');return null},scrollIntoView(){}};
 }
 const get=id=>{if(!nodes.has(id))nodes.set(id,makeNode());return nodes.get(id)};
 for(const id of ['codeResult','productSheet'])get(id).classList.owner=get(id);

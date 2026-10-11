@@ -1,6 +1,13 @@
-const APP_VERSION="0.9.198";
+const APP_VERSION="0.9.199";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
+  "./locales/it.js?v=0.9.199",
+  "./locales/en.js?v=0.9.199",
+  "./locales/fr.js?v=0.9.199",
+  "./locales/es.js?v=0.9.199",
+  "./locales/pt.js?v=0.9.199",
+  "./locales/nl.js?v=0.9.199",
+  "./locales/de.js?v=0.9.199",
   "./logos-hq/studio/action-86b81bbf8080.png",
   "./logos-hq/studio/aldi-42f288f8353a.png",
   "./logos-hq/studio/autogrill-d21fe6ba0d04.png",
@@ -69,33 +76,33 @@ const CORE=[
   "./ficard-theme.js?v="+APP_VERSION,
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
-  "./ficard-i18n.js?v=2.0.12",
-  "./ficard-polish.css?v=0.9.198",
+  "./ficard-i18n.js?v=2.1.0",
+  "./ficard-polish.css?v=0.9.199",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-content.js?v=0.9.198",
-  "./ficard-ads-config.js?v=0.9.198",
-  "./ficard-ads.js?v=0.9.198",
-  "./ficard-stores.js?v=0.9.198",
-  "./ficard-stores-ui.js?v=0.9.198",
-  "./ficard-theme.css?v=0.9.198",
+  "./ficard-content.js?v=0.9.199",
+  "./ficard-ads-config.js?v=0.9.199",
+  "./ficard-ads.js?v=0.9.199",
+  "./ficard-stores.js?v=0.9.199",
+  "./ficard-stores-ui.js?v=0.9.199",
+  "./ficard-theme.css?v=0.9.199",
   "./ficard-reader.js?v=1.1.2",
-  "./scandixit-scanner.js?v=1.1.0",
+  "./scandixit-scanner.js?v=1.1.1",
   "./nav-barcode.svg?v=0.9.43",
   "./barcode-crops.js?v=0.9.35",
-  "./merchant-ocr.js?v=0.9.198",
+  "./merchant-ocr.js?v=0.9.199",
   "./scandixit.html",
   "./scandixit-catalog.js?v=1.0.0",
-  "./scandixit-i18n.js?v=1.0.1",
+  "./scandixit-i18n.js?v=2.1.0",
   "./manifest.webmanifest",
   "./privacy.html",
-  "./ficard-analytics-config.js?v=0.9.198",
-  "./ficard-analytics.js?v=0.9.198",
-  "./scandixit-saved.js?v=0.9.198",
-  "./ficard-promos.js?v=0.9.198",
-  "./scandixit-links.js?v=0.9.198",
-  "./scandixit-saved.css?v=0.9.198",
-  "./ficard-brand-requests.js?v=0.9.198",
+  "./ficard-analytics-config.js?v=0.9.199",
+  "./ficard-analytics.js?v=0.9.199",
+  "./scandixit-saved.js?v=0.9.199",
+  "./ficard-promos.js?v=0.9.199",
+  "./scandixit-links.js?v=0.9.199",
+  "./scandixit-saved.css?v=0.9.199",
+  "./ficard-brand-requests.js?v=0.9.199",
   "./vendor/leaflet.js","./vendor/leaflet.css",
   "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
@@ -121,7 +128,7 @@ function latestShellRequest(url){
   if(path.endsWith("/ficard-theme.js"))return "./ficard-theme.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-runtime.js"))return "./ficard-runtime.js?v="+APP_VERSION;
   if(path.endsWith("/ficard-navigation.js"))return "./ficard-navigation.js?v="+APP_VERSION;
-  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.0.12";
+  if(path.endsWith("/ficard-i18n.js"))return "./ficard-i18n.js?v=2.1.0";
   return "";
 }
 

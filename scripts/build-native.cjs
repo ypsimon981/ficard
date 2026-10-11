@@ -11,7 +11,7 @@ async function main(){
  for(const entry of await fs.readdir(root,{withFileTypes:true})){
   if(entry.isFile()&&/\.(html|js|css|png|svg|webmanifest)$/.test(entry.name))await fs.copyFile(path.join(root,entry.name),path.join(out,entry.name));
  }
- for(const dir of ['vendor','logos','logos-hq'])await fs.cp(path.join(root,dir),path.join(out,dir),{recursive:true});
+ for(const dir of ['vendor','logos','logos-hq','locales'])await fs.cp(path.join(root,dir),path.join(out,dir),{recursive:true});
  await build({entryPoints:[path.join(root,'native/bootstrap.js')],outfile:path.join(out,'native/ficard-native.js'),bundle:true,format:'iife',target:'es2022',minify:true});
  for(const name of ['index.html','scandixit.html']){
   const file=path.join(out,name),html=await fs.readFile(file,'utf8');

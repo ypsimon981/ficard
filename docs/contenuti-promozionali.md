@@ -6,4 +6,6 @@ Offline e in assenza di annunci disponibili vengono sempre mostrati consigli. Ne
 
 Non è ancora collegato un fornitore pubblicitario: l’inventario iniziale è vuoto. Il punto d’integrazione è `window.FiCardAdContent`, un elenco di oggetti `{title,text,url}`; sono accettati soltanto URL HTTPS e il testo viene sempre escapato. Il collegamento di SDK, consenso o tracciamenti pubblicitari richiede una valutazione separata prima del rilascio.
 
-I consigli riguardano associazione negozi, backup, ScanDixit e preferiti e sono disponibili nelle sette lingue dell’app.
+I consigli riguardano associazione negozi, backup, ScanDixit e tre inviti alla condivisione: vantaggi e punti, famiglia, scambio fra amici. Sono disponibili nelle sette lingue dell’app e rimangono stabili nella sessione. Gli inviti aprono la sezione condivisione nelle Impostazioni, senza inviare file automaticamente.
+
+La sezione condivisione presenta i tre messaggi espandibili e un disclaimer sempre visibile sulle condizioni dei programmi fedeltà. La promessa di rapidità è «in pochi tocchi», senza tempi garantiti. Rimane visibile l’avviso che il backup contiene anche alias, note, foto e punti vendita. Non sono stati aggiunti tracciamenti, inviti automatici o modifiche al contenuto dei backup.

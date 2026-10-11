@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "source": "Fi-Card-BrandStudio",
-  "exportedAt": "2026-10-10T15:52:08+00:00",
+  "exportedAt": "2026-10-11T21:54:36+00:00",
   "brands": [
     {
       "key": "action",
@@ -9,9 +9,9 @@
       "color": "#FFFFFF",
       "category": "casa",
       "logoScale": 64,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-09T21:58:12+00:00",
-      "logo": "./logos-hq/studio/action-86b81bbf8080.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:24:26+00:00",
+      "logo": "./logos-hq/studio/action-8323e8b19bd3.png",
       "logoBg": "transparent",
       "previousColors": [
         "#005EB8",
@@ -53,9 +53,9 @@
       "color": "#F5F4F4",
       "category": "abbigliamento",
       "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-09T22:04:58+00:00",
-      "logo": "./logos-hq/studio/bata-526585a9ed91.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:25:07+00:00",
+      "logo": "./logos-hq/studio/bata-673303d350e2.png",
       "logoBg": "transparent",
       "previousColors": [
         "#D71920",
@@ -98,9 +98,9 @@
       "color": "#FFFFFF",
       "category": "farmacia",
       "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-09T22:12:49+00:00",
-      "logo": "./logos-hq/studio/benu-63f44d3b239f.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:23:19+00:00",
+      "logo": "./logos-hq/studio/benu-1d805657564c.png",
       "logoBg": "transparent",
       "previousColors": [
         "#00A878",
@@ -118,8 +118,8 @@
       "logo": "./logos-hq/studio/bershka-a8f3d6099578.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111",
-        "#000000"
+        "#000000",
+        "#111111"
       ]
     },
     {
@@ -148,8 +148,8 @@
       "logo": "./logos-hq/studio/bricocenter-a873489253d3.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613",
-        "#D1D1D1"
+        "#D1D1D1",
+        "#E30613"
       ]
     },
     {
@@ -178,8 +178,8 @@
       "logo": "./logos-hq/studio/calzedonia-61541208b47f.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111",
-        "#000000"
+        "#000000",
+        "#111111"
       ]
     },
     {
@@ -187,10 +187,10 @@
       "name": "Carrefour",
       "color": "#FAFAFA",
       "category": "supermercati",
-      "logoScale": 50,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-09T22:23:41+00:00",
-      "logo": "./logos-hq/studio/carrefour-3af7fef84fcc.png",
+      "logoScale": 60,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:23:44+00:00",
+      "logo": "./logos-hq/studio/carrefour-c08324f39426.png",
       "logoBg": "transparent",
       "previousColors": [
         "#1D4E9E",
@@ -214,14 +214,15 @@
     {
       "key": "coin",
       "name": "Coin",
-      "color": "#FFFFFF",
+      "color": "#8B5B5B",
       "category": "abbigliamento",
-      "logoScale": 55,
-      "studioRevision": 2,
-      "updatedAt": "2026-10-09T22:24:30+00:00",
+      "logoScale": 33,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-11T13:35:55+00:00",
       "logo": "./logos-hq/studio/coin-dd6f4581057c.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#8B5B5B",
         "#FFFFFF"
       ]
     },
@@ -251,8 +252,8 @@
       "logo": "./logos-hq/studio/crai-7aea931bd451.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613",
-        "#007F00"
+        "#007F00",
+        "#E30613"
       ]
     },
     {
@@ -281,6 +282,7 @@
       "logo": "./logos-hq/studio/deco-d9ec5e64f983.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#1D333E",
         "#E30613"
       ]
     },
@@ -295,7 +297,8 @@
       "logo": "./logos-hq/studio/deichmann-278d8b2b5d2c.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#00509D"
+        "#00509D",
+        "#008E54"
       ]
     },
     {
@@ -309,21 +312,24 @@
       "logo": "./logos-hq/studio/demos-b5d674729e64.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#3D96F5",
         "#5B3DF5"
       ]
     },
     {
       "key": "despar",
       "name": "Despar",
-      "color": "#FFFFFF",
+      "color": "#FF5C5C",
       "category": "supermercati",
       "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T09:01:11+00:00",
-      "logo": "./logos-hq/studio/despar-72f159b0183f.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:38:10+00:00",
+      "logo": "./logos-hq/studio/despar-409f8741dc11.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#009640"
+        "#009640",
+        "#FF5C5C",
+        "#FFFFFF"
       ]
     },
     {
@@ -337,7 +343,8 @@
       "logo": "./logos-hq/studio/dipiu-1fe278233fc7.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#FFE100"
       ]
     },
     {
@@ -351,7 +358,8 @@
       "logo": "./logos-hq/studio/dm-f429f9fbb4c3.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#0075BF"
+        "#0075BF",
+        "#FFFFFF"
       ]
     },
     {
@@ -365,7 +373,8 @@
       "logo": "./logos-hq/studio/douglas-79bcb7f082b2.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#231F20"
+        "#231F20",
+        "#C4EBE8"
       ]
     },
     {
@@ -379,7 +388,8 @@
       "logo": "./logos-hq/studio/drmax-a0315b67c4a7.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#4EA73B"
+        "#4EA73B",
+        "#54D237"
       ]
     },
     {
@@ -387,13 +397,14 @@
       "name": "Elite Pet",
       "color": "#FFFFFF",
       "category": "petstore",
-      "logoScale": 88,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:25:35+00:00",
+      "logoScale": 76,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:39:16+00:00",
       "logo": "./logos-hq/studio/elitepet-068b93b0ffd2.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#FFFFFF"
       ]
     },
     {
@@ -407,21 +418,24 @@
       "logo": "./logos-hq/studio/emark-a53ca3e53860.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#323096",
         "#5B3DF5"
       ]
     },
     {
       "key": "eni",
       "name": "Eni",
-      "color": "#FFFCF0",
+      "color": "#F0F0F0",
       "category": "carburanti",
-      "logoScale": 49,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:28:47+00:00",
-      "logo": "./logos-hq/studio/eni-25cab6412142.png",
+      "logoScale": 58,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:40:39+00:00",
+      "logo": "./logos-hq/studio/eni-f15816e9a125.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#FFD100"
+        "#F0F0F0",
+        "#FFD100",
+        "#FFFCF0"
       ]
     },
     {
@@ -435,7 +449,8 @@
       "logo": "./logos-hq/studio/euronics-9b8584616927.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#0057A8"
+        "#0057A8",
+        "#224B9B"
       ]
     },
     {
@@ -449,7 +464,8 @@
       "logo": "./logos-hq/studio/eurospin-f3b1916ebd9e.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#00549F"
+        "#00549F",
+        "#3C98D3"
       ]
     },
     {
@@ -457,13 +473,14 @@
       "name": "Expert",
       "color": "#FF6A00",
       "category": "elettronica",
-      "logoScale": 80,
-      "studioRevision": 2,
-      "updatedAt": "2026-10-10T15:31:50+00:00",
-      "logo": "./logos-hq/studio/expert-4a7610d2c213.png",
+      "logoScale": 76,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-11T20:25:56+00:00",
+      "logo": "./logos-hq/studio/expert-5c921fa9b7bb.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#FF6A00"
       ]
     },
     {
@@ -477,7 +494,8 @@
       "logo": "./logos-hq/studio/famila-75cedce0a191.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#F28C00"
+        "#F28C00",
+        "#FAEDE5"
       ]
     },
     {
@@ -486,12 +504,13 @@
       "color": "#FFFFFF",
       "category": "farmacia",
       "logoScale": 69,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:33:50+00:00",
-      "logo": "./logos-hq/studio/farmacia-1f6db5d1ea0d.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:26:29+00:00",
+      "logo": "./logos-hq/studio/farmacia-42fccd4e022d.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#FFFFFF"
       ]
     },
     {
@@ -499,12 +518,13 @@
       "name": "Feltrinelli",
       "color": "#E00024",
       "category": "altro",
-      "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:34:56+00:00",
-      "logo": "./logos-hq/studio/feltrinelli-503ac1604f30.png",
+      "logoScale": 69,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:27:10+00:00",
+      "logo": "./logos-hq/studio/feltrinelli-240ebfb31898.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#E00024",
         "#E30613"
       ]
     },
@@ -514,12 +534,13 @@
       "color": "#F4F4F4",
       "category": "casa",
       "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:36:23+00:00",
-      "logo": "./logos-hq/studio/flyingtiger-ca8a56dfa5cb.png",
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:27:38+00:00",
+      "logo": "./logos-hq/studio/flyingtiger-80487a9a8dd9.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111"
+        "#111111",
+        "#F4F4F4"
       ]
     },
     {
@@ -527,13 +548,14 @@
       "name": "Foot Locker",
       "color": "#474343",
       "category": "abbigliamento",
-      "logoScale": 60,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:38:31+00:00",
-      "logo": "./logos-hq/studio/footlocker-51a650b22057.png",
+      "logoScale": 49,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:27:58+00:00",
+      "logo": "./logos-hq/studio/footlocker-661455eda5ef.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#111111"
+        "#111111",
+        "#474343"
       ]
     },
     {
@@ -547,21 +569,24 @@
       "logo": "./logos-hq/studio/geox-50292b67fe19.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#003E6B"
+        "#003E6B",
+        "#F2F2F2"
       ]
     },
     {
       "key": "globalpet",
       "name": "Global Pet",
-      "color": "#FFFFFF",
+      "color": "#FF9D14",
       "category": "petstore",
-      "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:43:49+00:00",
-      "logo": "./logos-hq/studio/globalpet-754e1ce4bde7.png",
+      "logoScale": 67,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-11T20:32:10+00:00",
+      "logo": "./logos-hq/studio/globalpet-c7900d9eb8c0.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#FF9D14",
+        "#FFFFFF"
       ]
     },
     {
@@ -575,21 +600,24 @@
       "logo": "./logos-hq/studio/grandvision-51e3871c5fee.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#EAE5FF"
       ]
     },
     {
       "key": "hm",
       "name": "H&M",
-      "color": "#FFFFFF",
+      "color": "#F5F5F5",
       "category": "abbigliamento",
-      "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:45:33+00:00",
-      "logo": "./logos-hq/studio/hm-450633717fac.png",
+      "logoScale": 48,
+      "studioRevision": 3,
+      "updatedAt": "2026-10-11T20:32:55+00:00",
+      "logo": "./logos-hq/studio/hm-1100f545a92d.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#D50000"
+        "#D50000",
+        "#F5F5F5",
+        "#FFFFFF"
       ]
     },
     {
@@ -603,7 +631,8 @@
       "logo": "./logos-hq/studio/ikea-921b25e267eb.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#0058A3"
+        "#0058A3",
+        "#0058AB"
       ]
     },
     {
@@ -611,13 +640,14 @@
       "name": "IN’S",
       "color": "#FFED00",
       "category": "supermercati",
-      "logoScale": 51,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:47:48+00:00",
-      "logo": "./logos-hq/studio/ins-8359876f3ec0.png",
+      "logoScale": 45,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:33:30+00:00",
+      "logo": "./logos-hq/studio/ins-d633018777c9.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#5B3DF5"
+        "#5B3DF5",
+        "#FFED00"
       ]
     },
     {
@@ -625,13 +655,14 @@
       "name": "Intersport",
       "color": "#F2F2F2",
       "category": "sport",
-      "logoScale": 80,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:48:49+00:00",
+      "logoScale": 74,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:33:46+00:00",
       "logo": "./logos-hq/studio/intersport-3777fbf9696b.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#E30613"
+        "#E30613",
+        "#F2F2F2"
       ]
     },
     {
@@ -639,13 +670,14 @@
       "name": "Intimissimi",
       "color": "#E9C4C8",
       "category": "abbigliamento",
-      "logoScale": 95,
-      "studioRevision": 1,
-      "updatedAt": "2026-10-10T15:49:53+00:00",
+      "logoScale": 71,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:34:04+00:00",
       "logo": "./logos-hq/studio/intimissimi-aea5ee9d9ffa.png",
       "logoBg": "transparent",
       "previousColors": [
-        "#7A3E45"
+        "#7A3E45",
+        "#E9C4C8"
       ]
     },
     {
@@ -659,6 +691,1160 @@
       "logo": "./logos-hq/studio/ip-5c8a62be42b8.png",
       "logoBg": "transparent",
       "previousColors": [
+        "#F28C1B",
+        "#F58220"
+      ]
+    },
+    {
+      "key": "iper",
+      "name": "Iper",
+      "color": "#FFED29",
+      "category": "supermercati",
+      "logoScale": 58,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:34:28+00:00",
+      "logo": "./logos-hq/studio/iper-dea6afde118b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613",
+        "#FFED29"
+      ]
+    },
+    {
+      "key": "pim",
+      "name": "PIM",
+      "color": "#FDF103",
+      "category": "supermercati",
+      "logoScale": 58,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:30:53+00:00",
+      "logo": "./logos-hq/studio/pim-d754b161cd4f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FDF103"
+      ],
+      "mark": "PIM"
+    },
+    {
+      "key": "italpet",
+      "name": "Italpet",
+      "color": "#AA8D8D",
+      "category": "petstore",
+      "logoScale": 61,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:32:50+00:00",
+      "logo": "./logos-hq/studio/italpet-6c3ab62c109c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#AA8D8D"
+      ]
+    },
+    {
+      "key": "iperal",
+      "name": "Iperal",
+      "color": "#F8A432",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:34:38+00:00",
+      "logo": "./logos-hq/studio/iperal-6d77f32b02d2.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613",
+        "#F8A432"
+      ]
+    },
+    {
+      "key": "jdsports",
+      "name": "JD Sports",
+      "color": "#FFD500",
+      "category": "sport",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:43:25+00:00",
+      "logo": "./logos-hq/studio/jdsports-f38f25d7e459.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#FFD500"
+      ]
+    },
+    {
+      "key": "jysk",
+      "name": "JYSK",
+      "color": "#143C7D",
+      "category": "casa",
+      "logoScale": 61,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:45:45+00:00",
+      "logo": "./logos-hq/studio/jysk-c64057f054e6.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#143C7D"
+      ]
+    },
+    {
+      "key": "kfc",
+      "name": "KFC",
+      "color": "#F40027",
+      "category": "ristorazione",
+      "logoScale": 27,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T13:47:28+00:00",
+      "logo": "./logos-hq/studio/kfc-fcc79b9987b5.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E4002B",
+        "#F40027"
+      ]
+    },
+    {
+      "key": "kiabi",
+      "name": "Kiabi",
+      "color": "#120D59",
+      "category": "abbigliamento",
+      "logoScale": 62,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T13:50:07+00:00",
+      "logo": "./logos-hq/studio/kiabi-dd44a47c70a1.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#009FE3",
+        "#120D59"
+      ]
+    },
+    {
+      "key": "kiko",
+      "name": "KIKO Milano",
+      "color": "#BD56A7",
+      "category": "beauty",
+      "logoScale": 46,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:35:40+00:00",
+      "logo": "./logos-hq/studio/kiko-7da8429d076f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#BD56A7"
+      ]
+    },
+    {
+      "key": "a&o",
+      "name": "A&O",
+      "color": "#FFFFFF",
+      "category": "altro",
+      "logoScale": 56,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:22:59+00:00",
+      "logo": "./logos-hq/studio/aando-e940b716b4b1.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "coop",
+      "name": "Coop",
+      "color": "#E30613",
+      "category": "supermercati",
+      "logoScale": 54,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T20:24:35+00:00",
+      "logo": "./logos-hq/studio/coop-93eac253b01c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "gamestop",
+      "name": "GameLife",
+      "color": "#111111",
+      "category": "elettronica",
+      "logoScale": 65,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:31:08+00:00",
+      "logo": "./logos-hq/studio/gamelife-076e58275fc3.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ],
+      "mark": "GAMELIFE"
+    },
+    {
+      "key": "isoladeitesori",
+      "name": "L'Isola dei Tesori",
+      "color": "#076633",
+      "category": "petstore",
+      "logoScale": 70,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:38:02+00:00",
+      "logo": "./logos-hq/studio/isoladeitesori-d42a700fab2b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#076633",
+        "#F58220"
+      ]
+    },
+    {
+      "key": "lapiadineria",
+      "name": "La Piadineria",
+      "color": "#FFFFFF",
+      "category": "ristorazione",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:39:33+00:00",
+      "logo": "./logos-hq/studio/lapiadineria-76ac5d222552.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "leroymerlin",
+      "name": "Leroy Merlin",
+      "color": "#FAFAF5",
+      "category": "casa",
+      "logoScale": 53,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:39:57+00:00",
+      "logo": "./logos-hq/studio/leroymerlin-8f7f158c546e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FAFAF5"
+      ]
+    },
+    {
+      "key": "libraccio",
+      "name": "Libraccio",
+      "color": "#93D50A",
+      "category": "altro",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:41:26+00:00",
+      "logo": "./logos-hq/studio/libraccio-6165a05b9d56.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#93D50A",
+        "#E30613"
+      ]
+    },
+    {
+      "key": "lidl",
+      "name": "Lidl",
+      "color": "#0050AA",
+      "category": "supermercati",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:43:13+00:00",
+      "logo": "./logos-hq/studio/lidl-f1041728efbb.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0050AA"
+      ]
+    },
+    {
+      "key": "lillapois",
+      "name": "Lillapois",
+      "color": "#997BD1",
+      "category": "beauty",
+      "logoScale": 59,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:44:17+00:00",
+      "logo": "./logos-hq/studio/lillapois-de40dbbde46b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#997BD1",
+        "#A34CA5"
+      ]
+    },
+    {
+      "key": "lloyds",
+      "name": "LloydsFarmacia",
+      "color": "#005F27",
+      "category": "farmacia",
+      "logoScale": 60,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:45:30+00:00",
+      "logo": "./logos-hq/studio/lloyds-d3b9bdc8e5e7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#005F27",
+        "#7A1F78"
+      ]
+    },
+    {
+      "key": "lotteria",
+      "name": "Lotteria degli scontrini",
+      "color": "#07549A",
+      "category": "altro",
+      "logoScale": 63,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:46:57+00:00",
+      "logo": "./logos-hq/studio/lotteria-9b921eea0a08.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#07549A"
+      ]
+    },
+    {
+      "key": "majesticpets",
+      "name": "Majestic Pet's",
+      "color": "#FFFFFF",
+      "category": "petstore",
+      "logoScale": 59,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:48:36+00:00",
+      "logo": "./logos-hq/studio/majesticpets-ca947dd3343c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "mango",
+      "name": "Mango",
+      "color": "#D6D6D6",
+      "category": "abbigliamento",
+      "logoScale": 71,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:50:29+00:00",
+      "logo": "./logos-hq/studio/mango-71a93df66e39.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#D6D6D6"
+      ]
+    },
+    {
+      "key": "maurys",
+      "name": "Maury's",
+      "color": "#E30613",
+      "category": "casalinghi",
+      "logoScale": 70,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:52:46+00:00",
+      "logo": "./logos-hq/studio/maurys-6d793191f03b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613"
+      ]
+    },
+    {
+      "key": "maxizoo",
+      "name": "Maxi Zoo",
+      "color": "#01652F",
+      "category": "petstore",
+      "logoScale": 39,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:53:59+00:00",
+      "logo": "./logos-hq/studio/maxizoo-b05ff0261786.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#01652F",
+        "#66B32E"
+      ]
+    },
+    {
+      "key": "mercato",
+      "name": "Mercatò",
+      "color": "#DEDEDE",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:56:03+00:00",
+      "logo": "./logos-hq/studio/mercato-45f154e65f93.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#DEDEDE"
+      ]
+    },
+    {
+      "key": "mondadori",
+      "name": "Mondadori",
+      "color": "#1D1D1B",
+      "category": "altro",
+      "logoScale": 45,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:58:58+00:00",
+      "logo": "./logos-hq/studio/mondadori-124b99e7f192.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#1D1D1B",
+        "#E30613"
+      ]
+    },
+    {
+      "key": "motivi",
+      "name": "Motivi",
+      "color": "#E9C8CF",
+      "category": "abbigliamento",
+      "logoScale": 64,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T20:59:48+00:00",
+      "logo": "./logos-hq/studio/motivi-e4ca4ae20250.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#B21E3B",
+        "#E9C8CF"
+      ]
+    },
+    {
+      "key": "naturasì",
+      "name": "NaturaSì",
+      "color": "#5A7814",
+      "category": "supermercati",
+      "logoScale": 69,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:00:57+00:00",
+      "logo": "./logos-hq/studio/naturasi-09d09a6ac577.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5A7814",
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "nike",
+      "name": "Nike",
+      "color": "#F65A24",
+      "category": "sport",
+      "logoScale": 57,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:01:24+00:00",
+      "logo": "./logos-hq/studio/nike-4aaf42278d9c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F65A24"
+      ]
+    },
+    {
+      "key": "notino",
+      "name": "Notino",
+      "color": "#B5B5B5",
+      "category": "beauty",
+      "logoScale": 69,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:02:30+00:00",
+      "logo": "./logos-hq/studio/notino-614cfedc6776.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#B5B5B5"
+      ]
+    },
+    {
+      "key": "obi",
+      "name": "OBI",
+      "color": "#FFFFFF",
+      "category": "casa",
+      "logoScale": 67,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:03:37+00:00",
+      "logo": "./logos-hq/studio/obi-08f7724d6d29.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F36F21",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "norauto",
+      "name": "Norauto",
+      "color": "#002B6F",
+      "category": "altro",
+      "logoScale": 68,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:05:33+00:00",
+      "logo": "./logos-hq/studio/norauto-df12c3b1657b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#002B6F",
+        "#004B93"
+      ]
+    },
+    {
+      "key": "oldwildwest",
+      "name": "Old Wild West",
+      "color": "#EBD1C2",
+      "category": "ristorazione",
+      "logoScale": 77,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:07:27+00:00",
+      "logo": "./logos-hq/studio/oldwildwest-17d11de32926.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#8A4B24",
+        "#EBD1C2"
+      ]
+    },
+    {
+      "key": "ovs",
+      "name": "OVS",
+      "color": "#12273C",
+      "category": "abbigliamento",
+      "logoScale": 51,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:09:59+00:00",
+      "logo": "./logos-hq/studio/ovs-96f5dc0b2b99.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#12273C"
+      ]
+    },
+    {
+      "key": "pam",
+      "name": "Pam Panorama",
+      "color": "#FFFFFF",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 2,
+      "updatedAt": "2026-10-11T21:10:48+00:00",
+      "logo": "./logos-hq/studio/pam-7a8d514503ed.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "penny",
+      "name": "PENNY",
+      "color": "#CD1414",
+      "category": "supermercati",
+      "logoScale": 64,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:12:07+00:00",
+      "logo": "./logos-hq/studio/penny-5309f74e06d0.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#CD1414",
+        "#D71920"
+      ]
+    },
+    {
+      "key": "pepco",
+      "name": "Pepco",
+      "color": "#0078E3",
+      "category": "casa",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:15:09+00:00",
+      "logo": "./logos-hq/studio/pepco-538b59064c5c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0057B8",
+        "#0078E3"
+      ]
+    },
+    {
+      "key": "petsupermarket",
+      "name": "Pet Supermarket",
+      "color": "#000000",
+      "category": "petstore",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:16:08+00:00",
+      "logo": "./logos-hq/studio/petsupermarket-56325bb983fa.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#000000",
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "petmark",
+      "name": "Petmark",
+      "color": "#E0001B",
+      "category": "petstore",
+      "logoScale": 71,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:17:24+00:00",
+      "logo": "./logos-hq/studio/petmark-499b3548d323.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#E0001B"
+      ]
+    },
+    {
+      "key": "pewex",
+      "name": "Pewex",
+      "color": "#112C56",
+      "category": "supermercati",
+      "logoScale": 52,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:19:02+00:00",
+      "logo": "./logos-hq/studio/pewex-aa4f9d3f63e7.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#112C56",
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "piazzaitalia",
+      "name": "Piazza Italia",
+      "color": "#111111",
+      "category": "abbigliamento",
+      "logoScale": 72,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:19:52+00:00",
+      "logo": "./logos-hq/studio/piazzaitalia-8df353ea1e85.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "pinalli",
+      "name": "Pinalli",
+      "color": "#F7F7F7",
+      "category": "beauty",
+      "logoScale": 62,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:20:29+00:00",
+      "logo": "./logos-hq/studio/pinalli-d93736fd48f4.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F7F7F7",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "pittarosso",
+      "name": "PittaRosso",
+      "color": "#D0043C",
+      "category": "abbigliamento",
+      "logoScale": 69,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:21:26+00:00",
+      "logo": "./logos-hq/studio/pittarosso-dd3fb64be731.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#D0043C",
+        "#D90046"
+      ]
+    },
+    {
+      "key": "primark",
+      "name": "Primark",
+      "color": "#00A0D5",
+      "category": "abbigliamento",
+      "logoScale": 71,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:22:12+00:00",
+      "logo": "./logos-hq/studio/primark-284aa11abedc.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#00A0D5",
+        "#00A4D6"
+      ]
+    },
+    {
+      "key": "primigi",
+      "name": "Primigi",
+      "color": "#FCFCFC",
+      "category": "abbigliamento",
+      "logoScale": 53,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:22:51+00:00",
+      "logo": "./logos-hq/studio/primigi-414a5200d7f6.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FCFCFC",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "pullandbear",
+      "name": "Pull&Bear",
+      "color": "#FFFFFF",
+      "category": "abbigliamento",
+      "logoScale": 66,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:24:19+00:00",
+      "logo": "./logos-hq/studio/pullandbear-1544890d0df5.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "puma",
+      "name": "Puma",
+      "color": "#000000",
+      "category": "sport",
+      "logoScale": 54,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:25:54+00:00",
+      "logo": "./logos-hq/studio/puma-b95d68f461bf.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#000000",
+        "#111111"
+      ]
+    },
+    {
+      "key": "q8",
+      "name": "Q8",
+      "color": "#ED1B2E",
+      "category": "carburanti",
+      "logoScale": 53,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:27:02+00:00",
+      "logo": "./logos-hq/studio/q8-23bb4c817f42.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E31B23",
+        "#ED1B2E"
+      ]
+    },
+    {
+      "key": "risparmiocasa",
+      "name": "Risparmio Casa",
+      "color": "#0094F0",
+      "category": "casalinghi",
+      "logoScale": 68,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:28:02+00:00",
+      "logo": "./logos-hq/studio/risparmiocasa-6fb4cbba33d6.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0094F0",
+        "#E31E24"
+      ]
+    },
+    {
+      "key": "roadhouse",
+      "name": "Roadhouse",
+      "color": "#B1162D",
+      "category": "ristorazione",
+      "logoScale": 63,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:28:59+00:00",
+      "logo": "./logos-hq/studio/roadhouse-6338d779048b.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#B1162D",
+        "#B31B1B"
+      ]
+    },
+    {
+      "key": "robinsonpetshop",
+      "name": "Robinson Pet Shop",
+      "color": "#D5F5D1",
+      "category": "petstore",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:30:09+00:00",
+      "logo": "./logos-hq/studio/robinsonpetshop-ed75a6e64f05.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#D5F5D1"
+      ]
+    },
+    {
+      "key": "rossopomodoro",
+      "name": "Rossopomodoro",
+      "color": "#FFFFFF",
+      "category": "ristorazione",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:32:03+00:00",
+      "logo": "./logos-hq/studio/rossopomodoro-a86ed1682d30.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#D71920",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "salmoiraghi",
+      "name": "Salmoiraghi & Viganò",
+      "color": "#F5F5F5",
+      "category": "altro",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:32:58+00:00",
+      "logo": "./logos-hq/studio/salmoiraghi-04983cea7caa.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#F5F5F5"
+      ]
+    },
+    {
+      "key": "sephora",
+      "name": "Sephora",
+      "color": "#202022",
+      "category": "beauty",
+      "logoScale": 34,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:33:24+00:00",
+      "logo": "./logos-hq/studio/sephora-be77067c7d8f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#202022"
+      ]
+    },
+    {
+      "key": "shell",
+      "name": "Shell",
+      "color": "#FFD500",
+      "category": "carburanti",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:34:13+00:00",
+      "logo": "./logos-hq/studio/shell-0033914aae0c.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#FFD500"
+      ]
+    },
+    {
+      "key": "sigma",
+      "name": "Sigma",
+      "color": "#FFFFFF",
+      "category": "supermercati",
+      "logoScale": 42,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:35:12+00:00",
+      "logo": "./logos-hq/studio/sigma-9a1eb70a9434.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E30613",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "simply",
+      "name": "Simply",
+      "color": "#FFFFFF",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:36:47+00:00",
+      "logo": "./logos-hq/studio/simply-421f9ff15159.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "skechers",
+      "name": "Skechers",
+      "color": "#2A2E7D",
+      "category": "abbigliamento",
+      "logoScale": 68,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:38:00+00:00",
+      "logo": "./logos-hq/studio/skechers-16bfa62622a9.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#0055A5",
+        "#2A2E7D"
+      ]
+    },
+    {
+      "key": "sole365",
+      "name": "Sole365",
+      "color": "#00437A",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:38:54+00:00",
+      "logo": "./logos-hq/studio/sole365-c16b1f515dfb.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#00437A",
+        "#F6C500"
+      ]
+    },
+    {
+      "key": "starbucks",
+      "name": "Starbucks",
+      "color": "#007042",
+      "category": "ristorazione",
+      "logoScale": 36,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:39:42+00:00",
+      "logo": "./logos-hq/studio/starbucks-d971b1ac7b62.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#007042",
+        "#00754A"
+      ]
+    },
+    {
+      "key": "stradivarius",
+      "name": "Stradivarius",
+      "color": "#3D3D3D",
+      "category": "abbigliamento",
+      "logoScale": 64,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:41:09+00:00",
+      "logo": "./logos-hq/studio/stradivarius-e5b042dbad8e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#3D3D3D"
+      ]
+    },
+    {
+      "key": "tamoil",
+      "name": "Tamoil",
+      "color": "#003B7A",
+      "category": "carburanti",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:42:40+00:00",
+      "logo": "./logos-hq/studio/tamoil-c5f831203f3a.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#003B7A"
+      ]
+    },
+    {
+      "key": "tecnomat",
+      "name": "Tecnomat",
+      "color": "#001635",
+      "category": "casa",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:43:28+00:00",
+      "logo": "./logos-hq/studio/tecnomat-6b53d60c2a28.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#001635",
+        "#F5A800"
+      ]
+    },
+    {
+      "key": "terranova",
+      "name": "Terranova",
+      "color": "#000000",
+      "category": "abbigliamento",
+      "logoScale": 64,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:44:09+00:00",
+      "logo": "./logos-hq/studio/terranova-1f0a17885cfa.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#000000",
+        "#111111"
+      ]
+    },
+    {
+      "key": "tesco",
+      "name": "Tesco",
+      "color": "#FFFFFF",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:45:09+00:00",
+      "logo": "./logos-hq/studio/tesco-00d3fc639234.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#5B3DF5",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "tezenis",
+      "name": "Tezenis",
+      "color": "#111111",
+      "category": "abbigliamento",
+      "logoScale": 62,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:45:56+00:00",
+      "logo": "./logos-hq/studio/tezenis-7d293e89acf2.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111"
+      ]
+    },
+    {
+      "key": "thun",
+      "name": "THUN",
+      "color": "#357E7D",
+      "category": "casa",
+      "logoScale": 61,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:46:11+00:00",
+      "logo": "./logos-hq/studio/thun-8dac32c4e797.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#357E7D"
+      ]
+    },
+    {
+      "key": "tigota",
+      "name": "Tigotà",
+      "color": "#049AA5",
+      "category": "beauty",
+      "logoScale": 63,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:46:21+00:00",
+      "logo": "./logos-hq/studio/tigota-66c080cf33fc.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#049AA5"
+      ]
+    },
+    {
+      "key": "todis",
+      "name": "Todis",
+      "color": "#F5F2E4",
+      "category": "supermercati",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:46:52+00:00",
+      "logo": "./logos-hq/studio/todis-8d70c3d88859.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#F5F2E4"
+      ]
+    },
+    {
+      "key": "total",
+      "name": "TotalEnergies",
+      "color": "#EBEBEB",
+      "category": "carburanti",
+      "logoScale": 49,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:47:43+00:00",
+      "logo": "./logos-hq/studio/total-9e740a7c8ac9.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#E31B23",
+        "#EBEBEB"
+      ]
+    },
+    {
+      "key": "trony",
+      "name": "Trony",
+      "color": "#162553",
+      "category": "elettronica",
+      "logoScale": 52,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:48:38+00:00",
+      "logo": "./logos-hq/studio/trony-84686d030fdd.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#162553",
+        "#E30613"
+      ]
+    },
+    {
+      "key": "unieuro",
+      "name": "Unieuro",
+      "color": "#1D2343",
+      "category": "elettronica",
+      "logoScale": 62,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:48:48+00:00",
+      "logo": "./logos-hq/studio/unieuro-5f92c58227ca.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#1D2343"
+      ]
+    },
+    {
+      "key": "upim",
+      "name": "UPIM",
+      "color": "#1E3346",
+      "category": "abbigliamento",
+      "logoScale": 54,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:49:54+00:00",
+      "logo": "./logos-hq/studio/upim-45c5deb29d98.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#1E3346",
+        "#E60028"
+      ]
+    },
+    {
+      "key": "venchi",
+      "name": "Venchi",
+      "color": "#4B2E20",
+      "category": "ristorazione",
+      "logoScale": 56,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:50:27+00:00",
+      "logo": "./logos-hq/studio/venchi-d39061e18a4f.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#4B2E20"
+      ]
+    },
+    {
+      "key": "yvesrocher",
+      "name": "Yves Rocher",
+      "color": "#869940",
+      "category": "beauty",
+      "logoScale": 83,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:51:49+00:00",
+      "logo": "./logos-hq/studio/yvesrocher-5c43c9748733.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#006A4E",
+        "#869940"
+      ]
+    },
+    {
+      "key": "zara",
+      "name": "Zara",
+      "color": "#FFFFFF",
+      "category": "abbigliamento",
+      "logoScale": 53,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:52:50+00:00",
+      "logo": "./logos-hq/studio/zara-ceb578873e6e.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#111111",
+        "#FFFFFF"
+      ]
+    },
+    {
+      "key": "zooservice",
+      "name": "Zoo Service",
+      "color": "#2C7F27",
+      "category": "petstore",
+      "logoScale": 46,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:53:34+00:00",
+      "logo": "./logos-hq/studio/zooservice-98d75fef58b1.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#2C7F27",
+        "#5B3DF5"
+      ]
+    },
+    {
+      "key": "zooplus",
+      "name": "zooplus",
+      "color": "#C6E29C",
+      "category": "petstore",
+      "logoScale": 80,
+      "studioRevision": 1,
+      "updatedAt": "2026-10-11T21:54:30+00:00",
+      "logo": "./logos-hq/studio/zooplus-a84c6df7a77a.png",
+      "logoBg": "transparent",
+      "previousColors": [
+        "#C6E29C",
         "#F58220"
       ]
     }

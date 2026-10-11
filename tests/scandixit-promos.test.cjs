@@ -1,0 +1,5 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs');
+const {appLink}=require('../scandixit-links.js');
+test('Android app button keeps a web fallback and targets the correct package',()=>{const link=appLink('4006381333931',true);assert.match(link,/package=fi.card.app;/);assert.match(link,/scheme=ficard;/);assert.ok(link.includes(encodeURIComponent('https://fi-card.app/scandixit/?code=4006381333931')));assert.equal(appLink('evil;end'), '');});
+test('ScanDixit advice sits after the result and before saved products',()=>{const s=fs.readFileSync('scandixit.html','utf8');assert.ok(s.indexOf('id="scanContentBanner"')>s.indexOf('id="amazonLabel"'));assert.ok(s.indexOf('id="scanContentBanner"')<s.indexOf('class="card savedProducts"'));assert.match(s,/ficard-promos.js/)});
+test('ad units stay disabled, but ScanDixit native unit is configured',()=>{const s=fs.readFileSync('ficard-ads-config.js','utf8');assert.match(s,/enabled:false/);assert.match(s,/scandixit:'ca-app-pub-9232853493225235\/2996518713'/)});

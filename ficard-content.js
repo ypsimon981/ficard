@@ -1,4 +1,4 @@
-/* Fi-Card v0.9.196 · Local daily cap, stable session content, offline tips. */
+/* Fi-Card v0.9.198 · Local daily cap, stable session content, offline tips. */
 (function(root){
 'use strict';
 const DAILY='ficard.content.day.v1',SESSION='ficard.content.session.v1',IDLE=30*60*1000;
@@ -45,7 +45,7 @@ function adAvailable(){return root.navigator?.onLine!==false&&count<=2;}
 function slotAllowsAd(slot){model(slot);return adAvailable()&&choices[slot].ad;}
 function model(slot){
  const c=copy();let chosen=choices[slot];
- if(!chosen){chosen=choices[slot]={tip:Math.floor(Math.random()*6),ad:slot==='banner'||Math.random()<.5};}
+ if(!chosen){chosen=choices[slot]={tip:slot==='scandixit'?3+Math.floor(Math.random()*3):Math.floor(Math.random()*6),ad:slot==='banner'||Math.random()<.5};}
  const candidates=Array.isArray(root.FiCardAdContent)?root.FiCardAdContent:[];
  const ad=adAvailable()&&chosen.ad?candidates.find(a=>a&&typeof a.title==='string'&&typeof a.url==='string'&&/^https:\/\//i.test(a.url)):null;
  if(ad)return {label:c[1],title:ad.title,text:ad.text||'',url:ad.url,advert:true};
@@ -55,7 +55,7 @@ function model(slot){
 }
 function html(slot,banner=false){
  const m=model(slot),action=m.advert?'href="'+esc(m.url)+'" target="_blank" rel="noopener noreferrer"':'href="#'+m.view+'" data-content-view="'+m.view+'"'+(m.sharing?' data-content-sharing="true"':'');
- return '<a data-ad-slot="'+esc(slot)+'" data-ad-format="'+(banner?'banner':'native')+'" class="'+(banner?'contentBanner':'card advertisingCard contentTile')+'" '+action+' style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">'+esc(m.label)+'</span><strong>'+esc(m.title)+'</strong><small>'+esc(m.text)+'</small></div>'+(banner?'<span class="badge">'+esc(copy()[2])+'</span>':'')+'</a>';
+ return '<a data-ad-slot="'+esc(slot)+'" data-promo-campaign="tip'+choices[slot].tip+'" data-ad-format="'+(banner&&slot!=='scandixit'?'banner':'native')+'" class="'+(banner?'contentBanner':'card advertisingCard contentTile')+'" '+action+' style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">'+esc(m.label)+'</span><strong>'+esc(m.title)+'</strong><small>'+esc(m.text)+'</small></div>'+(banner?'<span class="badge">'+esc(copy()[2])+'</span>':'')+'</a>';
 }
 function renderSharing(){
  const panel=root.document?.getElementById('cardSharingMessages');if(!panel)return;

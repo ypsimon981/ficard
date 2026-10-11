@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#5B3DF5">
 <title>ScanDixit · FiCard</title>
-<script src="./ficard-theme.js?v=0.9.196"></script>
+<script src="./ficard-theme.js?v=0.9.198"></script>
 <link rel="icon" href="./icon-32.png" type="image/png">
 <script src="./vendor/html5-qrcode.min.js"></script>
 <script src="./barcode-crops.js?v=0.9.35"></script>
@@ -30,9 +30,9 @@ header{display:flex;align-items:center;justify-content:space-between;padding:12p
 body.embeddedInFiCard .scanHeader{display:none}
 @media(max-width:360px){.hero h1{font-size:26px}.app{padding-left:12px;padding-right:12px}.manual button{flex-basis:92px}.scanFiLogo{width:105px}.scanHeaderProduct strong{font-size:13px}}
 </style>
-<link rel="stylesheet" href="./ficard-theme.css?v=0.9.196">
+<link rel="stylesheet" href="./ficard-theme.css?v=0.9.198">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.150">
-<link rel="stylesheet" href="./scandixit-saved.css?v=0.9.196">
+<link rel="stylesheet" href="./scandixit-saved.css?v=0.9.198">
 </head>
 <body class="scanDixitPage">
 <script>if(new URLSearchParams(location.search).get("section")==="ficard")document.body.classList.add("embeddedInFiCard");</script>
@@ -136,6 +136,7 @@ body.embeddedInFiCard .scanHeader{display:none}
 </svg><span id="amazonLabel">Leggi opinioni del prodotto</span></a>
 </section>
 
+<div id="scanContentBanner" aria-label="Consigli Fi-Card"></div>
 <section class="card savedProducts"><h2 class="scanHeading">Prodotti salvati <span id="savedProductsCount">0</span></h2><p class="sub">Scansiona in negozio, approfondisci con calma. La lista resta su questo dispositivo.</p><p id="savedProductsEmpty" class="hint">Non hai ancora salvato prodotti. Puoi salvare anche solo il codice, senza aspettare il catalogo.</p><div id="savedProductsList"></div><details class="productBackup"><summary>Backup dei prodotti</summary><p class="hint">Separato dalle tessere. Importa solo i prodotti mancanti, senza duplicati.</p><div class="productQuickActions"><button class="secondary" id="exportProducts" type="button">Esporta prodotti</button><button class="secondary" id="shareProducts" type="button">Condividi prodotti</button></div><label class="fileLabel">Importa prodotti<input id="importProducts" type="file" accept="application/json,.json"></label></details></section>
 <p class="hint" style="text-align:center">Il prodotto fisico resta al centro. ScanDixit aggiunge le informazioni che aiutano a scegliere.</p>
 </div>
@@ -198,7 +199,10 @@ $("lookupModel").addEventListener("click",()=>{const text=$("ocrText").value.tri
 </script>
 <script src="./scandixit-i18n.js?v=1.0.1"></script>
 <script src="./scandixit-scanner.js?v=1.1.0"></script>
-<script src="./scandixit-saved.js?v=0.9.196"></script>
+<script src="./scandixit-saved.js?v=0.9.198"></script>
+<script src="./scandixit-links.js?v=0.9.198"></script>
+<script src="./ficard-content.js?v=0.9.198"></script>
+<script src="./ficard-promos.js?v=0.9.198"></script>
 </body>
 </html>
 

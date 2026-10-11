@@ -2,7 +2,7 @@ const test=require('node:test'),assert=require('node:assert/strict'),vm=require(
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
 const html=read('index.html');
 function ghostContext(){
- const saved={},ctx={localStorage:{getItem:k=>saved[k],setItem:(k,v)=>saved[k]=v},inferredBrandKey:c=>c.brandKey,esc:String,window:{},BRANDS:{conad:{name:'Conad',color:'#f00'},carrefour:{name:'Carrefour',color:'#fff'}},cardInk:()=> '#000',brandLogoHtml:b=>b.name,unifiedCardHtml:c=>'<real>'+c.id+'</real>',advertisingPreviewHtml:()=>'<ad/>'};
+ const saved={},ctx={localStorage:{getItem:k=>saved[k],setItem:(k,v)=>saved[k]=v,removeItem:k=>delete saved[k]},inferredBrandKey:c=>c.brandKey,esc:String,window:{},BRANDS:{conad:{name:'Conad',color:'#f00'},carrefour:{name:'Carrefour',color:'#fff'}},cardInk:()=> '#000',brandLogoHtml:b=>b.name,unifiedCardHtml:c=>'<real>'+c.id+'</real>',advertisingPreviewHtml:()=>'<ad/>'};
  vm.createContext(ctx);vm.runInContext(html.slice(html.indexOf('function onboardingGhostKeys('),html.indexOf('// Fit the translated arrival')),ctx);return ctx;
 }
 test('ghosts progressively disappear, avoid owned brands and stay gone after completing onboarding',()=>{
@@ -13,6 +13,7 @@ test('ghosts progressively disappear, avoid owned brands and stay gone after com
  cards.push({id:'3',brandKey:'other'});assert.equal(c.onboardingGhostKeys(cards).length,0);
  cards.pop();assert.equal(c.onboardingGhostKeys(cards).length,0);
  assert.equal(cards.length,2);assert.ok(cards.every(card=>card.id));
+ cards.length=0;assert.equal(c.onboardingGhostKeys(cards).length,3);
 });
 test('fourth slot follows three visible cards at zero, one, two and three saved cards',()=>{
  for(let count=0;count<=3;count++){

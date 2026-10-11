@@ -6,7 +6,7 @@ test('all catalog mini cards use the same logo, scale and card color as the wall
  vm.runInContext(html.slice(html.indexOf('function inferredBrandKey('),html.indexOf('function renderCategoryChips(')),c);
  for(const name of ['brandLogoHtml','cardInk'])vm.runInContext(html.split('\n').find(l=>l.startsWith('function '+name+'(')),c);
  vm.runInContext(html.slice(html.indexOf('function mapBrandVisual('),html.indexOf('function renderLocations(')),c);
- assert.equal(Object.keys(c.catalog).length,141);
+ assert.equal(Object.keys(c.catalog).length,143);
  for(const [key,b] of Object.entries(c.catalog)){
   const card={brandKey:key,name:b.name,color:b.color},art=c.brandLogoHtml(b,'wallet');
   const pin=c.mapCardPinIcon(card).html,mini=c.shopMiniCardHtml(card);

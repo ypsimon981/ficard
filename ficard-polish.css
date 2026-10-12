@@ -431,5 +431,5 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .cardItem .brandMark,.smartCard .brandMark{position:relative;z-index:1}
 .cardItem .cardAlias,.smartCardOpen .cardAlias{z-index:5}
 .mapCardFace{isolation:isolate}
-.mapCardFace::before{display:block;content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:rgba(0,0,0,.35);-webkit-mask-image:radial-gradient(ellipse 100% 100% at 0% 0%,transparent 99.8%,#000 100%);mask-image:radial-gradient(ellipse 100% 100% at 0% 0%,transparent 99.8%,#000 100%)}
+.mapCardFace::before{display:block;content:"";position:absolute;inset:0;z-index:2;pointer-events:none;background:rgba(0,0,0,.2);-webkit-mask-image:radial-gradient(ellipse 100% 100% at 0% 0%,transparent 99.8%,#000 100%);mask-image:radial-gradient(ellipse 100% 100% at 0% 0%,transparent 99.8%,#000 100%)}
 .mapCardFace .brandLogo,.mapCardFace .brandLogoFallback{z-index:1}

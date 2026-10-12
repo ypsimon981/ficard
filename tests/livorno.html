@@ -3,33 +3,28 @@
 body{font:15px system-ui;background:#f8f9fc;color:#1f2937;max-width:720px;margin:30px auto;padding:0 16px}h1{color:#5b3df5}button{border:0;border-radius:12px;padding:12px 18px;background:#5b3df5;color:white;cursor:pointer}button:disabled{opacity:.5}select{padding:12px;border:1px solid #ccc;border-radius:12px}section{background:white;border:1px solid #e7eaf0;border-radius:18px;padding:20px;margin:16px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}.muted{color:#667085}strong{color:#222}
 </style></head><body><h1>Fi-Card · Collaudo Livorno</h1><p class="muted">Pagina sperimentale isolata. Non modifica le carte né i negozi salvati sul telefono.</p>
 <section><label for="brand">Marchio</label> <select id="brand"><option value="conad">Conad</option><option value="lidl">Lidl</option><option value="ip">IP</option><option value="decathlon">Decathlon</option></select>
-<p><button id="osm">Verifica OpenStreetMap</button> <button id="server">Verifica server Fi-Card</button></p><p class="muted">La verifica OSM non scrive nel database. La lettura della cache è pubblica e limitata a Livorno. Il recupero dei dati resta protetto. Se la cache è vuota, il server risponde not_populated.</p></section>
+<p><button id="local">Verifica cache locale</button> <button id="server">Verifica server Fi-Card</button></p><p class="muted">Il server legge soltanto l’archivio. Un processo separato importa i negozi in background. Questa pagina non contatta Overpass.</p></section>
 <section><strong>Risultati</strong><pre id="out" aria-live="polite">Nessun test eseguito.</pre></section>
+<p class="muted">Dati © OpenStreetMap contributors · <a href="https://www.openstreetmap.org/copyright">ODbL</a></p>
 <script>
-const out=document.getElementById('out'), brand=document.getElementById('brand');
-const bounds='43.45,10.22,43.65,10.43';
-const endpoints=['https://overpass.kumi.systems/api/interpreter','https://overpass-api.de/api/interpreter'];
-async function run(which){
- document.querySelectorAll('button').forEach(b=>b.disabled=true);out.textContent='Richiesta in corso…';
- const t=performance.now();
+const out=document.getElementById('out'),brand=document.getElementById('brand');
+const messages={cache:'Archivio completo disponibile.',stale_cache:'Dati precedenti disponibili; aggiornamento da completare.',in_progress:'Importazione in corso. Riprova tra poco.',not_populated:'Importazione in attesa.',unavailable:'Importazione non riuscita. Il processo riproverà dopo la pausa indicata.'};
+const cacheKey=slug=>'ficard:livorno-pilot:v2:'+slug;
+async function run(local){
+ const slug=brand.value;document.querySelectorAll('button,select').forEach(b=>b.disabled=true);out.textContent='Verifica in corso…';const start=performance.now();
  try{
-  if(which==='osm'){
-   const b=brand.value;const label={ip:'IP',conad:'Conad',lidl:'Lidl',decathlon:'Decathlon'}[b];
-   const q='[out:json][timeout:20];(nwr["brand"="'+label+'"]('+bounds+');nwr["name"="'+label+'"]('+bounds+'););out center tags;';
-   let last;for(const endpoint of endpoints){try{
-    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),25000);
-    let r;try{r=await fetch(endpoint,{method:'POST',body:new URLSearchParams({data:q}),signal:controller.signal});}finally{clearTimeout(timer)}
-    if(!r.ok)throw Error('HTTP '+r.status);
-    const data=await r.json();const ids=new Set((data.elements||[]).map(x=>x.type+':'+x.id));
-    out.textContent=JSON.stringify({origine:'OpenStreetMap / Overpass',marchio:label,negozi:ids.size,tempo_ms:Math.round(performance.now()-t),esempi:(data.elements||[]).slice(0,10).map(x=>({nome:x.tags?.name,id:x.type+':'+x.id}))},null,2);return;
-   }catch(e){last=e}}
-   throw last;
+  let data;
+  if(local){const raw=localStorage.getItem(cacheKey(slug));if(!raw){out.textContent='Nessuna cache locale. Esegui prima la verifica server.';return;}data=JSON.parse(raw);}
+  else{
+   const r=await fetch('https://jzmuwixgryvbbqqaudkh.supabase.co/functions/v1/ficard-livorno-read?brand='+encodeURIComponent(slug),{signal:AbortSignal.timeout(15000)});
+   if(!r.ok)throw Error('Server HTTP '+r.status);data=await r.json();
+   if(data.complete){try{localStorage.setItem(cacheKey(slug),JSON.stringify(data));}catch(e){data.local_cache_error=String(e);}}
   }
-  const r=await fetch('https://jzmuwixgryvbbqqaudkh.supabase.co/functions/v1/ficard-livorno-read?brand='+encodeURIComponent(brand.value));
-  const body=await r.text();
-  out.textContent=JSON.stringify({origine:'Server Fi-Card',http:r.status,tempo_ms:Math.round(performance.now()-t),risposta:body.slice(0,1200)},null,2);
- }catch(e){out.textContent='Test non riuscito: '+String(e)+'\nPossibile blocco CORS, rete o server Overpass non disponibile.'}
- finally{document.querySelectorAll('button').forEach(b=>b.disabled=false)}
+  const expired=data.state?.fetched_at&&Date.now()-Date.parse(data.state.fetched_at)>=30*86400000;
+  const message=local?(expired?'Cache locale scaduta. Verifica il server.':'Cache locale disponibile.'):(messages[data.source]||data.source);
+  out.textContent=message+'\n'+JSON.stringify({origine:local?'Cache locale del test':'Server Fi-Card',tempo_ms:Math.round(performance.now()-start),...data},null,2);
+ }catch(e){out.textContent='Verifica non riuscita: '+String(e)+'\nLa richiesta è limitata a 15 secondi; puoi riprovare.';}
+ finally{document.querySelectorAll('button,select').forEach(b=>b.disabled=false);}
 }
-document.getElementById('osm').onclick=()=>run('osm');document.getElementById('server').onclick=()=>run('server');
+document.getElementById('server').onclick=()=>run(false);document.getElementById('local').onclick=()=>run(true);
 </script></body></html>

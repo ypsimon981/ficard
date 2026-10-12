@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Fi-Card · Test Livorno</title><style>
+body{font:15px system-ui;background:#f8f9fc;color:#1f2937;max-width:720px;margin:30px auto;padding:0 16px}h1{color:#5b3df5}button{border:0;border-radius:12px;padding:12px 18px;background:#5b3df5;color:white;cursor:pointer}button:disabled{opacity:.5}select{padding:12px;border:1px solid #ccc;border-radius:12px}section{background:white;border:1px solid #e7eaf0;border-radius:18px;padding:20px;margin:16px 0}pre{white-space:pre-wrap;overflow-wrap:anywhere;font-size:12px}.muted{color:#667085}strong{color:#222}
+</style></head><body><h1>Fi-Card · Collaudo Livorno</h1><p class="muted">Pagina sperimentale isolata. Non modifica le carte né i negozi salvati sul telefono.</p>
+<section><label for="brand">Marchio</label> <select id="brand"><option value="conad">Conad</option><option value="lidl">Lidl</option><option value="ip">IP</option><option value="decathlon">Decathlon</option></select>
+<p><button id="osm">Verifica OpenStreetMap</button> <button id="server">Verifica server Fi-Card</button></p><p class="muted">La verifica OSM non scrive nel database. Il server pilota richiede attualmente autenticazione: una risposta 401 è attesa finché non completiamo l'accesso anonimo protetto.</p></section>
+<section><strong>Risultati</strong><pre id="out" aria-live="polite">Nessun test eseguito.</pre></section>
+<script>
+const out=document.getElementById('out'), brand=document.getElementById('brand');
+const bounds='43.45,10.22,43.65,10.43';
+const endpoints=['https://overpass.kumi.systems/api/interpreter','https://overpass-api.de/api/interpreter'];
+async function run(which){
+ document.querySelectorAll('button').forEach(b=>b.disabled=true);out.textContent='Richiesta in corso…';
+ const t=performance.now();
+ try{
+  if(which==='osm'){
+   const b=brand.value;const label={ip:'IP',conad:'Conad',lidl:'Lidl',decathlon:'Decathlon'}[b];
+   const q='[out:json][timeout:20];(nwr["brand"="'+label+'"]('+bounds+');nwr["name"="'+label+'"]('+bounds+'););out center tags;';
+   let last;for(const endpoint of endpoints){try{
+    const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),25000);
+    let r;try{r=await fetch(endpoint,{method:'POST',body:new URLSearchParams({data:q}),signal:controller.signal});}finally{clearTimeout(timer)}
+    if(!r.ok)throw Error('HTTP '+r.status);
+    const data=await r.json();const ids=new Set((data.elements||[]).map(x=>x.type+':'+x.id));
+    out.textContent=JSON.stringify({origine:'OpenStreetMap / Overpass',marchio:label,negozi:ids.size,tempo_ms:Math.round(performance.now()-t),esempi:(data.elements||[]).slice(0,10).map(x=>({nome:x.tags?.name,id:x.type+':'+x.id}))},null,2);return;
+   }catch(e){last=e}}
+   throw last;
+  }
+  const r=await fetch('https://jzmuwixgryvbbqqaudkh.supabase.co/functions/v1/ficard-livorno-pilot?brand='+encodeURIComponent(brand.value));
+  const body=await r.text();
+  out.textContent=JSON.stringify({origine:'Server Fi-Card',http:r.status,tempo_ms:Math.round(performance.now()-t),risposta:body.slice(0,1200)},null,2);
+ }catch(e){out.textContent='Test non riuscito: '+String(e)+'\nPossibile blocco CORS, rete o server Overpass non disponibile.'}
+ finally{document.querySelectorAll('button').forEach(b=>b.disabled=false)}
+}
+document.getElementById('osm').onclick=()=>run('osm');document.getElementById('server').onclick=()=>run('server');
+</script></body></html>

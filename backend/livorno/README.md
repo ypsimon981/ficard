@@ -24,7 +24,7 @@ La vecchia funzione sincrona `ficard-livorno-pilot` è ritirata (410). `ficard-l
 
 - Importazione reale dei 20 punti e risposta pubblica `source=cache`, `complete=true` per tutti i marchi.
 - Tempi osservati sulle letture calde: 0,70–0,80 secondi. Prime chiamate dopo inattività/deploy: circa 4,6–6,9 secondi. Non sono una garanzia di latenza.
-- 3 test della pagina: lettura dal solo server, cache offline, mancata sovrascrittura da risultati incompleti/errori, cache scaduta.
+- Prima fase: 3 test della pagina tecnica. Seconda fase: 11 test della mappa, cache e shell offline, inclusi filtri, punti conservati su errore, risposte parziali, coordinate non valide e memoria locale non disponibile.
 - 7 test esistenti della cache dell'app: tutti passati.
 - `verify.sql`: sostituzione atomica, duplicati, lease superata, dati fuori area, conservazione su errore, risultato vuoto completo e permessi RPC; dati sintetici annullati con rollback.
 - Controllo live della pagina tramite runtime JavaScript: dati Lidl dal server, poi dalla cache locale con rete disabilitata. Il controllo in Chromium non era disponibile in questo ambiente.
@@ -40,4 +40,14 @@ Solo ramo `test/livorno-store-cache`, pagina di prova, codice backend e migrazio
 
 Le migrazioni partono dalle quattro tabelle del pilota e dalla funzione `ficard_claim_pilot_cell` già presenti nel progetto Fi-card; non sono un bootstrap da database vuoto. Le Edge Function corrispondono a `read.ts`, `worker.ts` e `retired-pilot.ts`.
 
-Per ripetere i controlli locali: `node --test tests/livorno-pilot.test.cjs tests/shop-cache.test.cjs`. Per ripetere i controlli transazionali del database: eseguire `backend/livorno/verify.sql` nel progetto Fi-card. Per controllare il ciclo senza forzare refresh: `select public.ficard_livorno_tick();` con ruolo amministrativo.
+Per ripetere i controlli locali: `node --test tests/livorno-pilot.test.cjs tests/livorno-map.test.cjs tests/shop-cache.test.cjs`. Per ripetere i controlli transazionali del database: eseguire `backend/livorno/verify.sql` nel progetto Fi-card. Per controllare il ciclo senza forzare refresh: `select public.ficard_livorno_tick();` con ruolo amministrativo.
+
+## Mappa sul telefono — seconda fase
+
+Pagina isolata disponibile all'indirizzo https://ficard-livorno-test.hazyfig12.chatgpt.site (accesso privato del proprietario). La copia su GitHub è `tests/livorno.html`, con `livorno-cache.js`, `livorno-map.js` e `livorno-sw.js` nella stessa cartella e Leaflet già presente in `vendor/`.
+
+La mappa legge tutti e quattro i marchi, visualizza i 20 punti, filtra per marchio e apre il punto selezionato dall'elenco. La modalità Solo cache non invia richieste al server. Errore server simula un 503 senza chiamate esterne. Il codice è stato verificato anche con i dati reali: 20 punti online, 20 locali e 20 dopo errore simulato. Sono passati 18 test (11 della nuova pagina, 7 esistenti).
+
+Il service worker conserva pagina, script e Leaflet per riaprire lo stesso indirizzo offline dopo un primo accesso online. Non intercetta le letture Supabase e non scarica preventivamente le immagini OSM. Offline i punti conservano le coordinate corrette ma le strade non sono disponibili: la pagina lo indica esplicitamente. La cache dei dati è distinta da quella dell'app principale.
+
+Verifica manuale ancora richiesta su browser del telefono: attendere 20 punti/4 marchi e l'indicazione pagina pronta, provare Solo cache e Errore server, disattivare la rete e ricaricare lo stesso indirizzo. Browser QA grafica e service worker su dispositivo reale non eseguiti in questo ambiente; la verifica automatica usa runtime JavaScript e un modello della Cache API. Nessuna modifica di backend, APK, app principale o dati Roma in questa seconda fase.

@@ -1,0 +1,17 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),LC=require('./livorno-cache.js');
+function element(){return {children:[],dataset:{},style:{},attrs:{},textContent:'',classList:{toggle(){}},append(...x){this.children.push(...x);},replaceChildren(){this.children=[];},setAttribute(k,v){this.attrs[k]=v;},querySelector(){return this.counter||(this.counter=element());},scrollIntoView(){}};}
+function page(){
+ const ids=['map','map-note','count','cached','shops','saved-at','status','refresh','latency','diagnostic','reset-map','shell'],elements=Object.fromEntries(ids.map(id=>[id,element()]));
+ const brands=['all',...Object.keys(LC.brands)].map(slug=>Object.assign(element(),{dataset:{brand:slug}})),modes=['online','cache','error'].map(mode=>Object.assign(element(),{dataset:{mode}}));
+ const layers=new Set(),pins={items:[],clearLayers(){this.items=[];},addTo(){return this;}};
+ const map={setView(){return this;},hasLayer:l=>layers.has(l),removeLayer:l=>layers.delete(l),fitBounds(){this.fitted=true;}};
+ const tiles={on(){return this;},addTo(){layers.add(this);return this;}};
+ const storage=new Map();let requests=0;
+ const context={LivornoCache:LC,document:{getElementById:id=>elements[id],createElement:element,querySelectorAll:q=>q==='[data-brand]'?brands:modes},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},L:{map:()=>map,control:Object.assign(()=>({addTo(){}}),{zoom:()=>({addTo(){}}),scale:()=>({addTo(){}})}),layerGroup:()=>pins,tileLayer:()=>tiles,divIcon:x=>x,marker:()=>({bindPopup(){return this;},addTo(layer){layer.items.push(this);return this;},openPopup(){}})},navigator:{onLine:true},window:{addEventListener(){}},performance,AbortController,AbortSignal,Date,JSON,URL};
+ context.LivornoCache={...LC,refresh:options=>LC.refresh({...options,fetcher:async url=>{requests++;const slug=new URL(url).searchParams.get('brand'),count={conad:7,lidl:3,decathlon:1,ip:9}[slug];return {ok:true,json:async()=>({brand:slug,count,complete:true,source:'cache',state:{fetched_at:new Date().toISOString()},stores:Array.from({length:count},(_,i)=>({osm_type:'node',osm_id:i+1,name:LC.brands[slug].label,lat:43.55,lon:10.32}))})};}})};
+ vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'livorno-map.js'),'utf8'),context);
+ return {context,elements,brands,modes,map,pins,requests:()=>requests};
+}
+const settle=()=>new Promise(resolve=>setImmediate(resolve));
+test('map draws 20 live points; brand filter draws only Lidl and list opens a marker',async()=>{const p=page();await settle();assert.equal(p.elements.count.textContent,'20');assert.equal(p.pins.items.length,20);assert.equal(p.elements.cached.textContent,'4/4');assert.equal(p.map.fitted,true);p.brands.find(b=>b.dataset.brand==='lidl').onclick();assert.equal(p.pins.items.length,3);assert.equal(p.elements.shops.children.length,3);assert.equal(p.elements.count.textContent,'3');p.elements.shops.children[0].onclick();assert.equal(p.requests(),4);});
+test('cache and error mode keep 20 markers and do not reread the server',async()=>{const p=page();await settle();for(const mode of ['cache','error']){p.modes.find(b=>b.dataset.mode===mode).onclick();await settle();assert.equal(p.pins.items.length,20);assert.equal(p.requests(),4);}assert.match(p.elements.status.textContent,/Errore simulato/);assert.equal(p.elements.refresh.disabled,false);});

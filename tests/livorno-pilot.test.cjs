@@ -1,29 +1,17 @@
-const test=require('node:test');
-const assert=require('node:assert/strict');
-const vm=require('node:vm');
-const fs=require('node:fs');
-const source=fs.readFileSync(require('node:path').join(__dirname,'livorno.html'),'utf8').split('<script>')[1].split('</script>')[0];
-function page(fetch){
- const elements={out:{textContent:''},brand:{value:'lidl'},server:{disabled:false},local:{disabled:false}};
- const storage=new Map();
- const ctx={document:{getElementById:id=>elements[id],querySelectorAll:()=>[elements.brand,elements.server,elements.local]},localStorage:{getItem:k=>storage.get(k),setItem:(k,v)=>storage.set(k,v)},performance,Date,AbortSignal,fetch};
- vm.createContext(ctx);vm.runInContext(source,ctx);
- return {ctx,elements,storage,run:local=>ctx.run(local)};
-}
-test('pilot reads only server; completed results are cached and usable offline',async()=>{
- let requests=0;
- const p=page(async url=>{requests++;assert.match(url,/\/ficard-livorno-read\?brand=lidl$/);return {ok:true,json:async()=>({source:'cache',complete:true,count:1,stores:[{osm_id:1}],state:{fetched_at:new Date().toISOString()}})};});
- await p.run(false);assert.equal(p.storage.size,1);assert.match(p.elements.out.textContent,/Archivio completo/);
- p.ctx.fetch=()=>{throw Error('offline');};await p.run(true);
- assert.equal(requests,1);assert.match(p.elements.out.textContent,/Cache locale disponibile/);
-});
-test('pending or failed refresh never replaces the previous completed local cache',async()=>{
- const p=page(async()=>({ok:true,json:async()=>({source:'in_progress',complete:false,count:0,stores:[]})}));
- p.storage.set('ficard:livorno-pilot:v2:lidl','old');await p.run(false);
- assert.equal(p.storage.get('ficard:livorno-pilot:v2:lidl'),'old');assert.match(p.elements.out.textContent,/Importazione in corso/);
- p.ctx.fetch=async()=>{throw Error('timeout');};await p.run(false);
- assert.equal(p.storage.get('ficard:livorno-pilot:v2:lidl'),'old');assert.equal(p.elements.server.disabled,false);assert.equal(p.elements.brand.disabled,false);
-});
-test('expired offline cache is labelled expired',async()=>{
- const p=page(()=>{throw Error('must not fetch');});p.storage.set('ficard:livorno-pilot:v2:lidl',JSON.stringify({state:{fetched_at:'2020-01-01T00:00:00Z'},stores:[]}));await p.run(true);assert.match(p.elements.out.textContent,/scaduta/);
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
+const LC=require('./livorno-cache.js');
+const storage=()=>{const map=new Map();return {getItem:k=>map.get(k)||null,setItem:(k,v)=>map.set(k,v),map};};
+const payload=(slug,count=1)=>({brand:slug,count,complete:true,source:'cache',state:{fetched_at:new Date().toISOString()},stores:Array.from({length:count},(_,i)=>({osm_type:'node',osm_id:i+1,name:LC.brands[slug].label,lat:43.55,lon:10.32}))});
+const online=async url=>{assert.ok(url.startsWith(LC.endpoint));return {ok:true,json:async()=>payload(new URL(url).searchParams.get('brand'))};};
+test('four server reads populate the isolated cache and filters',async()=>{const s=storage();const r=await LC.refresh({storage:s,fetcher:online});assert.equal(r.requests,4);assert.equal(r.source,'server');assert.equal(s.map.size,4);assert.equal(LC.stores(r.data).length,4);assert.equal(LC.stores(r.data,'lidl').length,1);assert.ok([...s.map.keys()].every(k=>k.startsWith('ficard:livorno-pilot:v2:')));});
+test('cache and offline modes make no server requests',async()=>{const s=storage();await LC.refresh({storage:s,fetcher:online});for(const options of [{mode:'cache'},{online:false}]){const r=await LC.refresh({storage:s,fetcher:()=>{throw Error('must not fetch');},...options});assert.equal(r.requests,0);assert.equal(LC.stores(r.data).length,4);}});
+test('simulated 503 retains saved points without a network call',async()=>{const s=storage();await LC.refresh({storage:s,fetcher:online});const before=[...s.map];const r=await LC.refresh({storage:s,mode:'error',fetcher:()=>{throw Error('must not fetch');}});assert.equal(r.source,'fallback');assert.equal(r.errors.length,1);assert.equal(LC.stores(r.data).length,4);assert.deepEqual([...s.map],before);});
+test('real HTTP errors and timeouts preserve the previous complete cache',async()=>{const s=storage();await LC.refresh({storage:s,fetcher:online});const before=[...s.map];for(const fetcher of [async()=>({ok:false,status:503}),async()=>{throw Error('Timeout');}]){const r=await LC.refresh({storage:s,fetcher});assert.equal(r.errors.length,4);assert.equal(LC.stores(r.data).length,4);assert.deepEqual([...s.map],before);}});
+test('partial success updates only completed brands',async()=>{const s=storage();await LC.refresh({storage:s,fetcher:online});const old=s.getItem(LC.key('lidl'));const r=await LC.refresh({storage:s,fetcher:async url=>{const slug=new URL(url).searchParams.get('brand');return {ok:true,json:async()=>slug==='lidl'?{...payload(slug,0),complete:false,source:'in_progress'}:payload(slug,2)};}});assert.equal(r.source,'fallback');assert.equal(LC.stores(r.data).length,7);assert.equal(s.getItem(LC.key('lidl')),old);});
+test('corrupt cache and invalid server coordinates do not poison valid data',async()=>{const s=storage();s.setItem(LC.key('lidl'),'broken');assert.equal(LC.read(s).warnings.length,1);const r=await LC.refresh({storage:s,fetcher:async url=>{const d=payload(new URL(url).searchParams.get('brand'));d.stores[0].lat=41;return {ok:true,json:async()=>d};}});assert.equal(r.errors.length,4);assert.equal(LC.stores(r.data).length,0);});
+test('empty successful archive clears obsolete points and expiry is visible',async()=>{const s=storage();await LC.refresh({storage:s,fetcher:online});const r=await LC.refresh({storage:s,fetcher:async url=>({ok:true,json:async()=>payload(new URL(url).searchParams.get('brand'),0)})});assert.equal(LC.stores(r.data).length,0);assert.equal(LC.expired({state:{fetched_at:'2020-01-01'}}),true);assert.equal(LC.expired(payload('lidl')),false);});
+test('storage failures keep fetched points visible but are reported',async()=>{const s={getItem:()=>null,setItem:()=>{throw Error('Quota');}};const r=await LC.refresh({storage:s,fetcher:online});assert.equal(LC.stores(r.data).length,4);assert.equal(r.warnings.length,4);});
+test('service worker precaches the shell and restores the same page on network failure',async()=>{const listeners={},cached=new Map();let failed=false;const cache={addAll:async files=>{for(const url of files)cached.set(url,{url});},put:async(url,response)=>cached.set(url,response)};
+ const context={self:{location:{href:'https://test.example/livorno-sw.js?entry=%2Findex.html&vendor=%2Fvendor%2F',origin:'https://test.example'},addEventListener:(name,fn)=>listeners[name]=fn,skipWaiting:async()=>{},clients:{claim:async()=>{}}},URL,caches:{open:async()=>cache,keys:async()=>[],delete:async()=>true,match:async url=>cached.get(typeof url==='string'?url:url.url)},fetch:async()=>{if(failed)throw Error('offline');return {ok:true,clone:()=>({})};},Promise};
+ vm.createContext(context);vm.runInContext(fs.readFileSync(require('node:path').join(__dirname,'livorno-sw.js'),'utf8'),context);let install;listeners.install({waitUntil:p=>install=p});await install;assert.equal(cached.size,5);failed=true;let response;listeners.fetch({request:{method:'GET',mode:'navigate',url:'https://test.example/index.html'},respondWith:p=>response=p,waitUntil:()=>{}});assert.equal((await response).url,'https://test.example/index.html');let intercepted=false;listeners.fetch({request:{method:'GET',url:LC.endpoint+'?brand=lidl'},respondWith:()=>intercepted=true});assert.equal(intercepted,false);
 });

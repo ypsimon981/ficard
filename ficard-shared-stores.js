@@ -22,12 +22,12 @@ async function request(b,signal){
  }));
  if(responses.some(d=>d.disabled))return {disabled:true};
  const data={cells:responses.flatMap(d=>d.cells),queue:responses.find(d=>d.queue)?.queue||null};
- const keys=new Set(cells.map(c=>c.y+'/'+c.x)),seen=new Set(),elements=new Map(),coverage=[];let waiting=0;
+ const keys=new Set(cells.map(c=>c.y+'/'+c.x)),seen=new Set(),elements=new Map(),coverage=[];let waiting=0,partial=0;
  for(const c of data.cells){const key=c.y+'/'+c.x;if(!Number.isInteger(c.y)||!Number.isInteger(c.x)||typeof c.complete!=='boolean'||!keys.has(key)||seen.has(key)||!Array.isArray(c.elements)||!c.elements.every(validElement))throw Error('Settore archivio non valido');seen.add(key);
   for(const e of c.elements)elements.set(e.type+'/'+e.id,e);
-  if(c.complete)coverage.push(bounds(c));else waiting++;
+  if(c.complete)coverage.push(bounds(c));else{partial++;if(c.snapshot_available!==true)waiting++;}
  }
- return {elements:[...elements.values()],coverage,complete:waiting===0,pending:waiting,source:'shared',queue:data.queue||null};
+ return {elements:[...elements.values()],coverage,complete:partial===0,pending:waiting,partial,source:'shared',queue:data.queue||null};
 }
 function prime(b){
  if(!enabled()||root.navigator?.onLine===false)return Promise.resolve(null);

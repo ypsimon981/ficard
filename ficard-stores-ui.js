@@ -82,7 +82,7 @@ async function search(center,force=false,bounds=null){
  searchCenter={lat:center.lat,lng:center.lng};
  const shared=typeof window!=='undefined'?window.FiCardSharedStores:null;
  // Small GPS movements and card changes reuse the same stored geographic area.
- if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();if(shared?.enabled())shared.prime(area).then(data=>{if(data?.pending&&shared.enabled()&&searchCenter.lat===center.lat&&searchCenter.lng===center.lng){status='Negozi locali disponibili. Archivio server in preparazione: '+data.pending+' settori.';renderLocations();if(!sharedRetry){sharedRetryCount=0;sharedRetry=setTimeout(()=>{sharedRetry=null;search(center,true,bounds)},15000)}}});return}
+ if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();if(shared?.enabled())shared.prime(area).then(data=>{if(data?.pending&&data.queue!=='capacity'&&shared.enabled()&&searchCenter.lat===center.lat&&searchCenter.lng===center.lng){status='Negozi locali disponibili. Archivio server in preparazione: '+data.pending+' settori.';renderLocations();if(!sharedRetry){sharedRetryCount=0;sharedRetry=setTimeout(()=>{sharedRetry=null;search(center,true,bounds)},15000)}}});return}
  if(busy&&key===lastKey)return;
  controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
  try{let data;
@@ -93,9 +93,9 @@ async function search(center,force=false,bounds=null){
   if(id!==requestId)return;
   if(data.source==='shared'){
    shopCache=S.mergeCache(shopCache,data);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
-   status=data.queue==='capacity'?'Coda piena o limite giornaliero di importazione raggiunto. Mantengo i negozi già salvati: riprova più tardi.':data.pending?'Archivio server in preparazione: '+data.pending+' settori. I negozi già disponibili restano visibili.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
-   if(data.pending&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
-   else if(!data.pending){clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}
+   status=data.pending?(data.queue==='capacity'?'Negozi disponibili salvati sul dispositivo. Alcune zone attendono un aggiornamento.':'Negozi disponibili salvati sul dispositivo. Altre zone sono in preparazione.'):data.partial?'Negozi dall’archivio nazionale, salvati sul dispositivo. Copertura della zona in verifica.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
+   if(data.pending&&data.queue!=='capacity'&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
+   else{clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}
   }else{shopCache=S.mergeCache(shopCache,data,area);status='Negozi aggiornati e salvati sul dispositivo.';}
   matchCachedShops(true);const stored=S.writeCache(localStorage,shopCache);if(!stored)status+=' Cache piena: nuovi risultati disponibili solo in questa sessione.';
  }catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status='Mostro i negozi già disponibili. Ricerca temporaneamente non disponibile: riprova tra poco.';}

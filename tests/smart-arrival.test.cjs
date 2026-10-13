@@ -32,4 +32,19 @@ const card=(id,key)=>({id,name:id,brandKey:key,locations:[]});const point=(meter
 test('OSM transient shops determine ordering even without saved locations',()=>{const c=fixture();c.cards=[card('a','a'),card('b','b')];c.results=[{cardId:'a',point:point(300,'node/1')},{cardId:'b',point:point(5,'node/2')}];assert.equal(c.smartOrder().ordered[0].id,'b');assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos).id,'b');assert.equal(c.cards[1].locations.length,0)});
 test('multiple nearby physical shops suppress the message, even for one card',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(5,'node/1')},{cardId:'a',point:point(6,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos),null)});
 test('multiple cards matching one OSM shop count as one shop',()=>{const c=fixture();c.cards=[card('a','a'),card('a2','a')];c.results=c.cards.map(x=>({cardId:x.id,point:point(5,'node/1')}));assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a')});
-test('message requires strictly below 50 m and a GPS position',()=>{const c=fixture();c.cards=[card('a','a')];c.cards[0].locations=[point(50.01)];assert.equal(c.arrivalCard(c.cards,c.currentPos),null);c.cards[0].locations=[point(49.99)];assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a');assert.equal(c.arrivalCard(c.cards,null),null)});
+test('message requires strictly below 35 m and a GPS position',()=>{const c=fixture();c.cards=[card('a','a')];c.cards[0].locations=[point(35.01)];assert.equal(c.arrivalCard(c.cards,c.currentPos),null);c.cards[0].locations=[point(34.99)];assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a');assert.equal(c.arrivalCard(c.cards,null),null)});
+
+test('screenshot distances focus Conad with IP outside 50 m',()=>{
+ for(const [conad,ip] of [[33,108],[3,85],[17,90]]){
+  const c=fixture();c.cards=[card('conad','a'),card('ip','b')];
+  c.results=[{cardId:'conad',point:point(conad,'node/1')},{cardId:'ip',point:point(ip,'node/2')}];
+  assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos)?.id,'conad');
+ }
+});
+test('a second shop within 50 m prevents focus but one beyond 50 m does not',()=>{
+ const c=fixture();c.cards=[card('a','a'),card('b','b')];
+ for(const [meters,expected] of [[49.99,null],[50,null],[50.01,'a']]){
+  c.results=[{cardId:'a',point:point(3,'node/1')},{cardId:'b',point:point(meters,'node/2')}];
+  assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos)?.id??null,expected);
+ }
+});

@@ -1,0 +1,9 @@
+DirectoryIndex index.php
+Options -Indexes
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+  Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+</IfModule>
+<IfModule mod_expires.c>
+  ExpiresActive Off
+</IfModule>

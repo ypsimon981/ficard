@@ -6,6 +6,7 @@ create table if not exists public.ficard_brand_catalog (
   name text not null,
   category text not null default 'altro',
   color text,
+  color_2 text,
   mark text,
   logo_url text,
   logo_bg text default 'transparent',
@@ -15,15 +16,37 @@ create table if not exists public.ficard_brand_catalog (
   markets text[] not null default '{}',
   status text not null default 'draft',
   is_complete boolean not null default false,
+  layout_type text not null default 'solid',
+  split_ratio smallint not null default 50,
+  gradient_direction text not null default 'left_right',
+  gradient_center_x smallint not null default 50,
+  gradient_center_y smallint not null default 50,
+  gradient_softness smallint not null default 70,
   revision bigint not null default 1,
   updated_at timestamptz not null default now(),
   constraint ficard_brand_key_format check (char_length(brand_key) between 1 and 80 and brand_key !~ '[[:space:][:cntrl:]/\\]'),
   constraint ficard_brand_category check (category in ('supermercati','abbigliamento','sport','elettronica','casa','casalinghi','petstore','farmacia','beauty','ristorazione','carburanti','altro')),
   constraint ficard_brand_status check (status in ('draft','published','disabled')),
   constraint ficard_brand_color check (color is null or color ~ '^#[0-9A-Fa-f]{6}$'),
+  constraint ficard_brand_color_2 check (color_2 is null or color_2 ~ '^#[0-9A-Fa-f]{6}$'),
   constraint ficard_brand_scale check (logo_scale is null or logo_scale between 10 and 100),
-  constraint ficard_brand_markets check (international or cardinality(markets)>0)
+  constraint ficard_brand_markets check (international or cardinality(markets)>0),
+  constraint ficard_brand_layout_type check (layout_type in ('solid','split_horizontal','split_vertical','gradient_linear','gradient_elliptical','gradient_radial')),
+  constraint ficard_brand_split_ratio check (split_ratio in (33,50,66)),
+  constraint ficard_brand_gradient_direction check (gradient_direction in ('left_right','right_left','top_bottom','bottom_top','diag_down','diag_up')),
+  constraint ficard_brand_gradient_center check (gradient_center_x between 0 and 100 and gradient_center_y between 0 and 100),
+  constraint ficard_brand_gradient_softness check (gradient_softness between 20 and 100)
 );
+
+-- Compatibility for projects provisioned before card layouts were introduced.
+alter table public.ficard_brand_catalog
+  add column if not exists color_2 text,
+  add column if not exists layout_type text not null default 'solid',
+  add column if not exists split_ratio smallint not null default 50,
+  add column if not exists gradient_direction text not null default 'left_right',
+  add column if not exists gradient_center_x smallint not null default 50,
+  add column if not exists gradient_center_y smallint not null default 50,
+  add column if not exists gradient_softness smallint not null default 70;
 
 alter table public.ficard_brand_catalog enable row level security;
 revoke all on table public.ficard_brand_catalog from anon, authenticated;

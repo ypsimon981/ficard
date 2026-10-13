@@ -27,3 +27,11 @@ I backup dei dati personali sul telefono non sono accessibili da questo ambiente
 ## Verifica
 
 `npm test` comprende griglia, richieste senza dati delle carte, risposte parziali, conservazione su errore, switch locale/remoto e integrazione della cache. `backend/shared-store-cache-verify.sql` verifica il database con dati sintetici annullati con rollback.
+
+## Scansione notturna
+
+L'automazione **Scansione notturna Fi-Card** avvia `public.ficard_shared_night_scan()` ogni notte intorno alle 02:00 Europe/Rome, con primo avvio il 14 ottobre 2026. La preparazione è consentita soltanto fra le 01:00 e le 06:00 locali e una sola volta per data locale. Si accodano al massimo 20 nuovi settori adiacenti a quelli già esplorati e con almeno tre punti OSM, entro i limiti globali di ammissione. Non si avvia uno scarico dell'intera Italia.
+
+I settori notturni hanno origine `prefetch`, non vengono avviati di giorno e sono subordinati alle richieste degli utenti. Quando un utente richiede un settore prefetched, viene promosso a `user`. Il lavoro già in corso si completa normalmente; i nuovi lavori vengono scelti dando precedenza alle richieste degli utenti. Il prefetch si ferma a 80 chiamate di fonte giornaliere complessive, lasciando le ultime 40 del limite globale di 120 alle richieste degli utenti. La coda notturna lascia almeno 16 posti di ammissione disponibili.
+
+La pianificazione avvia la preparazione; il job del database svolge l'importazione anche con app chiusa. Il primo ciclo notturno reale resta da verificare; i test transazionali di finestra oraria, idempotenza, promozione e permessi sono passati. Per ripeterli usare `backend/shared-night-verify.sql`. Lo stesso interruttore server `shared_config.enabled=false` arresta anche la scansione notturna.

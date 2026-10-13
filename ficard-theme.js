@@ -19,7 +19,7 @@ function loadScript(src,dataKey){if(!root.document||root.document.querySelector(
 function loadI18n(){if(root.FiCardI18n)return;loadScript('./ficard-i18n.js?v=2.1.0','data-ficard-i18n')}
 function loadRuntime(){loadScript('./ficard-runtime.js?v=0.9.209','data-ficard-runtime')}
 function loadNavigation(){loadScript('./ficard-navigation.js?v=0.9.209','data-ficard-navigation')}
-function loadCatalog(){loadScript('./ficard-catalog.js?v=0.9.211','data-ficard-catalog')}
+function loadCatalog(){loadScript('./ficard-catalog.js?v=0.9.212','data-ficard-catalog')}
 try{current=valid(root.localStorage.getItem(KEY));}catch{}
 root.FiCardTheme={presets,apply,current:()=>current};
 apply(current);

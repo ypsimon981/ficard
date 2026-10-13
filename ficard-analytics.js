@@ -51,8 +51,8 @@ function opened(){if(Date.now()-lastOpen<180000)return;lastOpen=Date.now();obser
 function setConsent(value,reportChoice=false){
  const previous=enabled(),next=!!value;
  if(previous===next){const check=root.document?.getElementById('analyticsConsent');if(check)check.checked=next;return}
- if(reportChoice&&previous&&!next)sendCount('analytics_disabled',currentPage(),'',true);
  controllers.forEach(c=>c.abort());controllers.clear();recent.clear();
+ if(reportChoice&&previous&&!next)sendCount('analytics_disabled',currentPage(),'',true);
  memoryChoice=next;
  try{root.localStorage.setItem(PREFERENCE,next?'yes':'no')}catch{}
  removeLegacyID();

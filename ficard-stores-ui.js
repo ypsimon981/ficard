@@ -87,13 +87,13 @@ async function search(center,force=false,bounds=null){
  controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
  try{let data;
   if(shared?.enabled()){
-   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(shopCache.elements.length){status='Archivio server non disponibile. Mantengo i negozi già salvati.';return;}data=await S.request(query,active.signal);}
+   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(e.code==='AREA_TOO_LARGE'){status=e.message;return;}if(shopCache.elements.length){status='Archivio server non disponibile. Mantengo i negozi già salvati.';return;}data=await S.request(query,active.signal);}
    if(data?.disabled||data?.unsupported)data=await S.request(query,active.signal);
   }else data=await S.request(query,active.signal);
   if(id!==requestId)return;
   if(data.source==='shared'){
    shopCache=S.mergeCache(shopCache,data);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
-   status=data.pending?'Archivio server in preparazione: '+data.pending+' settori. I negozi già disponibili restano visibili.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
+   status=data.queue==='capacity'?'Coda piena o limite giornaliero di importazione raggiunto. Mantengo i negozi già salvati: riprova più tardi.':data.pending?'Archivio server in preparazione: '+data.pending+' settori. I negozi già disponibili restano visibili.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
    if(data.pending&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
    else if(!data.pending){clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}
   }else{shopCache=S.mergeCache(shopCache,data,area);status='Negozi aggiornati e salvati sul dispositivo.';}

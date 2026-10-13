@@ -6,17 +6,22 @@ function cellsFor(b){
  if(!Array.isArray(b)||b.length!==4||!b.every(Number.isFinite)||b[0]>=b[2]||b[1]>=b[3])throw Error('Zona non valida');
  if(b[0]<35||b[2]>48||b[1]<6||b[3]>19)return null;
  const cells=[];for(let y=Math.floor(b[0]*20+1e-8);y<Math.ceil(b[2]*20-1e-8);y++)for(let x=Math.floor(b[1]*20+1e-8);x<Math.ceil(b[3]*20-1e-8);x++)cells.push({y,x});
- if(cells.length>16)throw Error('Avvicina la mappa: massimo 16 settori per ricerca.');return cells;
+ if(cells.length>48){const error=Error('Avvicina la mappa per cercare una zona più piccola.');error.code='AREA_TOO_LARGE';throw error;}return cells;
 }
 const bounds=c=>[c.y/20,c.x/20,(c.y+1)/20,(c.x+1)/20];
 function validElement(e){return e&&['node','way','relation'].includes(e.type)&&Number.isSafeInteger(e.id)&&Number.isFinite(e.lat)&&Number.isFinite(e.lon)&&e.lat>=35&&e.lat<=48&&e.lon>=6&&e.lon<=19&&e.tags&&typeof e.tags==='object'&&!Array.isArray(e.tags);}
 const pending=new Map();
 async function request(b,signal){
  const cells=cellsFor(b);if(!cells)return {unsupported:true};
- const r=await fetch(ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cells}),signal:AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]),cache:'no-store'});
- if(!r.ok)throw Error('Archivio condiviso: HTTP '+r.status);
- const data=await r.json();if(data.disabled)return {disabled:true};
- if(!Array.isArray(data.cells)||data.cells.length!==cells.length)throw Error('Risposta archivio non valida');
+ const chunks=[];for(let i=0;i<cells.length;i+=16)chunks.push(cells.slice(i,i+16));
+ const responses=await Promise.all(chunks.map(async batch=>{
+  const r=await fetch(ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cells:batch}),signal:AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]),cache:'no-store'});
+  if(!r.ok)throw Error('Archivio condiviso: HTTP '+r.status);
+  const d=await r.json();if(d.disabled)return d;
+  if(!Array.isArray(d.cells)||d.cells.length!==batch.length||d.cells.some(c=>!batch.some(expected=>expected.x===c.x&&expected.y===c.y)))throw Error('Risposta archivio non valida');return d;
+ }));
+ if(responses.some(d=>d.disabled))return {disabled:true};
+ const data={cells:responses.flatMap(d=>d.cells),queue:responses.find(d=>d.queue)?.queue||null};
  const keys=new Set(cells.map(c=>c.y+'/'+c.x)),seen=new Set(),elements=new Map(),coverage=[];let waiting=0;
  for(const c of data.cells){const key=c.y+'/'+c.x;if(!Number.isInteger(c.y)||!Number.isInteger(c.x)||typeof c.complete!=='boolean'||!keys.has(key)||seen.has(key)||!Array.isArray(c.elements)||!c.elements.every(validElement))throw Error('Settore archivio non valido');seen.add(key);
   for(const e of c.elements)elements.set(e.type+'/'+e.id,e);

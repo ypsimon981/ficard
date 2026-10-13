@@ -2,6 +2,7 @@ begin;
 do $$
 declare at_night timestamptz;at_noon timestamptz;a jsonb;b jsonb;n integer;previous_prefetch integer;
 begin
+ update ficard_private.shared_config set warmup_until=null where id;
  at_night:=((now() at time zone 'Europe/Rome')::date+2+time '02:00') at time zone 'Europe/Rome';
  at_noon:=((now() at time zone 'Europe/Rome')::date+2+time '12:00') at time zone 'Europe/Rome';
  a:=public.ficard_shared_night_scan(at_noon);

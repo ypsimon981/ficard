@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.211";
+const APP_VERSION="0.9.212";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -126,13 +126,13 @@ const CORE=[
   "./logos-hq/studio/zooservice-98d75fef58b1.png",
   "./logos-hq/studio/zooplus-a84c6df7a77a.png",
 
-  "./locales/it.js?v=0.9.211",
-  "./locales/en.js?v=0.9.211",
-  "./locales/fr.js?v=0.9.211",
-  "./locales/es.js?v=0.9.211",
-  "./locales/pt.js?v=0.9.211",
-  "./locales/nl.js?v=0.9.211",
-  "./locales/de.js?v=0.9.211",
+  "./locales/it.js?v=0.9.212",
+  "./locales/en.js?v=0.9.212",
+  "./locales/fr.js?v=0.9.212",
+  "./locales/es.js?v=0.9.212",
+  "./locales/pt.js?v=0.9.212",
+  "./locales/nl.js?v=0.9.212",
+  "./locales/de.js?v=0.9.212",
 
   "./logos-hq/kasanova-approved.svg",
   "./logos-hq/bialetti-approved.png",
@@ -152,37 +152,38 @@ const CORE=[
   "./logos-hq/cisalfa-approved.png",
   "./",
   "./index.html",
+  "./ficard-catalog.js?v="+APP_VERSION,
   "./ficard-theme.js?v="+APP_VERSION,
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
   "./ficard-i18n.js?v=2.1.0",
-  "./ficard-polish.css?v=0.9.211",
+  "./ficard-polish.css?v=0.9.212",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-content.js?v=0.9.211",
-  "./ficard-ads-config.js?v=0.9.211",
-  "./ficard-ads.js?v=0.9.211",
-  "./ficard-stores.js?v=0.9.211",
-  "./ficard-shared-stores.js?v=0.9.211",
-  "./ficard-stores-ui.js?v=0.9.211",
-  "./ficard-theme.css?v=0.9.211",
+  "./ficard-content.js?v=0.9.212",
+  "./ficard-ads-config.js?v=0.9.212",
+  "./ficard-ads.js?v=0.9.212",
+  "./ficard-stores.js?v=0.9.212",
+  "./ficard-shared-stores.js?v=0.9.212",
+  "./ficard-stores-ui.js?v=0.9.212",
+  "./ficard-theme.css?v=0.9.212",
   "./ficard-reader.js?v=1.1.2",
   "./scandixit-scanner.js?v=1.1.1",
   "./nav-barcode.svg?v=0.9.43",
   "./barcode-crops.js?v=0.9.35",
-  "./merchant-ocr.js?v=0.9.211",
+  "./merchant-ocr.js?v=0.9.212",
   "./scandixit.html",
   "./scandixit-catalog.js?v=1.0.0",
   "./scandixit-i18n.js?v=2.1.0",
   "./manifest.webmanifest",
   "./privacy.html",
-  "./ficard-analytics-config.js?v=0.9.211",
-  "./ficard-analytics.js?v=0.9.211",
-  "./scandixit-saved.js?v=0.9.211",
-  "./ficard-promos.js?v=0.9.211",
-  "./scandixit-links.js?v=0.9.211",
-  "./scandixit-saved.css?v=0.9.211",
-  "./ficard-brand-requests.js?v=0.9.211",
+  "./ficard-analytics-config.js?v=0.9.212",
+  "./ficard-analytics.js?v=0.9.212",
+  "./scandixit-saved.js?v=0.9.212",
+  "./ficard-promos.js?v=0.9.212",
+  "./scandixit-links.js?v=0.9.212",
+  "./scandixit-saved.css?v=0.9.212",
+  "./ficard-brand-requests.js?v=0.9.212",
   "./vendor/leaflet.js","./vendor/leaflet.css",
   "./vendor/images/layers.png","./vendor/images/layers-2x.png","./vendor/images/marker-icon.png","./vendor/images/marker-icon-2x.png","./vendor/images/marker-shadow.png",
   "./icon.svg","./icon-32.png","./icon-180.png","./icon-192.png","./icon-512.png",
@@ -198,7 +199,7 @@ self.addEventListener("install",event=>{
 self.addEventListener("activate",event=>{
   event.waitUntil(
     caches.keys()
-      .then(keys=>Promise.all(keys.filter(key=>key.startsWith("ficard-")&&key!==CACHE).map(key=>caches.delete(key))))
+      .then(keys=>Promise.all(keys.filter(key=>key.startsWith("ficard-v")&&key!==CACHE).map(key=>caches.delete(key))))
       .then(()=>self.clients.claim())
   );
 });

@@ -1,28 +1,51 @@
-/* Fi-Card remote brand catalog: Developer is authoritative, app keeps a local cache and bundled fallback. */
+/* Simple published brand catalog. Logo tools stay in the studio; satin is app styling. */
 (function(root){
 'use strict';
-const CACHE='ficard.brandCatalog.cache.v2';
-const CHECKED='ficard.brandCatalog.checkedAt.v2';
-const MAX_AGE=6*60*60*1000;
+const CACHE='ficard.brandCatalog.cache.v3',CHECKED='ficard.brandCatalog.checkedAt.v3';
+const LOGOS='ficard-catalog-logos-v1',MAX_AGE=6*60*60*1000;
 const ENDPOINT='https://fi-card.app/developer/api.php?action=public_catalog';
-const originals=new Map();
-let appliedKeys=new Set(),observer=null;
-const directions={left_right:'to right',right_left:'to left',top_bottom:'to bottom',bottom_top:'to top',diag_down:'135deg',diag_up:'45deg'};
-function readCache(){try{const x=JSON.parse(root.localStorage.getItem(CACHE)||'null');return x&&Array.isArray(x.rows)?x:null}catch{return null}}
-function writeCache(x){try{root.localStorage.setItem(CACHE,JSON.stringify(x));root.localStorage.setItem(CHECKED,String(Date.now()))}catch{}}
-function country(){const langs=[root.navigator?.language,...(root.navigator?.languages||[])].filter(Boolean);for(const l of langs){const m=String(l).match(/[-_]([A-Z]{2})$/i);if(m)return m[1].toUpperCase()}return ''}
-function cleanRow(r){return{brand_key:String(r.brand_key||''),name:r.name||r.brand_key,category:r.category||'altro',color:r.color||'#5B3DF5',color_2:r.color_2||null,mark:r.mark||String(r.name||r.brand_key||'').toUpperCase(),logo_url:r.logo_url||null,logo_bg:r.logo_bg||'transparent',logo_scale:Number(r.logo_scale||70),domain:r.domain||null,international:r.international!==false,markets:Array.isArray(r.markets)?r.markets:[],status:r.status||'draft',is_complete:r.is_complete!==false,layout_type:r.layout_type||'solid',split_ratio:Number(r.split_ratio||50),gradient_direction:r.gradient_direction||'left_right',gradient_center_x:Number(r.gradient_center_x??50),gradient_center_y:Number(r.gradient_center_y??50),gradient_softness:Number(r.gradient_softness??70),revision:Number(r.revision||1)}}
-function allowed(r){if(!r?.is_complete||r.status!=='published')return false;if(r.international!==false)return true;const c=country();return !c||r.markets.includes(c)}
-function restorePrevious(){if(typeof BRANDS!=='object')return;for(const key of appliedKeys){if(originals.has(key)){const old=originals.get(key);if(old===null)delete BRANDS[key];else BRANDS[key]=old}}appliedKeys=new Set()}
-function applyRows(rows){if(typeof BRANDS!=='object')return false;restorePrevious();for(const raw of rows||[]){const r=cleanRow(raw),key=r.brand_key;if(!key)continue;if(!originals.has(key))originals.set(key,Object.hasOwn(BRANDS,key)?{...BRANDS[key]}:null);if(!allowed(r))continue;const old=BRANDS[key]||{};BRANDS[key]=Object.assign({},old,{name:r.name,category:r.category,color:r.color,mark:r.mark,domain:r.domain||old.domain,logo:r.logo_url||old.logo,logoBg:r.logo_bg,logoScale:r.logo_scale,remoteRevision:r.revision,remoteCatalog:true,layoutType:r.layout_type,color2:r.color_2,splitRatio:r.split_ratio,gradientDirection:r.gradient_direction,gradientCenterX:r.gradient_center_x,gradientCenterY:r.gradient_center_y,gradientSoftness:r.gradient_softness,international:r.international,markets:r.markets});appliedKeys.add(key)}refreshUi();return true}
-function background(b){const c1=b?.color||'#5B3DF5',c2=b?.color2||'#2DD4BF',t=b?.layoutType||'solid',r=Number(b?.splitRatio||50),x=Number(b?.gradientCenterX??50),y=Number(b?.gradientCenterY??50),s=Number(b?.gradientSoftness??70);if(t==='split_horizontal')return `linear-gradient(to right,${c1} 0 ${r}%,${c2} ${r}% 100%)`;if(t==='split_vertical')return `linear-gradient(to bottom,${c1} 0 ${r}%,${c2} ${r}% 100%)`;if(t==='gradient_linear')return `linear-gradient(${directions[b?.gradientDirection]||'to right'},${c1},${c2})`;if(t==='gradient_elliptical')return `radial-gradient(ellipse at ${x}% ${y}%,${c1} 0%,${c2} ${s}%)`;if(t==='gradient_radial')return `radial-gradient(circle at ${x}% ${y}%,${c1} 0%,${c2} ${s}%)`;return c1}
-function inkFor(b){function lum(hex){if(!/^#[0-9a-f]{6}$/i.test(hex))return .2;const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]}return Math.min(lum(b?.color||'#5B3DF5'),lum(b?.color2||b?.color||'#5B3DF5'))>.22?'#172033':'#FFFFFF'}
-function styleCards(scope=root.document){if(!scope?.querySelectorAll||typeof BRANDS!=='object')return;scope.querySelectorAll('[data-brand]').forEach(el=>{const b=BRANDS[el.dataset.brand];if(!b?.remoteCatalog)return;el.style.setProperty('--ficard-brand-bg',background(b));el.style.setProperty('--card-color',b.color||'#5B3DF5');el.style.setProperty('--card-ink',inkFor(b))})}
-function installStyle(){if(root.document.getElementById('ficardRemoteCatalogStyle'))return;const s=root.document.createElement('style');s.id='ficardRemoteCatalogStyle';s.textContent='.cardItem[data-brand],.smartCard[data-brand],.detailBrandHeader[data-brand],.ghostCard[data-brand]{background:var(--ficard-brand-bg,var(--card-color))!important}';root.document.head.appendChild(s)}
-function refreshUi(){try{if(typeof renderAll==='function')renderAll()}catch{}try{const sel=root.document.getElementById('addBrand');if(sel&&typeof catalogOptions==='function'){const keep=sel.value;sel.innerHTML=catalogOptions(keep);sel.value=keep}if(typeof renderBrandResults==='function')renderBrandResults()}catch{}styleCards()}
-async function sync(){if(root.navigator?.onLine===false)return false;const c=new AbortController(),timer=setTimeout(()=>c.abort(),6000);try{const r=await fetch(ENDPOINT,{credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',signal:c.signal});if(!r.ok)throw new Error('catalog '+r.status);const j=await r.json(),version=Number(j.version||0),rows=Array.isArray(j.brands)?j.brands:[],cached=readCache();if(!cached||Number(cached.version)!==version){writeCache({version,rows});applyRows(rows)}else try{root.localStorage.setItem(CHECKED,String(Date.now()))}catch{}return true}catch{return false}finally{clearTimeout(timer)}}
-function boot(){if(typeof BRANDS!=='object'){setTimeout(boot,50);return}installStyle();const cached=readCache();if(cached)applyRows(cached.rows);observer?.disconnect();observer=new MutationObserver(m=>{for(const x of m)for(const n of x.addedNodes)if(n.nodeType===1)styleCards(n.matches?.('[data-brand]')?n.parentNode:n)});observer.observe(root.document.body,{childList:true,subtree:true});styleCards();let last=0;try{last=Number(root.localStorage.getItem(CHECKED)||0)}catch{}if(Date.now()-last>MAX_AGE)sync()}
-root.FiCardCatalog={sync,applyRows,background,cache:readCache};
-if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',boot,{once:true});else boot();
-root.addEventListener?.('online',()=>sync());
+const originals=new Map(),objectUrls=new Map();let applied=new Set(),pending=null,applyEpoch=0;
+function readCache(){try{const v=JSON.parse(root.localStorage.getItem(CACHE)||'null');return v&&Array.isArray(v.rows)?v:null}catch{return null}}
+function writeCache(v){try{root.localStorage.setItem(CACHE,JSON.stringify(v));root.localStorage.setItem(CHECKED,String(Date.now()))}catch{}}
+function cleanRow(r){
+ if(!r||!/^([a-z0-9][a-z0-9_-]{0,63})$/.test(r.brand_key||'')||r.status!=='published'||r.is_complete===false||!/^#[0-9a-f]{6}$/i.test(r.color||''))return null;
+ let logo;try{logo=new URL(r.logo_url);if(logo.protocol!=='https:'||logo.hostname!=='fi-card.app'||logo.pathname!=='/developer/api.php'||logo.searchParams.get('action')!=='public_logo')return null}catch{return null}
+ const n=Number(r.logo_scale);return {brand_key:r.brand_key,name:String(r.name||r.brand_key).slice(0,160),category:String(r.category||'altro'),color:r.color,mark:String(r.mark||r.name||r.brand_key).slice(0,160),logo_url:logo.href,logo_scale:Number.isFinite(n)?Math.max(25,Math.min(95,n)):80,revision:Number(r.revision)||1,status:'published'};
+}
+async function cachedLogo(url){
+ if(objectUrls.has(url))return objectUrls.get(url);
+ try{if(!root.caches)return url;const cache=await root.caches.open(LOGOS);let response=await cache.match(url);
+  if(!response&&root.navigator?.onLine!==false){const abort=new AbortController(),timer=setTimeout(()=>abort.abort(),6000);try{response=await root.fetch(url,{credentials:'omit',referrerPolicy:'no-referrer',signal:abort.signal})}finally{clearTimeout(timer)};if(!response.ok||!/^image\/png(?:;|$)/i.test(response.headers.get('Content-Type')||''))return url;const blob=await response.clone().blob();if(blob.size>3000000)return url;await cache.put(url,response.clone())}
+  if(response){const local=root.URL.createObjectURL(await response.blob());objectUrls.set(url,local);return local}
+ }catch{}return url;
+}
+async function applyRows(rows){
+ if(typeof BRANDS!=='object')return false;
+ const epoch=++applyEpoch,clean=(rows||[]).map(cleanRow).filter(Boolean),logos=new Map();let next=0;
+ await Promise.all(Array.from({length:Math.min(4,clean.length)},async()=>{while(next<clean.length){const r=clean[next++];logos.set(r.brand_key,await cachedLogo(r.logo_url))}}));
+ if(epoch!==applyEpoch)return false;
+ const previous=new Map([...applied].map(key=>[key,BRANDS[key]]));
+ for(const key of applied){const old=originals.get(key);if(old===null)delete BRANDS[key];else BRANDS[key]=old}applied=new Set();
+ for(const r of clean){const key=r.brand_key;if(!originals.has(key))originals.set(key,Object.hasOwn(BRANDS,key)?{...BRANDS[key]}:null);
+  BRANDS[key]={...(BRANDS[key]||{}),name:r.name,category:Object.hasOwn(CATEGORIES,r.category)?r.category:'altro',color:r.color,mark:r.mark,logo:logos.get(key),logoBg:'transparent',logoScale:r.logo_scale,studioRevision:r.revision,remoteCatalog:true,previousColors:[...new Set([...(previous.get(key)?.previousColors||[]),...(BRANDS[key]?.previousColors||[]),previous.get(key)?.color,BRANDS[key]?.color].filter(Boolean))]};applied.add(key)
+ }
+ refreshUi();return true;
+}
+function refreshUi(){try{if(typeof normalizeCategories==='function')normalizeCategories()}catch{}try{if(typeof renderAll==='function')renderAll();else if(typeof renderCards==='function')renderCards()}catch{}
+ try{const select=root.document?.getElementById('addBrand');if(select&&typeof catalogOptions==='function'){const value=select.value;select.innerHTML=catalogOptions(value);select.value=value}if(typeof renderBrandResults==='function')renderBrandResults()}catch{}
+}
+async function performSync(){
+ if(root.navigator?.onLine===false)return false;const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),6000);
+ try{const r=await root.fetch(ENDPOINT,{credentials:'omit',referrerPolicy:'no-referrer',cache:'no-store',signal:controller.signal});if(!r.ok)return false;
+  const data=await r.json();if(!data||!Array.isArray(data.brands)||typeof data.version!=='string')return false;
+  const rows=data.brands.map(cleanRow);if(rows.some(x=>!x))return false;
+  const cached=readCache();if(!cached||cached.version!==data.version){await applyRows(rows);writeCache({version:data.version,rows})}else try{root.localStorage.setItem(CHECKED,String(Date.now()))}catch{}return true;
+ }catch{return false}finally{clearTimeout(timer)}
+}
+function sync(){if(!pending)pending=performSync().finally(()=>{pending=null});return pending}
+async function boot(){if(typeof BRANDS!=='object'){setTimeout(boot,50);return}const cached=readCache();if(cached)await applyRows(cached.rows);checkAge()}
+function checkAge(){let last=0;try{last=Number(root.localStorage.getItem(CHECKED)||0)}catch{}if(Date.now()-last>MAX_AGE)sync()}
+root.FiCardCatalog={sync,applyRows,cache:readCache};
+if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',boot,{once:true});else if(root.document)boot();
+root.addEventListener?.('online',sync);root.document?.addEventListener('visibilitychange',()=>{if(root.document.visibilityState==='visible')checkAge()});
 })(typeof window==='undefined'?globalThis:window);

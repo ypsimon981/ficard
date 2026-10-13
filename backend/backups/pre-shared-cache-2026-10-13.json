@@ -1,0 +1,570 @@
+{
+  "cells": [
+    {
+      "lease": null,
+      "status": "ready",
+      "attempts": 5,
+      "brand_id": 1,
+      "cell_key": "livorno-pilot-v1",
+      "endpoint": "https://overpass-api.de/api/interpreter",
+      "fetched_at": "2026-10-12T22:38:18.422861+00:00",
+      "last_error": null,
+      "duration_ms": 25684,
+      "retry_after": null
+    },
+    {
+      "lease": null,
+      "status": "ready",
+      "attempts": 3,
+      "brand_id": 4,
+      "cell_key": "livorno-pilot-v1",
+      "endpoint": "https://overpass-api.de/api/interpreter",
+      "fetched_at": "2026-10-12T22:33:22.66882+00:00",
+      "last_error": null,
+      "duration_ms": 4448,
+      "retry_after": null
+    },
+    {
+      "lease": null,
+      "status": "ready",
+      "attempts": 3,
+      "brand_id": 3,
+      "cell_key": "livorno-pilot-v1",
+      "endpoint": "https://overpass-api.de/api/interpreter",
+      "fetched_at": "2026-10-12T22:34:40.156516+00:00",
+      "last_error": null,
+      "duration_ms": 21900,
+      "retry_after": null
+    },
+    {
+      "lease": null,
+      "status": "ready",
+      "attempts": 4,
+      "brand_id": 2,
+      "cell_key": "livorno-pilot-v1",
+      "endpoint": "https://overpass-api.de/api/interpreter",
+      "fetched_at": "2026-10-12T22:35:18.287119+00:00",
+      "last_error": null,
+      "duration_ms": 6734,
+      "retry_after": null
+    }
+  ],
+  "brands": [
+    {
+      "id": 1,
+      "slug": "ip",
+      "osm_tags": [
+        {
+          "key": "brand",
+          "value": "IP"
+        },
+        {
+          "key": "name",
+          "value": "IP"
+        }
+      ],
+      "created_at": "2026-10-12T21:52:07.234603+00:00",
+      "display_name": "IP"
+    },
+    {
+      "id": 2,
+      "slug": "conad",
+      "osm_tags": [
+        {
+          "key": "brand",
+          "value": "Conad"
+        },
+        {
+          "key": "name",
+          "value": "Conad"
+        }
+      ],
+      "created_at": "2026-10-12T21:52:07.234603+00:00",
+      "display_name": "Conad"
+    },
+    {
+      "id": 3,
+      "slug": "lidl",
+      "osm_tags": [
+        {
+          "key": "brand",
+          "value": "Lidl"
+        },
+        {
+          "key": "name",
+          "value": "Lidl"
+        }
+      ],
+      "created_at": "2026-10-12T21:52:07.234603+00:00",
+      "display_name": "Lidl"
+    },
+    {
+      "id": 4,
+      "slug": "decathlon",
+      "osm_tags": [
+        {
+          "key": "brand",
+          "value": "Decathlon"
+        },
+        {
+          "key": "name",
+          "value": "Decathlon"
+        }
+      ],
+      "created_at": "2026-10-12T21:52:07.234603+00:00",
+      "display_name": "Decathlon"
+    }
+  ],
+  "locations": [
+    {
+      "lat": 43.5306409,
+      "lon": 10.3309741,
+      "name": "Decathlon",
+      "tags": {
+        "name": "Decathlon",
+        "shop": "sports",
+        "brand": "Decathlon",
+        "addr:street": "Via Cesare Beccaria",
+        "addr:postcode": "57128",
+        "contact:phone": "+39 0586 01201",
+        "opening_hours": "Mo-Sa 09:00-20:00; Su 10:00-20:00; PH off",
+        "brand:wikidata": "Q509349",
+        "addr:housenumber": "1"
+      },
+      "osm_id": 1132001539,
+      "brand_id": 4,
+      "osm_type": "way",
+      "updated_at": "2026-10-12T22:33:22.66882+00:00"
+    },
+    {
+      "lat": 43.5661422,
+      "lon": 10.317937,
+      "name": "Lidl",
+      "tags": {
+        "name": "Lidl",
+        "shop": "supermarket",
+        "brand": "Lidl",
+        "operator": "LIDL Italia S.r.l.",
+        "ref:vatin": "IT02275030233",
+        "addr:street": "Via Fabio Filzi",
+        "addr:postcode": "57122",
+        "opening_hours": "Mo-Sa 08:00-21:30; Su 08:30-20:30",
+        "brand:wikidata": "Q151954",
+        "brand:wikipedia": "en:Lidl",
+        "addr:housenumber": "1"
+      },
+      "osm_id": 542209740,
+      "brand_id": 3,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:34:40.156516+00:00"
+    },
+    {
+      "lat": 43.5571863,
+      "lon": 10.326106,
+      "name": "Lidl",
+      "tags": {
+        "name": "Lidl",
+        "shop": "supermarket",
+        "brand": "Lidl",
+        "level": "1",
+        "building": "retail",
+        "operator": "LIDL Italia S.r.l.",
+        "ref:vatin": "IT02275030233",
+        "check_date": "2022-05-17",
+        "start_date": "2019-02-21",
+        "addr:street": "Viale Ippolito Nievo",
+        "addr:postcode": "57122",
+        "opening_hours": "08:00-21:00",
+        "brand:wikidata": "Q151954",
+        "brand:wikipedia": "en:Lidl",
+        "building:levels": "2",
+        "addr:housenumber": "29;31;33"
+      },
+      "osm_id": 560810036,
+      "brand_id": 3,
+      "osm_type": "way",
+      "updated_at": "2026-10-12T22:34:40.156516+00:00"
+    },
+    {
+      "lat": 43.5293262,
+      "lon": 10.3415765,
+      "name": "Lidl",
+      "tags": {
+        "name": "Lidl",
+        "shop": "supermarket",
+        "brand": "Lidl",
+        "fixme": "check shape; no aerial imagery currently available",
+        "building": "retail",
+        "start_date": "2024-09-19",
+        "addr:street": "Via di Collinaia",
+        "description": "terzo LIDL di Livorno",
+        "payment:cash": "yes",
+        "payment:visa": "yes",
+        "addr:postcode": "57128",
+        "nohousenumber": "yes",
+        "opening_hours": "Mo-Sa 08:00-21:30; Su 08:00-21:00",
+        "brand:wikidata": "Q151954",
+        "payment:maestro": "yes",
+        "payment:bancomat": "yes",
+        "payment:mastercard": "yes",
+        "payment:american_express": "yes"
+      },
+      "osm_id": 1245920686,
+      "brand_id": 3,
+      "osm_type": "way",
+      "updated_at": "2026-10-12T22:34:40.156516+00:00"
+    },
+    {
+      "lat": 43.5071762,
+      "lon": 10.3228109,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "level": "0",
+        "addr:city": "Antignano",
+        "wheelchair": "limited",
+        "addr:street": "Via Carlo Puini",
+        "addr:postcode": "57128",
+        "brand:wikidata": "Q639075",
+        "addr:housenumber": "97"
+      },
+      "osm_id": 318344280,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5571387,
+      "lon": 10.3206496,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "addr:city": "Livorno",
+        "wheelchair": "yes",
+        "addr:street": "Via Giuseppe Bandi",
+        "addr:postcode": "57122",
+        "brand:wikidata": "Q639075",
+        "brand:wikipedia": "it:Conad"
+      },
+      "osm_id": 854375730,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5558313,
+      "lon": 10.3132653,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "level": "0",
+        "operator": "Mara store S.r.l.",
+        "addr:city": "Livorno",
+        "ref:vatin": "IT01723170492",
+        "wheelchair": "yes",
+        "addr:street": "Via delle Lastre",
+        "addr:postcode": "57122",
+        "contact:phone": "+39 0586 889614",
+        "brand:wikidata": "Q639075",
+        "brand:wikipedia": "it:Conad",
+        "addr:housenumber": "26"
+      },
+      "osm_id": 1482711976,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5499832,
+      "lon": 10.3065863,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "level": "-1",
+        "addr:city": "Livorno",
+        "addr:street": "Via Grande",
+        "addr:postcode": "57123",
+        "brand:wikidata": "Q639075",
+        "brand:wikipedia": "it:Conad",
+        "addr:housenumber": "166"
+      },
+      "osm_id": 2980844721,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5316938,
+      "lon": 10.3051181,
+      "name": "Conad City",
+      "tags": {
+        "name": "Conad City",
+        "shop": "convenience",
+        "brand": "Conad",
+        "phone": "+39 0586817002",
+        "operator": "Conad",
+        "addr:city": "Livorno",
+        "addr:street": "Via della Pieve",
+        "addr:postcode": "57100",
+        "brand:wikidata": "Q639075",
+        "brand:wikipedia": "it:Conad"
+      },
+      "osm_id": 5726698830,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5915099,
+      "lon": 10.3521852,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "operator": "Conad",
+        "addr:city": "Collesalvetti",
+        "addr:street": "Via Karl Heinrich Marx",
+        "addr:postcode": "57017",
+        "brand:wikidata": "Q639075",
+        "addr:housenumber": "27"
+      },
+      "osm_id": 6120083034,
+      "brand_id": 2,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5633715,
+      "lon": 10.3241076,
+      "name": "Conad",
+      "tags": {
+        "name": "Conad",
+        "shop": "supermarket",
+        "brand": "Conad",
+        "phone": "+39 0586 426585",
+        "building": "retail",
+        "operator": "Leccia S.r.l.",
+        "addr:city": "Livorno",
+        "ref:vatin": "IT01379740499",
+        "addr:street": "Via dell'Antimonio",
+        "addr:postcode": "57100",
+        "opening_hours": "Mo-Sa 08:00-20:00; Su 08:00-13:00",
+        "brand:wikidata": "Q639075",
+        "brand:wikipedia": "it:Conad",
+        "addr:housenumber": "4,6,8"
+      },
+      "osm_id": 1095230069,
+      "brand_id": 2,
+      "osm_type": "way",
+      "updated_at": "2026-10-12T22:35:18.287119+00:00"
+    },
+    {
+      "lat": 43.5607221,
+      "lon": 10.326356,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "amenity": "fuel",
+        "operator": "Ip Services S.R.L.",
+        "ref:mise": "29281",
+        "ref:vatin": "IT06303151002",
+        "wheelchair": "no",
+        "addr:street": "Via Firenze",
+        "fuel:diesel": "yes",
+        "payment:visa": "yes",
+        "contact:phone": "+39 0586 405020",
+        "payment:notes": "yes",
+        "brand:wikidata": "Q646807",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "10"
+      },
+      "osm_id": 228167581,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.5252717,
+      "lon": 10.3251229,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "source": "MISE - Ministero Sviluppo Economico",
+        "amenity": "fuel",
+        "operator": "Terreni Francesca e Bucchioni Riccardo Società in Nome Collettiv",
+        "ref:mise": "14979",
+        "wheelchair": "yes",
+        "addr:street": "Via Niccolò Machiavelli",
+        "fuel:diesel": "yes",
+        "addr:postcode": "57128",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "61b"
+      },
+      "osm_id": 229121620,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.5745386,
+      "lon": 10.334533,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "amenity": "fuel",
+        "operator": "Ca.Le.Lo. S.R.L.",
+        "ref:mise": "18237",
+        "addr:street": "Via Firenze",
+        "fuel:diesel": "yes",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "85"
+      },
+      "osm_id": 229131464,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.575624,
+      "lon": 10.3360719,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "source": "MISE - Ministero Sviluppo Economico",
+        "amenity": "fuel",
+        "operator": "Ip Services S.R.L.",
+        "ref:mise": "56198",
+        "addr:street": "Via Firenze",
+        "fuel:diesel": "yes",
+        "addr:postcode": "57121",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "87"
+      },
+      "osm_id": 229131697,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.5693553,
+      "lon": 10.3785176,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "amenity": "fuel",
+        "operator": "Ip di Attanasio Andrea",
+        "ref:mise": "46335",
+        "addr:street": "Via delle Sorgenti",
+        "fuel:diesel": "yes",
+        "self_service": "yes",
+        "addr:postcode": "57121",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "470"
+      },
+      "osm_id": 1750135840,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.561095,
+      "lon": 10.3306269,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "disused": "yes",
+        "operator": "IP",
+        "disused:amenity": "fuel"
+      },
+      "osm_id": 1773096457,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.5576599,
+      "lon": 10.3267198,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "amenity": "fuel",
+        "operator": "Ricciuti Nicola",
+        "ref:mise": "14464",
+        "wheelchair": "no",
+        "addr:street": "Viale Ippolito Nievo",
+        "fuel:diesel": "yes",
+        "addr:postcode": "57122",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes",
+        "addr:housenumber": "43c"
+      },
+      "osm_id": 2470932515,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.5739081,
+      "lon": 10.320125,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "IP",
+        "source": "MISE - Ministero Sviluppo Economico",
+        "amenity": "fuel",
+        "operator": "Ip Services S.R.L.",
+        "ref:mise": "61200",
+        "fuel:diesel": "yes",
+        "self_service": "yes",
+        "brand:wikidata": "Q3788748",
+        "fuel:octane_95": "yes"
+      },
+      "osm_id": 2673407244,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    },
+    {
+      "lat": 43.4938436,
+      "lon": 10.3241384,
+      "name": "IP",
+      "tags": {
+        "name": "IP",
+        "brand": "Api-Ip",
+        "source": "MISE - Ministero Sviluppo Economico",
+        "amenity": "fuel",
+        "operator": "Ip Services S.R.L.",
+        "ref:mise": "61321",
+        "fuel:diesel": "yes",
+        "brand:wikidata": "Q646807",
+        "fuel:octane_95": "yes",
+        "brand:wikipedia": "en:Anonima Petroli Italiana"
+      },
+      "osm_id": 2784824374,
+      "brand_id": 1,
+      "osm_type": "node",
+      "updated_at": "2026-10-12T22:38:18.422861+00:00"
+    }
+  ],
+  "created_at": "2026-10-13T05:03:32.966765+00:00"
+}

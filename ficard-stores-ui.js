@@ -3,6 +3,7 @@
 if(scannerBridge)return;
 const S=FiCardStores;let results=[],searchCenter=null,controller=null,requestId=0,busy=false,status='',lastKey='',mapFramed=false;
 let shopCache=S.readCache(localStorage),matchedCards='',mapSignature='',listSignature='';
+let sharedRetry=null,sharedRetryCount=0;
 function matchCachedShops(force=false){const ds=descriptors(),key=JSON.stringify(ds);if(force||key!==matchedCards){results=S.parse(shopCache,ds);matchedCards=key}}
 const baseSmartCarousel=renderSmartCarousel;renderSmartCarousel=function(){matchCachedShops();baseSmartCarousel()};
 function shopSignature(items,distances=true){const rows=items.map(x=>JSON.stringify([x.c.id,x.c.name,x.c.color,x.c.brandKey,x.l,x.favorite,x.saved,distances?Math.round(x.d):null]));return JSON.stringify(distances?rows:rows.sort())}
@@ -74,17 +75,29 @@ renderOverviewMap=function(){
 };
 function renderShopUpdates(){renderSmartCarousel();renderCards();renderLocations();renderOverviewMap();renderDetail()}
 async function search(center,force=false,bounds=null){
+ clearTimeout(sharedRetry);sharedRetry=null;if(!force)sharedRetryCount=0;
  matchCachedShops();const ds=descriptors(),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
  let query;try{query=S.query(center,allNames,1500,bounds)}catch(e){status=e.message;renderLocations();return}
  const area=bounds||S.boundsFor(center,1500),needed=bounds||S.boundsFor(center,1000),key=area.map(n=>n.toFixed(5)).join(',');
  searchCenter={lat:center.lat,lng:center.lng};
+ const shared=typeof window!=='undefined'?window.FiCardSharedStores:null;
  // Small GPS movements and card changes reuse the same stored geographic area.
- if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();return}
+ if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();if(shared?.enabled())shared.prime(area).then(data=>{if(data?.pending&&shared.enabled()&&searchCenter.lat===center.lat&&searchCenter.lng===center.lng){status='Negozi locali disponibili. Archivio server in preparazione: '+data.pending+' settori.';renderLocations();if(!sharedRetry){sharedRetryCount=0;sharedRetry=setTimeout(()=>{sharedRetry=null;search(center,true,bounds)},15000)}}});return}
  if(busy&&key===lastKey)return;
  controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
- try{const data=await S.request(query,active.signal);if(id!==requestId)return;
-  shopCache=S.mergeCache(shopCache,data,area);matchCachedShops(true);
-  const stored=S.writeCache(localStorage,shopCache);status='Negozi aggiornati'+(stored?' e salvati sul dispositivo.':'. Cache piena: risultati disponibili in questa sessione.');
+ try{let data;
+  if(shared?.enabled()){
+   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(shopCache.elements.length){status='Archivio server non disponibile. Mantengo i negozi già salvati.';return;}data=await S.request(query,active.signal);}
+   if(data?.disabled||data?.unsupported)data=await S.request(query,active.signal);
+  }else data=await S.request(query,active.signal);
+  if(id!==requestId)return;
+  if(data.source==='shared'){
+   shopCache=S.mergeCache(shopCache,data);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
+   status=data.pending?'Archivio server in preparazione: '+data.pending+' settori. I negozi già disponibili restano visibili.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
+   if(data.pending&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
+   else if(!data.pending){clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}
+  }else{shopCache=S.mergeCache(shopCache,data,area);status='Negozi aggiornati e salvati sul dispositivo.';}
+  matchCachedShops(true);const stored=S.writeCache(localStorage,shopCache);if(!stored)status+=' Cache piena: nuovi risultati disponibili solo in questa sessione.';
  }catch(e){if(id!==requestId)return;console.warn('FiCard negozi:',e);status='Mostro i negozi già disponibili. Ricerca temporaneamente non disponibile: riprova tra poco.';}
  finally{if(id===requestId){busy=false;renderShopUpdates()}}
 }
@@ -95,7 +108,7 @@ const baseNearest=nearestFor;nearestFor=function(c,pos){let n=baseNearest(c,pos)
 function resetShopFilters(){document.getElementById('shopCategory').value='';document.getElementById('shopCard').value='';document.getElementById('shopFavorites').checked=false;renderLocations();renderOverviewMap()}
 document.getElementById('shopReset').onclick=resetShopFilters;
 for(const id of ['shopCategory','shopCard','shopFavorites'])document.getElementById(id).onchange=()=>{renderLocations();renderOverviewMap()};
-document.getElementById('shopSearchHere').onclick=()=>{if(busy){requestId++;controller?.abort();busy=false;status='Ricerca annullata.';renderShopUpdates();return}if(!overviewMap)return;const p=overviewMap.getCenter(),b=overviewMap.getBounds();search({lat:p.lat,lng:p.lng},true,[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()])};
+document.getElementById('shopSearchHere').onclick=()=>{if(busy){requestId++;controller?.abort();clearTimeout(sharedRetry);sharedRetry=null;busy=false;status='Ricerca annullata.';renderShopUpdates();return}if(!overviewMap)return;clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;const p=overviewMap.getCenter(),b=overviewMap.getBounds();search({lat:p.lat,lng:p.lng},true,[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()])};
 document.getElementById('mapRefresh').onclick=async()=>{try{currentPos=await getPosition();mapFramed=true;renderAll();if(overviewMap)overviewMap.setView([currentPos.lat,currentPos.lng],13);await search(currentPos)}catch(e){status=e.message;renderLocations();toast(e.message)}};
 const baseRefresh=refreshPosition;refreshPosition=async function(){await baseRefresh();if(currentPos)search(currentPos)};
 const baseGo=go;go=function(v){baseGo(v);if(v==='map'){matchCachedShops();renderLocations();renderOverviewMap();if(currentPos&&!busy)search(currentPos);if(!currentPos&&!busy){status='Usa La mia posizione oppure sposta la mappa e cerca nella zona.';renderLocations()}}};

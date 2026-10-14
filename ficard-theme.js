@@ -17,9 +17,9 @@ function applyDocument(doc,p){if(!doc?.documentElement)return;const s=doc.docume
 function apply(id,persist=false){current=valid(id);const p=presets.find(p=>p.id===current);applyDocument(root.document,p);if(persist)try{root.localStorage.setItem(KEY,current);}catch{}if(root.document){for(const frame of root.document.querySelectorAll('iframe')){try{if(frame.contentWindow?.FiCardTheme)frame.contentWindow.FiCardTheme.apply(current);else applyDocument(frame.contentDocument,p);}catch{}}root.document.querySelectorAll('[data-theme-choice]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.themeChoice===current)));}root.FiCardI18n?.refresh?.();return current;}
 function loadScript(src,dataKey){if(!root.document||root.document.querySelector('script['+dataKey+']'))return;const script=root.document.createElement('script');script.src=src;script.setAttribute(dataKey,'1');script.async=true;(root.document.head||root.document.documentElement).appendChild(script);}
 function loadI18n(){if(root.FiCardI18n)return;loadScript('./ficard-i18n.js?v=2.1.0','data-ficard-i18n')}
-function loadRuntime(){loadScript('./ficard-runtime.js?v=0.9.213','data-ficard-runtime')}
-function loadNavigation(){loadScript('./ficard-navigation.js?v=0.9.213','data-ficard-navigation')}
-function loadCatalog(){loadScript('./ficard-catalog.js?v=0.9.213','data-ficard-catalog')}
+function loadRuntime(){loadScript('./ficard-runtime.js?v=0.9.214','data-ficard-runtime')}
+function loadNavigation(){loadScript('./ficard-navigation.js?v=0.9.214','data-ficard-navigation')}
+function loadCatalog(){loadScript('./ficard-catalog.js?v=0.9.214','data-ficard-catalog')}
 try{current=valid(root.localStorage.getItem(KEY));}catch{}
 root.FiCardTheme={presets,apply,current:()=>current};
 apply(current);

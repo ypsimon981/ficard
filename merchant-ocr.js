@@ -7,7 +7,7 @@ function merchantFromOcr(text,confidence){
  const hits=Object.entries(BRANDS).filter(([key,b])=>!['altri','locale','farmacia'].includes(key)&&norm(b.name).length>=4&&lines.some(l=>norm(l).includes(norm(b.name))));
  if(hits.length===1)return {key:hits[0][0],name:hits[0][1].name};
  if(hits.length>1)return null;
- const names=lines.filter(l=>l.length>=4&&l.length<=65&&/[\p{L}]{3}/u.test(l)&&!/^\d/.test(l)&&!/(klarna|paga|offert|richied|ottieni|negozio|barcode|codice|tessera|fedelt|dettagli|chiudi|indietro)/i.test(l));
+ const names=lines.filter(l=>l.length>=4&&l.length<=65&&/[\p{L}]{3}/u.test(l)&&!/^\d/.test(l)&&!/(?:ficard|fecard)/.test(norm(l))&&!/(klarna|paga|offert|richied|ottieni|negozio|barcode|codice|tessera|fedelt|dettagli|chiudi|indietro|condiviso da|non devi cercare)/i.test(l));
  return confidence>=55&&names.length===1?{key:'',name:names[0]}:null;
 }
 async function getMerchantOcrWorker(){

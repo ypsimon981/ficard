@@ -4,6 +4,11 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "legal.trademarks.title": "Merken en klantenkaarten",
+    "legal.trademarks.independent": "Fi-Card is een onafhankelijke app en is niet verbonden aan, gesponsord door of goedgekeurd door de getoonde bedrijven.",
+    "legal.trademarks.ownership": "Namen, handelsmerken, logo's en afbeeldingen zijn eigendom van hun respectieve rechthebbenden en worden uitsluitend getoond om gebruikers te helpen hun klantenkaarten te herkennen en te ordenen.",
+    "legal.trademarks.rules": "Fi-Card geeft geen kaarten uit en wijzigt de regels van loyaliteitsprogramma's niet. Het gebruik van kaarten valt onder de voorwaarden van de betreffende winkels.",
+    "legal.trademarks.contact": "Voor meldingen over merken:",
     "language.title": "Taal",
     "language.subtitle": "Interfacetaal",
     "language.autoNote": "Je keuze wordt op dit apparaat opgeslagen.",

@@ -1107,7 +1107,7 @@ function mostUsedFirst(a,b){return (Number(b.useCount)||0)-(Number(a.useCount)||
 function unifiedCardHtml(c,focus){
  let html=cardHtml(c);if(focus)html=html.replace('card cardItem ','card cardItem nearbyHero ');
  const n=quickPositionReady()?nearestFor(c,currentPos):null;
- const meta=n&&Number.isFinite(n.d)?(focus?'<div class="walletArrival">Non cercare la tua card, è lei che trova te.</div>':'<div class="walletDistance">'+esc(distanceLabel(n.d))+'</div>'):(c.isDemo?'<div class="walletDistance demoNoDistance">'+esc(window.FiCardDemo?.getStatus()==='loading'?'Cerco negozi…':window.FiCardDemo?.getStatus()==='ready'?'Nessuno entro 30 km':'Posizione da rilevare')+'</div>':'');
+ const meta=n&&Number.isFinite(n.d)?(focus?'<div class="walletArrival">Non cercare la tua card, è lei che trova te.</div>':'<div class="walletDistance">'+esc(distanceLabel(n.d))+'</div>'):(c.isDemo?'<div class="walletDistance demoNoDistance">'+esc(window.FiCardDemo?.getStatus()==='loading'?'Cerco negozi…':window.FiCardDemo?.getStatus()==='ready'?'Nessuno entro 30 km':window.FiCardDemo?.getStatus()==='offline'?'Serve internet':window.FiCardDemo?.getStatus()==='error'?'Ricerca non disponibile':'Posizione da rilevare')+'</div>':'');
  if(!focus&&meta)html=html.replace(/<\/div>$/,meta+'</div>');
  return '<div class="walletTile'+(focus?' nearbyHero':'')+'">'+html+(focus?meta:'')+'</div>';
 }

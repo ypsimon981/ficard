@@ -10,8 +10,8 @@ function t(k){let lang=root.FiCardI18n?.language?.()||'it';return (words[String(
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function read(){try{const data=JSON.parse(root.localStorage.getItem(KEY)||'null');if(data&&typeof data.code==='string'&&data.code.length>0&&data.code.length<=4096)return {code:data.code,format:typeof data.format==='string'?data.format:'CODE128'};}catch{}return null}
 function save(value){try{root.localStorage.setItem(KEY,JSON.stringify(value));return true}catch{return false}}
-function tileHtml(){if(!read())return '';return '<div class="walletTile lotteryTile"><div class="card cardItem walletLight" style="--card-color:#E8E2FF;--card-ink:#4324BC"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="lotteryTileIcon" aria-hidden="true">♧</span><div class="name">'+esc(t('title'))+'</div><div class="type">'+esc(t('code'))+'</div></button></div></div>'}
-function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open><span class="lotteryReminderIcon" aria-hidden="true">♧</span><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span aria-hidden="true">›</span></button>'}
+function tileHtml(){if(!read())return '';return '<div class="walletTile lotteryTile"><div class="card cardItem walletLight" style="--card-color:#E8E2FF;--card-ink:#4324BC"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="lotteryTileIcon" aria-hidden="true">🎟️</span><div class="name">'+esc(t('title'))+'</div><div class="type">'+esc(t('code'))+'</div></button></div></div>'}
+function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open><span class="lotteryReminderIcon" aria-hidden="true">🎟️</span><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span aria-hidden="true">›</span></button>'}
 let scanner=null,scanning=false;
 async function stop(){const d=scanner;scanner=null;scanning=false;const el=root.document.getElementById('lotteryReader');if(el)el.hidden=true;if(d){try{await d.stop()}catch{}try{await d.clear()}catch{}}}
 function close(){stop();root.document.getElementById('lotteryModal')?.classList.remove('show');}
@@ -35,7 +35,7 @@ function showCode(){
  root.drawBarcode?.('lotteryCanvas',c);
  modal.classList.add('show');
 }
-function refresh(){const info=root.document.getElementById('lotteryStatus');if(info)info.textContent=read()?t('edit'):t('add');root.renderCards?.();}
+function refresh(){const button=root.document.getElementById('lotterySettingsAdd');if(button)button.textContent=read()?t('edit'):t('add');root.renderCards?.();}
 function init(){
  const d=root.document;if(!d.getElementById('lotteryModal'))return;
  d.getElementById('lotterySettingsAdd')?.addEventListener('click',showEditor);

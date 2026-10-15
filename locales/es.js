@@ -4,6 +4,11 @@
  root.FiCardLocales["es"]={
   "name": "Español",
   "messages": {
+    "backup.alias.ask": "¿Quieres asignar un alias a las tarjetas importadas?",
+    "backup.alias.label": "Alias para las tarjetas importadas",
+    "backup.alias.hint": "Se aplicará a las tarjetas nuevas, aunque el archivo ya tenga un alias. Las tarjetas existentes no cambiarán.",
+    "backup.alias.placeholder": "Ej. Marco, Familia",
+    "backup.alias.required": "Escribe un alias o desactiva la opción",
     "legal.trademarks.title": "Marcas y tarjetas de fidelización",
     "legal.trademarks.independent": "Fi-Card es una aplicación independiente y no está afiliada, patrocinada ni avalada por las empresas representadas.",
     "legal.trademarks.ownership": "Los nombres, marcas, logotipos y elementos gráficos pertenecen a sus respectivos titulares y se muestran únicamente para ayudar a identificar y organizar las tarjetas de fidelización de los usuarios.",
@@ -913,16 +918,17 @@
     "Consejo",
     "Publicidad",
     "Abrir",
-    "Asocia la tienda",
-    "Añade la ubicación a tu tarjeta para encontrarla cuando estés cerca.",
+    "¿Falta una tienda en el mapa?",
+    "Puedes añadirla tú directamente desde el mapa.",
     "Guarda una copia",
     "Conserva una copia de tus tarjetas desde Ajustes.",
-    "Prueba ScanDixit",
+    "Protege tus tarjetas desde ⚙️ Ajustes.",
     "Escanea un producto para buscar información antes de comprarlo.",
     "Comparte todas tus tarjetas",
     "Intercambiad copias en familia: solo se añaden las tarjetas que faltan."
   ],
   "sharing": {
+    "promoSubtitles": ["Comparte tus tarjetas con un amigo: donde esté permitido, podéis acumular puntos en la misma tarjeta.","Comparte tus tarjetas con la familia: cada uno las tendrá en su teléfono.","Intercambiad vuestras colecciones: Fi-Card añade solo las tarjetas que faltan."],
     "intro": "Comparte tu conjunto de tarjetas en pocos toques",
     "disclaimer": "Comparte y utiliza tarjetas solo cuando lo permita el programa de fidelización. Los descuentos y puntos dependen de las condiciones de la tienda.",
     "items": [

@@ -4,6 +4,11 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "legal.trademarks.title": "Marchi e carte fedeltà",
+    "legal.trademarks.independent": "Fi-Card è un'app indipendente e non è affiliata, sponsorizzata o approvata dalle aziende rappresentate.",
+    "legal.trademarks.ownership": "Nomi, marchi, loghi e grafiche appartengono ai rispettivi titolari e sono mostrati esclusivamente per identificare e organizzare le carte fedeltà degli utenti.",
+    "legal.trademarks.rules": "Fi-Card non emette carte né modifica i regolamenti dei programmi fedeltà. L'uso delle carte è soggetto alle condizioni stabilite dagli esercenti.",
+    "legal.trademarks.contact": "Per segnalazioni sui marchi:",
     "language.title": "Lingua",
     "language.subtitle": "Lingua dell’interfaccia",
     "language.autoNote": "La scelta resta salvata su questo dispositivo.",

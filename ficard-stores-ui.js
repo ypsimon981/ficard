@@ -16,7 +16,17 @@ function shops(cardId=''){
  const items=[];for(const c of allVisibleCards()){if(cardId&&c.id!==cardId)continue;
  for(const l of c.locations||[])items.push({c,l,saved:!c.isDemo,favorite:!c.isDemo&&savedFavorite(l)});
  for(const x of results.filter(x=>x.cardId===c.id)){if(!savedAt(c,x.point))items.push({c,l:x.point,saved:false,favorite:false})}
- }const origin=currentPos||searchCenter;return items.map(x=>({...x,d:origin?distanceM(origin,x.l):Infinity})).sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,'it'));
+ }
+ // Merge overlapping OSM node/way/entrance records, including already-cached demo points.
+ // Prefer explicitly saved and favourite points so the user's choices are retained.
+ const unique=[];
+ for(const x of items.slice().sort((a,b)=>Number(b.favorite)-Number(a.favorite)||Number(b.saved)-Number(a.saved))){
+  const brand=storeBrand(x.c).key;
+  if(unique.some(y=>storeBrand(y.c).key===brand&&S.sameStore(y.l,x.l)))continue;
+  unique.push(x);
+ }
+ const origin=currentPos||searchCenter;
+ return unique.map(x=>({...x,d:origin?distanceM(origin,x.l):Infinity})).sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,'it'));
 }
 function storeBrand(c){const key=c.brandKey||inferredBrandKey(c);return {key:key||'custom:'+c.name.trim().toLocaleLowerCase('it'),name:BRANDS[key]?.name||c.name}}
 function heartSvg(active){return '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="'+(active?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>'}

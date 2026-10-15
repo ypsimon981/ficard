@@ -921,12 +921,45 @@
     "Missing a store on the map?",
     "You can add it yourself, directly on the map.",
     "Save a backup",
-    "Keep a copy of your cards from Settings.",
     "Keep your cards safe in ⚙️ Settings.",
+    "Try ScanDixit",
     "Scan a product to look up information before buying.",
     "Share all your cards",
     "Exchange family backups: only missing cards are added."
   ],
+  "journey": {
+    "growth": [
+      [
+        "More cards in your wallet?",
+        "Scan them into Fi-Card and keep them on your phone."
+      ],
+      [
+        "All your cards in one place",
+        "Add the cards you use most often in just a few taps."
+      ],
+      [
+        "Stop searching for cards",
+        "Add your cards: Fi-Card shows the right one when you're near the store."
+      ]
+    ],
+    "importFriend": [
+      "A friend already uses Fi-Card?",
+      "Ask them to share their collection: you'll import only missing cards."
+    ],
+    "referral": [
+      [
+        "Like Fi-Card?",
+        "Recommend it to a friend and help them organize their loyalty cards."
+      ],
+      [
+        "Spread the word about Fi-Card",
+        "Invite a family member to try it: you can share your cards."
+      ]
+    ],
+    "invite": "All your loyalty cards in one place. Try Fi-Card!",
+    "copied": "Fi-Card link copied",
+    "copyPrompt": "Copy and share the Fi-Card link:"
+  },
   "sharing": {
     "promoSubtitles": ["Share your cards with a friend: where allowed, you can collect points on the same card.","Share your cards with family: everyone will have them on their own phone.","Exchange your card collections: Fi-Card adds only missing cards."],
     "intro": "Share your card set in a few taps",

@@ -98,8 +98,12 @@ root.document?.addEventListener('click',async e=>{
   return;
  }
  root.go?.(action==='map'?'map':action==='scandixit'?'scandixit':'profile');
- const id=action==='import'?'importCardsBox':action==='share'?'sharingCardsBox':action==='backup'?'backupInfo':null;
- if(id)root.document.getElementById(id)?.scrollIntoView?.({block:'center',behavior:'auto'});
+ const id=action==='import'?'importData':action==='share'?'sharingCardsBox':action==='backup'?'backupInfo':null;
+ if(id){
+  const target=root.document.getElementById(id);
+  for(let parent=target?.parentElement;parent;parent=parent.parentElement)if(parent.tagName==='DETAILS')parent.open=true;
+  target?.scrollIntoView?.({block:'center',behavior:'auto'});
+ }
 });
 root.document?.addEventListener('visibilitychange',()=>{if(root.document.hidden){try{root.sessionStorage.setItem(SESSION,JSON.stringify({day:day(Date.now()),count,last:Date.now()}));}catch{}}else{session();render();}});
 root.document?.addEventListener('pointerdown',()=>{if(Date.now()-last>60000){try{root.sessionStorage.setItem(SESSION,JSON.stringify({day:day(Date.now()),count,last:Date.now()}));}catch{}last=Date.now();}},{passive:true});

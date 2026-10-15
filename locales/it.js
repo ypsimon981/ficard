@@ -4,6 +4,13 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "settings.compact.codes": "Come funzionano",
+    "settings.compact.country": "Dettagli sul Paese",
+    "settings.compact.create": "Crea backup",
+    "settings.compact.restore": "Ripristina backup",
+    "settings.compact.options": "Altre opzioni e istruzioni",
+    "settings.compact.about": "Informazioni e altre impostazioni",
+
     "settings.group.special": "Carte speciali",
     "settings.group.locale": "Lingua e Paese",
     "settings.group.backup": "Backup ed esportazione",

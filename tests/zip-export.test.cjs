@@ -10,12 +10,11 @@ test('ZIP uses standard store format, UTF-8 names and correct CRC/central direct
 test('ZIP rejects duplicate names and paths',()=>{
  const a={name:'same.png',data:new Uint8Array()};assert.throws(()=>zip.create([a,a]));assert.throws(()=>zip.create([{...a,name:'../private.png'}]));
 });
-test('settings have separate export/import/sharing boxes and no duplicate action IDs',()=>{
- const starts=['exportCardsBox','importCardsBox','sharingCardsBox'].map(id=>html.indexOf('id="'+id+'"'));
- const sections=starts.map((start,i)=>html.slice(start,starts[i+1]||html.indexOf('id="importFile"',start)));
- assert(sections[0].includes('id="exportData"')&&sections[0].includes('id="exportCardImages"'));assert(!sections[0].includes('id="importData"'));
- assert(sections[1].includes('id="importData"')&&sections[1].includes('id="importImagesProfile"'));assert(!sections[1].includes('id="exportData"'));
- assert(sections[2].includes('id="shareBackup"'));
+test('settings expose main backup actions and retain secondary export/import/sharing actions without duplicate IDs',()=>{
+ const backup=html.slice(html.indexOf('id="backupSettingsBox"'),html.indexOf('<details class="panel settingsMore"'));
+ const expanded=backup.indexOf('<details');
+ for(const id of ['exportData','importData'])assert(backup.indexOf('id="'+id+'"')<expanded);
+ for(const id of ['exportCardImages','importImagesProfile','sendPersonalBackup'])assert(backup.indexOf('id="'+id+'"')>expanded);
  for(const id of ['exportData','importData','shareBackup','importImagesProfile'])assert.equal(html.split('id="'+id+'"').length-1,1);
 });
 function fixture(fail=false){

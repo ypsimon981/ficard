@@ -4,6 +4,13 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "settings.compact.codes": "Hoe het werkt",
+    "settings.compact.country": "Landdetails",
+    "settings.compact.create": "Back-up maken",
+    "settings.compact.restore": "Back-up herstellen",
+    "settings.compact.options": "Meer opties en instructies",
+    "settings.compact.about": "Informatie en overige instellingen",
+
     "settings.group.special": "Speciale kaarten",
     "settings.group.locale": "Taal en land",
     "settings.group.backup": "Back-up en export",

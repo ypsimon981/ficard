@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.220";
+const APP_VERSION="0.9.221";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -161,7 +161,7 @@ const CORE=[
   "./ficard-polish.css?v=0.9.215",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-lottery.js?v=0.9.220",
+  "./ficard-lottery.js?v=0.9.221",
   "./ficard-content.js?v=0.9.218",
   "./ficard-ads-config.js?v=0.9.215",
   "./ficard-ads.js?v=0.9.215",
@@ -195,7 +195,10 @@ const CORE=[
 ];
 
 self.addEventListener("install",event=>{
-  event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(CORE)).then(()=>self.skipWaiting()));
+  // A single optional logo must never block the entire app update.
+  event.waitUntil(caches.open(CACHE)
+    .then(cache=>Promise.allSettled(CORE.map(asset=>cache.add(asset))))
+    .then(()=>self.skipWaiting()));
 });
 
 self.addEventListener("activate",event=>{

@@ -17,11 +17,23 @@ function query(center,list,radius=3000,bounds=null){
  // `out tags` omits node coordinates, causing valid point shops to be discarded.
  return '[out:json][timeout:25];(nwr["shop"]'+area+';nwr["amenity"~"^(fuel|pharmacy)$"]'+area+';);out body center;';
 }
+// OSM often represents the same shop as a building polygon and a point/entrance.
+// Compare only within the same brand/card; never merge distant stores sharing an address.
+function sameStore(a,b){
+ if(!a||!b||!Number.isFinite(a.lat)||!Number.isFinite(a.lng)||!Number.isFinite(b.lat)||!Number.isFinite(b.lng))return false;
+ if(a.osmId&&b.osmId&&a.osmId===b.osmId)return true;
+ const lat=(a.lat+b.lat)*Math.PI/360,dy=(a.lat-b.lat)*111320,dx=(a.lng-b.lng)*111320*Math.cos(lat);
+ const meters=Math.hypot(dx,dy);
+ if(meters<=55)return true;
+ const addressA=normalize(a.address),addressB=normalize(b.address);
+ // A full street address with house number, not a city-only or district label.
+ return meters<=300&&addressA.length>=10&&/\d/.test(addressA)&&addressA===addressB;
+}
 function parse(data,descriptors){
  const found=[];for(const e of data.elements||[]){const lat=e.lat??e.center?.lat,lng=e.lon??e.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)continue;
  const tags=e.tags||{},address=tags['addr:street']?[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']].filter(Boolean).join(' '):tags['addr:suburb']||tags['addr:neighbourhood']||tags['addr:quarter']||tags['addr:district']||tags['addr:postcode']||tags['addr:city']||'';
  for(const d of descriptors)if(matches(tags,d.names)){const point={lat,lng,osmId:e.type+'/'+e.id,name:String(tags.name||tags.brand||d.names[0]).slice(0,200),address:address.slice(0,300),source:'osm-discovered'};
- if(!found.some(x=>x.cardId===d.id&&(x.point.osmId===point.osmId||Math.hypot(x.point.lat-lat,x.point.lng-lng)<.0003)))found.push({cardId:d.id,point});}
+ if(!found.some(x=>x.cardId===d.id&&sameStore(x.point,point)))found.push({cardId:d.id,point});}
  }return found;
 }
 const CACHE_KEY='ficard.nearby-shops.v4',CACHE_AGE=7*86400000;
@@ -77,6 +89,6 @@ function reverseAddress(point,storage){
   }catch(e){return ''}finally{clearTimeout(timer)}
  });addressPending.set(key,job);addressQueue=job;job.finally(()=>addressPending.delete(key));return job;
 }
-root.FiCardStores={normalize,names,matches,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
+root.FiCardStores={normalize,names,matches,sameStore,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
 })(window);
 

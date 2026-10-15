@@ -1,4 +1,4 @@
-/* Fi-Card 0.9.220 — personal receipt-lottery code; never included in card-set exports. */
+/* Fi-Card 0.9.221 — personal receipt-lottery code; never included in card-set exports. */
 (function(root){
 'use strict';
 const KEY='ficard.personal.receipt-lottery.v1';
@@ -15,7 +15,11 @@ function tileHtml(){if(!read())return '';return '<div class="card cardItem walle
 function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><img class="lotteryReminderLogo" src="'+LOGO+'" alt="Lotteria degli scontrini"><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span class="lotteryReminderArrow" aria-hidden="true">›</span></button>'}
 let scanner=null,scanning=false;
 async function stop(){const d=scanner;scanner=null;scanning=false;const el=root.document.getElementById('lotteryReader');if(el)el.hidden=true;if(d){try{await d.stop()}catch{}try{await d.clear()}catch{}}}
-function close(){stop();root.document.getElementById('lotteryModal')?.classList.remove('show');}
+function close(){
+ stop();
+ root.document.getElementById('lotteryModal')?.classList.remove('show','lotteryViewing');
+ root.document.getElementById('detailModal')?.classList.remove('lotteryBehind');
+}
 function showEditor(){
  const modal=root.document.getElementById('lotteryModal');if(!modal)return;
  const c=read();root.document.getElementById('lotteryHeading').textContent=c?t('edit'):t('add');
@@ -24,6 +28,8 @@ function showEditor(){
  root.document.getElementById('lotteryCode').value=c?.code||'';
  root.document.getElementById('lotteryFormat').value=c?.format||'CODE128';
  root.document.getElementById('lotteryRemove').hidden=!c;
+ modal.classList.remove('lotteryViewing');
+ if(root.document.getElementById('detailModal')?.classList.contains('show'))root.document.getElementById('detailModal').classList.add('lotteryBehind');
  modal.classList.add('show');
 }
 function showCode(){
@@ -34,6 +40,8 @@ function showCode(){
  root.document.getElementById('lotteryViewer').hidden=false;
  root.document.getElementById('lotteryNum').textContent=c.code;
  root.drawBarcode?.('lotteryCanvas',c);
+ modal.classList.add('lotteryViewing');
+ if(root.document.getElementById('detailModal')?.classList.contains('show'))root.document.getElementById('detailModal').classList.add('lotteryBehind');
  modal.classList.add('show');
 }
 function refresh(){const button=root.document.getElementById('lotterySettingsAdd');if(button)button.textContent=read()?t('edit'):t('add');root.renderCards?.();}

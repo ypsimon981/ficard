@@ -117,13 +117,16 @@ async function search(center,force=false,bounds=null){
  controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
  try{let data;
   if(shared?.enabled()){
-   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(e.code==='AREA_TOO_LARGE'){status=e.message;return;}if(shopCache.elements.length){status='Archivio server non disponibile. Mantengo i negozi già salvati.';return;}data=await S.request(query,active.signal);}
+   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(e.code==='AREA_TOO_LARGE'){status=e.message;return;}// A cache from a different district does not mean this area is covered.
+    // Always attempt a bounded live fallback; retain existing points on failure.
+    try{data=await S.request(query,active.signal);status='Archivio condiviso non disponibile: ricerca locale OpenStreetMap.'}
+    catch(fallbackError){status='Archivio non disponibile e ricerca OpenStreetMap non riuscita. Mostro solo i negozi già salvati; elenco incompleto.';return;}}
    if(data?.disabled||data?.unsupported)data=await S.request(query,active.signal);
   }else data=await S.request(query,active.signal);
   if(id!==requestId)return;
   if(data.source==='shared'){
    shopCache=S.mergeCache(shopCache,data);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
-   status=data.pending?(data.queue==='capacity'?'Negozi disponibili salvati sul dispositivo. Alcune zone attendono un aggiornamento.':'Negozi disponibili salvati sul dispositivo. Altre zone sono in preparazione.'):data.partial?'Negozi dall’archivio nazionale, salvati sul dispositivo. Copertura della zona in verifica.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
+   status=data.pending?(data.queue==='capacity'?'Negozi disponibili salvati sul dispositivo. Copertura incompleta: alcune zone attendono un aggiornamento.':'Negozi disponibili salvati sul dispositivo. Copertura incompleta: altre zone sono in preparazione.'):data.partial?'Negozi dall’archivio nazionale, salvati sul dispositivo. Copertura incompleta della zona.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
    if(data.pending&&data.queue!=='capacity'&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
    else{clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}
   }else{shopCache=S.mergeCache(shopCache,data,area);status='Negozi aggiornati e salvati sul dispositivo.';}

@@ -12,13 +12,13 @@ function keys(realCards){
 }
 function cards(realCards,brands){
  return keys(realCards).map(key=>{
-  const b=brands[key],point=points[key];
-  return {id:ID_PREFIX+key,isDemo:true,name:b?.name||key,alias:'Carta dimostrativa',brandKey:key,category:b?.category||'altro',color:b?.color||'#5B3DF5',locations:point?[point]:[],code:'',format:'CODE128'};
+  const b=brands[key],locations=points[key]||[];
+  return {id:ID_PREFIX+key,isDemo:true,name:b?.name||key,alias:'Carta dimostrativa',brandKey:key,category:b?.category||'altro',color:b?.color||'#5B3DF5',locations,code:'',format:'CODE128'};
  });
 }
 function isDemoId(id){return typeof id==='string'&&id.startsWith(ID_PREFIX)&&KEYS.includes(id.slice(ID_PREFIX.length))}
 function getStatus(){return state}
-function getPoint(key){return points[key]||null}
+function getPoint(key){return points[key]?.[0]||null}
 function distance(a,b){
  const p=Math.PI/180,dLat=(b.lat-a.lat)*p,dLon=(b.lng-a.lng)*p;
  const x=Math.sin(dLat/2)**2+Math.cos(a.lat*p)*Math.cos(b.lat*p)*Math.sin(dLon/2)**2;
@@ -31,8 +31,8 @@ function cached(p){
   if(v?.version!==1||!v.center||!Number.isFinite(v.at)||Date.now()-v.at>7*86400000||distance(p,v.center)>8000)return false;
   points={};
   for(const key of KEYS){
-   const point=v.points?.[key];
-   if(point&&Number.isFinite(point.lat)&&Number.isFinite(point.lng)&&distance(p,point)<=MAX_RADIUS)points[key]=point;
+   const list=v.points?.[key];
+   if(Array.isArray(list))points[key]=list.filter(point=>point&&Number.isFinite(point.lat)&&Number.isFinite(point.lng)&&distance(p,point)<=MAX_RADIUS);
   }
   state='ready';return true;
  }catch{return false}
@@ -63,14 +63,14 @@ async function updatePosition(p,realCards,brands){
    const data=await S.request(query(captured));
    const descriptors=KEYS.map(key=>({id:key,names:S.names({name:brands[key]?.name||key},brands,key)}));
    const matches=S.parse(data,descriptors);
-   const best={};
+   const found={};
    for(const m of matches){
     const d=distance(captured,m.point);
     if(d>MAX_RADIUS)continue;
-    if(!best[m.cardId]||d<best[m.cardId].d)best[m.cardId]={point:m.point,d};
+    (found[m.cardId]||(found[m.cardId]=[])).push({point:m.point,d});
    }
    if(distance(captured,center)>8000)return;
-   points=Object.fromEntries(Object.entries(best).map(([k,v])=>[k,v.point]));
+   points=Object.fromEntries(Object.entries(found).map(([key,rows])=>[key,rows.sort((a,b)=>a.d-b.d).slice(0,250).map(x=>x.point)]));
    state='ready';
    try{root.localStorage.setItem(CACHE_KEY,JSON.stringify({version:1,center:captured,points,at:Date.now()}))}catch{}
   }catch{if(distance(captured,center)<=8000)state='error'}

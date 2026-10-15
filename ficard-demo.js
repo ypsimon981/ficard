@@ -77,7 +77,7 @@ async function updatePosition(p,realCards,brands){
  const captured={...center};
  inflight=(async()=>{
   const S=root.FiCardStores,shared=root.FiCardSharedStores;
-  let full=false,partial=false;
+  let full=false,partial=false,sharedComplete=false;
   try{
    if(!S?.request||!S?.parse)throw Error('Store locator unavailable');
    // Prefer the national store archive: one bounded request, not a 30 km city-wide Overpass scan.
@@ -85,12 +85,13 @@ async function updatePosition(p,realCards,brands){
     try{
      const b=S.boundsFor(captured,10500);
      const data=await shared.request(b);
-     if(data?.source==='shared'){mergeMatches(data,captured,brands);partial=true}
+     if(data?.source==='shared'){mergeMatches(data,captured,brands);partial=true;sharedComplete=data.complete===true}
     }catch(e){console.warn('FiCard demo: archivio condiviso non disponibile',e)}
    }
-   // A small targeted search can work even when a 30 km Overpass query times out.
-   if(!Object.values(points).some(x=>x.length)){
-    try{mergeMatches(await S.request(query(captured,4500)),captured,brands);partial=true}
+   // A small targeted search supplements an incomplete shared archive.
+   // Other cached brands do not prove the nearest shop for this brand was found.
+   if(!sharedComplete){
+    try{mergeMatches(await S.request(query(captured,6000)),captured,brands);partial=true}
     catch(e){console.warn('FiCard demo: ricerca locale non disponibile',e)}
    }
    // Complete the requested 30 km radius. Keep any already-discovered shops if it fails.

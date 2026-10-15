@@ -921,12 +921,45 @@
     "Fehlt ein Geschäft auf der Karte?",
     "Du kannst es direkt auf der Karte hinzufügen.",
     "Backup speichern",
-    "Speichere eine Kopie deiner Karten in den Einstellungen.",
     "Sichere deine Karten unter ⚙️ Einstellungen.",
+    "ScanDixit ausprobieren",
     "Scanne ein Produkt für Informationen vor dem Kauf.",
     "Teile alle deine Karten",
     "Tauscht Backups in der Familie aus: Nur fehlende Karten werden hinzugefügt."
   ],
+  "journey": {
+    "growth": [
+      [
+        "Noch mehr Karten im Portemonnaie?",
+        "Scanne sie mit Fi-Card und speichere sie auf deinem Handy."
+      ],
+      [
+        "Alle Karten an einem Ort",
+        "Füge deine meistgenutzten Karten mit wenigen Tipps hinzu."
+      ],
+      [
+        "Nie wieder Karten suchen",
+        "Füge deine Karten hinzu: Fi-Card zeigt die passende Karte in der Nähe des Geschäfts."
+      ]
+    ],
+    "importFriend": [
+      "Ein Freund nutzt schon Fi-Card?",
+      "Bitte ihn, seine Karten zu teilen: Du importierst nur fehlende Karten."
+    ],
+    "referral": [
+      [
+        "Gefällt dir Fi-Card?",
+        "Empfiehl die App einem Freund, damit er seine Kundenkarten ordnen kann."
+      ],
+      [
+        "Mach Fi-Card bekannt",
+        "Lade Familienmitglieder ein: Ihr könnt eure Karten teilen."
+      ]
+    ],
+    "invite": "Alle Kundenkarten an einem Ort. Probiere Fi-Card!",
+    "copied": "Fi-Card-Link kopiert",
+    "copyPrompt": "Fi-Card-Link kopieren und teilen:"
+  },
   "sharing": {
     "promoSubtitles": ["Teile deine Karten mit Freunden: Wo erlaubt, könnt ihr Punkte auf derselben Karte sammeln.","Teile deine Karten mit der Familie: Jeder hat sie auf dem eigenen Handy.","Tauscht eure Kartensammlungen: Fi-Card ergänzt nur fehlende Karten."],
     "intro": "Teile dein Kartenset mit wenigen Fingertipps",

@@ -2,7 +2,7 @@
 (function(){
 if(scannerBridge)return;
 const S=FiCardStores;let results=[],searchCenter=null,controller=null,requestId=0,busy=false,status='',lastKey='',mapFramed=false;
-let shopCache=S.readCache(localStorage),matchedCards='',mapSignature='',listSignature='';
+let shopCache=S.readCache(localStorage),matchedCards='',mapSignature='',listSignature='',lastMappedCount=0;
 let sharedRetry=null,sharedRetryCount=0;
 function matchCachedShops(force=false){const ds=descriptors(),key=JSON.stringify(ds);if(force||key!==matchedCards){results=S.parse(shopCache,ds);matchedCards=key}}
 const baseSmartCarousel=renderSmartCarousel;renderSmartCarousel=function(){matchCachedShops();baseSmartCarousel()};
@@ -72,6 +72,9 @@ renderOverviewMap=function(){
  const el=document.getElementById('overviewMap');if(!el||!window.L)return;
  if(!overviewMap){overviewMap=L.map(el,{zoomControl:true}).setView([42.2,12.5],6);L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'&copy; OpenStreetMap contributors'}).addTo(overviewMap)}
  const items=filtered(),signature=shopSignature(items,false);
+ // If shops arrive after the empty map was initially framed, show them automatically.
+ if(!lastMappedCount&&items.length)mapFramed=false;
+ lastMappedCount=items.length;
  if(!overviewLayer||signature!==mapSignature){
   mapSignature=signature;if(overviewLayer)overviewLayer.remove();
   overviewLayer=(L.markerClusterGroup?L.markerClusterGroup({maxClusterRadius:45,showCoverageOnHover:false,spiderfyDistanceMultiplier:1.8,chunkedLoading:true,chunkInterval:40,chunkDelay:20,
@@ -82,7 +85,23 @@ renderOverviewMap=function(){
   if(overviewLayer.addLayers)overviewLayer.addLayers(markers);else markers.forEach(m=>overviewLayer.addLayer(m));
  }
  if(currentPos){if(currentPosLayer)currentPosLayer.setLatLng([currentPos.lat,currentPos.lng]);else currentPosLayer=L.circleMarker([currentPos.lat,currentPos.lng],{radius:9,weight:3,fillOpacity:.6}).addTo(overviewMap).bindTooltip('La tua posizione')}
- setTimeout(()=>{overviewMap.invalidateSize();if(!mapFramed){if(currentPos){overviewMap.setView([currentPos.lat,currentPos.lng],13);mapFramed=true}else if(items.length){overviewMap.fitBounds(items.map(x=>[x.l.lat,x.l.lng]),{maxZoom:14,padding:[25,25]});mapFramed=true}}},80);
+ setTimeout(()=>{
+  overviewMap.invalidateSize();
+  if(mapFramed)return; // Do not override a map that the user has deliberately moved.
+  const valid=items.filter(x=>Number.isFinite(x.l.lat)&&Number.isFinite(x.l.lng));
+  if(valid.length){
+   // Frame the actual shops, not an unrelated cached map center.
+   // For large national datasets, prefer the nearest 30 km to avoid zooming out over Italy.
+   const origin=currentPos||searchCenter;
+   const nearby=origin?valid.filter(x=>distanceM(origin,x.l)<=30000).slice(0,100):valid.slice(0,100);
+   const visible=nearby.length?nearby:valid.slice(0,30);
+   const positions=visible.map(x=>[x.l.lat,x.l.lng]);
+   if(currentPos&&nearby.length)positions.push([currentPos.lat,currentPos.lng]);
+   if(positions.length===1)overviewMap.setView(positions[0],15,{animate:false});
+   else overviewMap.fitBounds(positions,{maxZoom:15,padding:[32,32],animate:false});
+  }else if(currentPos)overviewMap.setView([currentPos.lat,currentPos.lng],13,{animate:false});
+  mapFramed=true;
+ },80);
 };
 function renderShopUpdates(){renderSmartCarousel();renderCards();renderLocations();renderOverviewMap();renderDetail()}
 async function search(center,force=false,bounds=null){
@@ -116,9 +135,9 @@ function renderDetail(){if(!document.getElementById('detailModal')?.classList.co
 const baseOpen=openCard;openCard=function(id,recordUse=true){baseOpen(id,recordUse);const c=cards.find(c=>c.id===id),mapButton=document.getElementById('cardMapBtn');if(c&&mapButton)mapButton.onclick=()=>openMapForCard(c);const section=document.querySelector('#detailContent .cardLocations');if(section){const actions=section.querySelector('.detailActions');section.replaceChildren(actions);const box=document.createElement('div');box.id='cardNearbyStores';section.append(box);renderDetail();if(currentPos&&!busy)search(currentPos)}};
 smartShopCandidates=function(){return shops().filter(x=>!x.c.isDemo).map(x=>({c:x.c,l:x.l}))};
 const baseNearest=nearestFor;nearestFor=function(c,pos){let n=baseNearest(c,pos);if(pos)for(const x of results.filter(x=>x.cardId===c.id)){const d=distanceM(pos,x.point);if(!n||d<n.d)n={...x.point,d}}return n};
-function resetShopFilters(){document.getElementById('shopCategory').value='';document.getElementById('shopCard').value='';document.getElementById('shopFavorites').checked=false;renderLocations();renderOverviewMap()}
+function resetShopFilters(){document.getElementById('shopCategory').value='';document.getElementById('shopCard').value='';document.getElementById('shopFavorites').checked=false;mapFramed=false;renderLocations();renderOverviewMap()}
 document.getElementById('shopReset').onclick=resetShopFilters;
-for(const id of ['shopCategory','shopCard','shopFavorites'])document.getElementById(id).onchange=()=>{renderLocations();renderOverviewMap()};
+for(const id of ['shopCategory','shopCard','shopFavorites'])document.getElementById(id).onchange=()=>{mapFramed=false;renderLocations();renderOverviewMap()};
 document.getElementById('shopSearchHere').onclick=()=>{if(busy){requestId++;controller?.abort();clearTimeout(sharedRetry);sharedRetry=null;busy=false;status='Ricerca annullata.';renderShopUpdates();return}if(!overviewMap)return;clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;const p=overviewMap.getCenter(),b=overviewMap.getBounds();search({lat:p.lat,lng:p.lng},true,[b.getSouth(),b.getWest(),b.getNorth(),b.getEast()])};
 document.getElementById('mapRefresh').onclick=async()=>{try{currentPos=await getPosition();mapFramed=true;renderAll();if(overviewMap)overviewMap.setView([currentPos.lat,currentPos.lng],13);await search(currentPos)}catch(e){status=e.message;renderLocations();toast(e.message)}};
 const baseRefresh=refreshPosition;refreshPosition=async function(){await baseRefresh();if(currentPos)search(currentPos)};

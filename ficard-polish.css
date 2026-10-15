@@ -479,3 +479,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .cardEditActions{position:sticky;top:48px;z-index:3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px;padding:10px 0 12px;background:var(--bg);margin-bottom:8px}
 .cardEditActions button{margin:0;min-height:44px;width:100%}
 #detailHeading:focus{outline:none}
+
+/* Settings groups: special cards, locale, backup, then app information. */
+#profileView>#backupSettingsBox{margin-bottom:18px}
+#backupSettingsBox>.backupSection{margin-top:16px;padding-top:16px;border-top:1px solid var(--line)}
+#backupSettingsBox .backupSection>button{width:100%;margin-top:10px}
+#backupSettingsBox .backupSection>button[hidden]{display:none!important}
+#backupSettingsBox #storageStatus{margin-bottom:0}
+#marketSettingsBox .ficardLanguageSetting{grid-template-columns:minmax(0,1fr);gap:8px;margin-top:14px;padding:0 0 16px}
+#marketSettingsBox .ficardLanguageSetting .field{width:100%;max-width:none}

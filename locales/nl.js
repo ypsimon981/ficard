@@ -4,6 +4,10 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "settings.group.special": "Speciale kaarten",
+    "settings.group.locale": "Taal en land",
+    "settings.group.backup": "Back-up en export",
+
     "edit.view": "Mijn kaart",
     "edit.catalogHint": "Fi-Card beheert het uiterlijk van cataloguskaarten. Je kunt de alias en code van je kaart aanpassen.",
     "edit.currentFormat": "Huidig formaat: {format}",

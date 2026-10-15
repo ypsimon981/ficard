@@ -4,6 +4,10 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "settings.group.special": "Carte speciali",
+    "settings.group.locale": "Lingua e Paese",
+    "settings.group.backup": "Backup ed esportazione",
+
     "edit.view": "La mia carta",
     "edit.catalogHint": "L’aspetto delle carte del catalogo è gestito da Fi-Card. Puoi aggiornare alias e codice della tua tessera.",
     "edit.currentFormat": "Formato attuale: {format}",

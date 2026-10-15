@@ -4,6 +4,10 @@
  root.FiCardLocales["fr"]={
   "name": "Français",
   "messages": {
+    "settings.group.special": "Cartes spéciales",
+    "settings.group.locale": "Langue et pays",
+    "settings.group.backup": "Sauvegarde et exportation",
+
     "edit.view": "Ma carte",
     "edit.catalogHint": "Fi-Card gère l’apparence des cartes du catalogue. Vous pouvez modifier le nom personnalisé et le code de votre carte.",
     "edit.currentFormat": "Format actuel : {format}",

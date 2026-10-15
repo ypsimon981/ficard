@@ -140,7 +140,7 @@ function installStyles(){
   root.document.head?.appendChild(style);
 }
 function renderLanguageControl(){
-  const panel=root.document?.querySelector('#profileView .panel');
+  const panel=root.document?.querySelector('#marketSettingsBox')||root.document?.querySelector('#profileView .panel');
   if(!panel)return;
   let box=root.document.getElementById('ficardLanguageSetting');
   if(!box){
@@ -148,7 +148,7 @@ function renderLanguageControl(){
     box.id='ficardLanguageSetting';
     box.className='ficardLanguageSetting';
     box.innerHTML='<div class="ficardLanguageCopy"><b id="ficardLanguageTitle"></b><small id="ficardLanguageSubtitle"></small></div><select id="ficardLanguageSelect" class="field"></select>';
-    const anchor=panel.querySelector('.settingsFacts');
+    const anchor=panel.querySelector('#marketCountryIntro')||panel.querySelector('.settingsFacts');
     if(anchor)panel.insertBefore(box,anchor); else panel.prepend(box);
     const select=box.querySelector('select');
     for(const lang of SUPPORTED){

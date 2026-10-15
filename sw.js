@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.226";
+const APP_VERSION="0.9.227";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -162,14 +162,14 @@ const CORE=[
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-markets.js?v=0.9.223",
-  "./ficard-demo.js?v=0.9.226",
+  "./ficard-demo.js?v=0.9.227",
   "./ficard-lottery.js?v=0.9.223",
   "./ficard-content.js?v=0.9.218",
   "./ficard-ads-config.js?v=0.9.215",
   "./ficard-ads.js?v=0.9.215",
-  "./ficard-stores.js?v=0.9.215",
+  "./ficard-stores.js?v=0.9.227",
   "./ficard-shared-stores.js?v=0.9.215",
-  "./ficard-stores-ui.js?v=0.9.226",
+  "./ficard-stores-ui.js?v=0.9.227",
   "./ficard-theme.css?v=0.9.215",
   "./ficard-reader.js?v=1.1.2",
   "./scandixit-scanner.js?v=1.1.1",

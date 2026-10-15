@@ -321,6 +321,15 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     .trademarkDisclaimer h3{margin:0 0 8px;color:var(--text);font-size:12px;font-weight:700}
     .trademarkDisclaimer p{margin:0 0 9px}
     .trademarkDisclaimer a{color:var(--violet);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+    .lotteryTile .card{background:#E8E2FF;color:#4324BC}
+    .lotteryTileIcon{display:block;font-size:32px;line-height:1.3}
+    .lotteryReminder{width:100%;display:flex;align-items:center;gap:12px;text-align:left;margin:12px 0;padding:12px;border:1px solid #DCD5FF;border-radius:14px;background:#F5F1FF;color:#4324BC;cursor:pointer}
+    .lotteryReminderIcon{font-size:26px;flex:0 0 auto}
+    .lotteryReminderCopy{display:flex;flex-direction:column;flex:1;gap:4px}
+    .lotteryReminderCopy small{font-size:12px;line-height:1.35;color:#514B65}
+    .lotteryCodePreview{background:#fff;padding:16px;border-radius:14px;text-align:center;overflow:auto}
+    .lotteryCodePreview canvas{max-width:100%;height:auto}
+    .lotteryCodePreview .num{overflow-wrap:anywhere}
   </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.215">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.215">
@@ -404,6 +413,14 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
             <span class="reviewEmail">info@fi-card.app</span>
           </div>
         </div>
+        <section class="backupPanel" id="usefulCodesBox" aria-labelledby="usefulCodesTitle">
+          <div class="backupHeading"><span id="usefulCodesTitle">Codici utili</span></div>
+          <p class="hint">Codici aggiuntivi da mostrare alla cassa, senza complicare le carte fedeltà.</p>
+          <button type="button" class="secondary" id="lotterySettingsAdd">Aggiungi lotteria degli scontrini</button>
+          <p class="hint">Il codice apparirà in fondo alle carte e sotto ogni tessera fedeltà aperta. Mostralo solo se il negozio aderisce. Non viene condiviso né esportato nei backup JSON.</p>
+          <button type="button" class="secondary" disabled aria-disabled="true">Aggiungi tessera sanitaria · In preparazione</button>
+          <p class="hint">In futuro potrai richiamare la tessera sanitaria in farmacia. Funzione non ancora attiva.</p>
+        </section>
         <section class="backupPanel" id="exportCardsBox" aria-labelledby="exportCardsTitle">
           <div class="backupHeading"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m-4-4 4 4 4-4M4 16v4h16v-4"/></svg><span id="exportCardsTitle">Esporta e metti al sicuro</span></div>
           <p class="hint">Le carte sono salvate solo su questo dispositivo: Fi-Card non ha un account che le recupera automaticamente. Prima di cambiare telefono o cancellare l’app, crea un backup e conservalo anche nel tuo Drive, iCloud o inviandolo alla tua email. Lasciarlo soltanto sul vecchio telefono non basta.</p>
@@ -471,6 +488,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     <div id="scanner" class="scanner addCardScanner"><div id="reader"></div></div>
     <p class="captureHint" id="captureHint">Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.</p>
     <button type="button" class="manualEntryBtn" id="manualEntryBtn">Inserisci i dati manualmente</button>
+    <button type="button" class="manualEntryBtn" id="lotteryAddFromCard">＋ Lotteria degli scontrini</button>
   </section>
   <section id="cardFormFields" class="cardFormFields" hidden>
     <div class="formStepHead"><b>Completa i dati</b><small>Controlla ciò che Fi-Card ha acquisito e salva la carta.</small></div>
@@ -526,6 +544,24 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><div id="imageBrandRequestSettings" class="panel"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><div class="panel" style="margin:10px 0"><label class="hint" for="backupAliasToggle"><input type="checkbox" id="backupAliasToggle"> Vuoi assegnare un alias alle carte importate?</label><div id="backupAliasBox" hidden style="margin-top:10px"><label for="backupAlias">Alias per le carte importate</label><input id="backupAlias" class="field" type="text" maxlength="60" placeholder="Es. Marco, Famiglia"><p class="hint">Verrà applicato alle carte aggiunte, anche se il file contiene già un alias. Le carte già presenti non cambiano.</p></div></div><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
 
+<div id="lotteryModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="lotteryHeading"><div class="sheet">
+  <div class="grab"></div><div class="sheetHead"><h2 id="lotteryHeading">Lotteria degli scontrini</h2><button type="button" class="close" id="lotteryClose" aria-label="Chiudi">×</button></div>
+  <div id="lotteryEditor">
+    <p class="hint">Salva il codice della lotteria: sarà sempre in fondo alle tue carte e richiamabile sotto ogni tessera fedeltà.</p>
+    <label for="lotteryCode">Codice lotteria</label><input class="field" id="lotteryCode" type="text" maxlength="4096" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Inserisci il codice">
+    <label for="lotteryFormat">Formato del codice</label><select class="field" id="lotteryFormat"><option value="CODE128">Code 128 (barre)</option><option value="QR_CODE">QR Code</option><option value="EAN13">EAN-13</option><option value="EAN8">EAN-8</option><option value="CODE39">Code 39</option><option value="DATA_MATRIX">Data Matrix</option></select>
+    <button type="button" class="secondary" id="lotteryScan">Scansiona codice</button><div id="lotteryReader" hidden style="width:100%;min-height:180px"></div>
+    <button type="button" class="primary" id="lotterySave">Salva codice</button>
+    <button type="button" class="danger" id="lotteryRemove" hidden>Elimina codice</button>
+    <p class="hint">Codice personale: escluso dalla condivisione delle carte e dai backup JSON. Resta salvato su questo dispositivo. Conserva una copia separata.</p>
+  </div>
+  <div id="lotteryViewer" hidden>
+    <div class="lotteryCodePreview"><canvas id="lotteryCanvas"></canvas><div id="lotteryNum" class="num"></div></div>
+    <p class="hint">Mostralo prima del pagamento soltanto negli esercizi aderenti alla lotteria.</p>
+    <button type="button" class="secondary" id="lotteryEdit">Modifica codice</button>
+  </div>
+</div></div>
+<script src="./ficard-lottery.js?v=0.9.219"></script>
 <script src="./ficard-content.js?v=0.9.218"></script>
 <script src="./ficard-promos.js?v=0.9.215"></script>
 <script src="./ficard-ads-config.js?v=0.9.215"></script>
@@ -535,7 +571,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.15-release2-web-v0.9.218";
+const RELEASE="2026.10.15-release2-web-v0.9.219";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -1014,9 +1050,10 @@ function renderCards(){
  const grid=document.getElementById("cardGrid");
  grid.classList.add("usageGrid");
  const ghostKeys=onboardingGhostKeys(cards),ghosts=!q&&['used','all','name'].includes(active)?ghostKeys:[];
- if(!list.length&&!ghosts.length){grid.innerHTML='<div class="empty"><strong>Nessuna carta qui</strong><button type="button" class="primary emptyAddCard" data-i18n="nav.add">Aggiungi carta</button></div>';grid.querySelector('.emptyAddCard').onclick=()=>document.getElementById('addFab').click();return}
+ const lotteryTile=!q&&['used','all','name'].includes(active)?(window.FiCardLottery?.tileHtml()||''):'';
+ if(!list.length&&!ghosts.length&&!lotteryTile){grid.innerHTML='<div class="empty"><strong>Nessuna carta qui</strong><button type="button" class="primary emptyAddCard" data-i18n="nav.add">Aggiungi carta</button></div>';grid.querySelector('.emptyAddCard').onclick=()=>document.getElementById('addFab').click();return}
  const ordered=active==='name'?list.slice().sort((a,b)=>a.name.localeCompare(b.name,"it",{sensitivity:"base",numeric:true})||String(a.alias||'').localeCompare(String(b.alias||''),"it",{sensitivity:"base",numeric:true})):distanceOrderedCards(list),focus=active==='used'&&!q&&quickPositionReady()?arrivalCard(ordered,currentPos):null;
- grid.innerHTML=mainCardTiles(ordered,!q&&(active==='used'||ghosts.length>0),focus?.id,ghosts);
+ grid.innerHTML=mainCardTiles(ordered,!q&&(active==='used'||ghosts.length>0),focus?.id,ghosts)+lotteryTile;
  bindCardInteractions(grid);
  grid.querySelectorAll('[data-ghost-add]').forEach(button=>button.onclick=()=>document.getElementById('addFab').click());
 }
@@ -1164,7 +1201,7 @@ function openCard(id,recordUse=true){
  const b=brandFor(c),n=nearestFor(c,currentPos),locs=(c.locations||[]).map((l,i)=>({l,i,d:currentPos?distanceM(currentPos,l):Infinity})).sort((a,b)=>a.d-b.d||a.i-b.i);
  const locHtml=locs.length?'<div class="panel" style="margin-top:12px"><b>Punti vendita associati</b>'+locs.map(x=>'<div class="promo" style="margin-bottom:0"><div class="locationBrandIcon" style="background:'+esc(c.color||"#5B3DF5")+'"><span>'+mapBrandInnerHtml(c)+'</span></div><div class="grow"><small>'+esc(distanceLabel(x.d))+'</small></div><button class="chip" title="Naviga" aria-label="Naviga" data-nav-loc="'+x.i+'">'+pinSvg()+'</button><button class="chip" data-remove-loc="'+x.i+'">Dissocia</button></div>').join("")+'</div>':'<p class="hint">Vuoi ritrovare questa carta quando sei in negozio? Tocca “Associa posizione attuale”: dalla prossima visita la vedrai tra le carte vicine.</p>';
  document.getElementById("detailContent").innerHTML='<div class="detailHero"><div class="detailBrandHeader '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><span class="detailLogo">'+brandLogoHtml(b,'wallet')+'</span><h2>'+esc(c.name)+'</h2>'+cardAliasHtml(c)+'<p>'+esc(categoryLabel(c))+'</p></div><div class="barcodeBox"><canvas id="detailSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>'+
- '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="cardMapBtn" type="button" aria-label="Mappa dei negozi di questa carta" title="Mappa dei negozi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button><button id="deleteBtn" class="deleteCardAction" type="button" aria-label="Elimina carta" title="Elimina carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></button></div>'+officialFlyerHtml(c)+'<div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>';
+ '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="cardMapBtn" type="button" aria-label="Mappa dei negozi di questa carta" title="Mappa dei negozi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button><button id="deleteBtn" class="deleteCardAction" type="button" aria-label="Elimina carta" title="Elimina carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></button></div>'+(window.FiCardLottery?.bannerHtml()||'')+officialFlyerHtml(c)+'<div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>';
  drawBarcode("detailSvg",c);showModal("detailModal");
  document.querySelector("#detailContent .barcodeBox").insertAdjacentHTML("beforeend",'<p class="hint" data-screen-awake role="status"></p>');syncCardScreen();
  document.getElementById("fullBtn").onclick=()=>showFull(c);
@@ -1437,7 +1474,7 @@ document.getElementById("backupAliasToggle").onchange=e=>{document.getElementByI
 function chosenBackupAlias(){if(!document.getElementById("backupAliasToggle").checked)return null;const alias=document.getElementById("backupAlias").value.trim().slice(0,60);if(!alias){toast("Scrivi un alias oppure disattiva l’opzione");document.getElementById("backupAlias").focus();return false}return alias}
 document.getElementById("mergeBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;const added=mergeCards(pendingBackup,alias);if(added)window.FiCardAnalytics?.track("backup_merged","profile");save();renderAll();hideModal("backupModal");toast(added+" carte aggiunte; duplicati ignorati")};
 document.getElementById("replaceBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;if(!confirm("Sostituire le "+cards.length+" carte attuali con le "+pendingBackup.length+" carte del backup?"))return;downloadBackup(cards,"fi-card-prima-del-ripristino.json");cards=pendingBackup.map(c=>alias?{...c,alias}:c);save();renderAll();hideModal("backupModal");toast("Backup ripristinato")};
-document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tutte le carte e i punti vendita salvati?")){window.FiCardAnalytics?.setConsent(false);cards=[];await saveQueue;try{[KEY,...LEGACY_KEYS,"ficard.cards.local-newer"].forEach(k=>localStorage.removeItem(k))}catch(e){}try{await idbSet("cards",[])}catch(e){}renderAll();toast("Dati locali cancellati")}};
+document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tutte le carte e i punti vendita salvati?")){window.FiCardAnalytics?.setConsent(false);cards=[];await saveQueue;try{[KEY,...LEGACY_KEYS,"ficard.cards.local-newer"].forEach(k=>localStorage.removeItem(k));window.FiCardLottery?.clear()}catch(e){}try{await idbSet("cards",[])}catch(e){}renderAll();toast("Dati locali cancellati")}};
 
 document.getElementById("refreshBtn").onclick=async()=>{toast("Aggiorno Fi-Card…");try{await window.FiCardCatalog?.sync();if("caches" in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith("ficard-v")).map(k=>caches.delete(k)))}if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration("./");if(reg)await reg.update()}}catch(e){}const u=new URL(location.href);u.searchParams.set("release",RELEASE);u.searchParams.set("_refresh",Date.now());location.replace(u.toString())};
 if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});

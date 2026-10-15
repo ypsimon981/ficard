@@ -1,4 +1,4 @@
-/* Fi-Card 0.9.221 — personal receipt-lottery code; never included in card-set exports. */
+/* Fi-Card 0.9.222 — personal receipt-lottery code; never included in card-set exports. */
 (function(root){
 'use strict';
 const KEY='ficard.personal.receipt-lottery.v1';
@@ -44,7 +44,15 @@ function showCode(){
  if(root.document.getElementById('detailModal')?.classList.contains('show'))root.document.getElementById('detailModal').classList.add('lotteryBehind');
  modal.classList.add('show');
 }
-function refresh(){const button=root.document.getElementById('lotterySettingsAdd');if(button)button.textContent=read()?t('edit'):t('add');root.renderCards?.();}
+function refresh(){
+ const button=root.document.getElementById('lotterySettingsAdd');
+ if(button){
+  const exists=!!read();
+  button.textContent=exists?(root.FiCardI18n?.language?.()==='it'?'Mostra lotteria degli scontrini':'Show receipt lottery code'):t('add');
+  button.setAttribute('aria-label',button.textContent);
+ }
+ root.renderCards?.();
+}
 function isLotteryCard(c){return !!c&&(String(c.brandKey||'').toLowerCase()==='lotteria'||/^lotteria\s+degli\s+scontrini$/i.test(String(c.name||'').trim()))}
 function isDemo(c){return /^FICARD-DEMO-/i.test(String(c?.code||''))}
 function store(code,format){const value=String(code||'').trim();if(!value||value.length>4096)return false;const ok=save({code:value,format:format||'CODE128'});if(ok)refresh();return ok}
@@ -58,7 +66,7 @@ function migrateLegacy(collection){
 }
 function init(){
  const d=root.document;if(!d.getElementById('lotteryModal'))return;
- d.getElementById('lotterySettingsAdd')?.addEventListener('click',showEditor);
+ d.getElementById('lotterySettingsAdd')?.addEventListener('click',()=>read()?showCode():showEditor());
  d.getElementById('lotteryAddFromCard')?.addEventListener('click',()=>{root.hideModal?.('addModal');showEditor()});
  d.addEventListener('click',e=>{if(e.target.closest('[data-lottery-open]')){e.preventDefault();showCode()}});
  d.getElementById('lotteryClose').onclick=close;
@@ -70,7 +78,13 @@ function init(){
   if(!store(code,format)){root.toast?.('Salvataggio non riuscito');return}
   stop();root.toast?.(t('saved'));showCode();
  };
- d.getElementById('lotteryRemove').onclick=()=>{if(!root.confirm(t('confirm')))return;try{root.localStorage.removeItem(KEY)}catch{}close();refresh();root.toast?.(t('removed'))};
+ const removeSavedCode=()=>{
+  if(!root.confirm(t('confirm')))return;
+  try{root.localStorage.removeItem(KEY)}catch{}
+  close();refresh();root.toast?.(t('removed'));
+ };
+ d.getElementById('lotteryRemove').onclick=removeSavedCode;
+ d.getElementById('lotteryDelete').onclick=removeSavedCode;
  d.getElementById('lotteryScan').onclick=async()=>{
   if(scanning)return;scanning=true;
   try{

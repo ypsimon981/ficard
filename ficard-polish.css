@@ -464,3 +464,18 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 }
 .detailBrandHeader{overflow:hidden}
 .detailBrandHeader>*{position:relative;z-index:1}
+
+/* Explicit card editing view: keep form actions visible while scrolling. */
+#detailModal.cardEditing .detailHero,
+#detailModal.cardEditing .detailToolbar,
+#detailModal.cardEditing .lotteryReminder,
+#detailModal.cardEditing .officialFlyer,
+#detailModal.cardEditing .cardLocations{display:none!important}
+#detailModal.cardEditing .sheetHead{position:sticky;top:-14px;z-index:4;background:var(--bg);padding:12px 0;margin-bottom:8px;border-bottom:2px solid var(--violet,#5B3DF5)}
+#detailModal.cardEditing .sheetHead h2{color:var(--violet,#5B3DF5);font-weight:750}
+#detailModal.cardEditing .cardEditPanel{overflow:visible;margin-top:0}
+.cardEditContext strong{display:block;font-size:18px;overflow-wrap:anywhere}
+.cardEditContext .hint{margin:6px 0 14px}
+.cardEditActions{position:sticky;top:48px;z-index:3;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:10px;padding:10px 0 12px;background:var(--bg);margin-bottom:8px}
+.cardEditActions button{margin:0;min-height:44px;width:100%}
+#detailHeading:focus{outline:none}

@@ -4,6 +4,17 @@
  root.FiCardLocales["de"]={
   "name": "Deutsch",
   "messages": {
+    "edit.view": "Meine Karte",
+    "edit.catalogHint": "Fi-Card verwaltet das Aussehen der Katalogkarten. Du kannst den Alias und den Code deiner Karte ändern.",
+    "edit.currentFormat": "Aktuelles Format: {format}",
+    "edit.detectedFormat": "Erkanntes Format: {format}",
+    "edit.required": "Name und Code sind erforderlich",
+
+    "edit.cancel": "Abbrechen",
+    "edit.save": "Änderungen speichern",
+    "edit.hint": "Änderungen werden erst übernommen, wenn du auf „Änderungen speichern“ drückst.",
+    "edit.updated": "Karte aktualisiert",
+
     "useful.title": "Nützliche Codes",
     "useful.intro": "Zusätzliche Codes für die Kasse, ohne Kundenkarten komplizierter zu machen.",
     "useful.hint": "Der Code steht hinter Karten mit verknüpftem Standort und ist unter jeder geöffneten Kundenkarte abrufbar. Zeige ihn nur in teilnehmenden Geschäften. Er wird weder geteilt noch in JSON-Sicherungen exportiert.",

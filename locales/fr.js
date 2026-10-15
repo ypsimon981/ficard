@@ -4,6 +4,17 @@
  root.FiCardLocales["fr"]={
   "name": "Français",
   "messages": {
+    "edit.view": "Ma carte",
+    "edit.catalogHint": "Fi-Card gère l’apparence des cartes du catalogue. Vous pouvez modifier le nom personnalisé et le code de votre carte.",
+    "edit.currentFormat": "Format actuel : {format}",
+    "edit.detectedFormat": "Format détecté : {format}",
+    "edit.required": "Le nom et le code sont obligatoires",
+
+    "edit.cancel": "Annuler",
+    "edit.save": "Enregistrer les modifications",
+    "edit.hint": "Les modifications seront appliquées uniquement après avoir appuyé sur « Enregistrer les modifications ».",
+    "edit.updated": "Carte mise à jour",
+
     "useful.title": "Codes utiles",
     "useful.intro": "Des codes supplémentaires à présenter en caisse, sans compliquer les cartes de fidélité.",
     "useful.hint": "Le code reste après les cartes associées à un lieu et est accessible sous chaque carte de fidélité ouverte. Présentez-le uniquement dans les magasins participants. Il n'est ni partagé ni exporté dans les sauvegardes JSON.",

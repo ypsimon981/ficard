@@ -4,6 +4,17 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "edit.view": "La mia carta",
+    "edit.catalogHint": "L’aspetto delle carte del catalogo è gestito da Fi-Card. Puoi aggiornare alias e codice della tua tessera.",
+    "edit.currentFormat": "Formato attuale: {format}",
+    "edit.detectedFormat": "Formato rilevato: {format}",
+    "edit.required": "Nome e codice sono obbligatori",
+
+    "edit.cancel": "Annulla",
+    "edit.save": "Salva modifiche",
+    "edit.hint": "Le modifiche saranno applicate solo quando premi “Salva modifiche”.",
+    "edit.updated": "Carta aggiornata",
+
     "useful.title": "Codici utili",
     "useful.intro": "Codici aggiuntivi da mostrare alla cassa, senza complicare le carte fedeltà.",
     "useful.hint": "Il codice resta dopo le carte con posizione associata ed è richiamabile sotto ogni tessera fedeltà aperta. Mostralo solo se il negozio aderisce. Non viene condiviso né esportato nei backup JSON.",

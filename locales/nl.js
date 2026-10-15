@@ -4,6 +4,17 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "edit.view": "Mijn kaart",
+    "edit.catalogHint": "Fi-Card beheert het uiterlijk van cataloguskaarten. Je kunt de alias en code van je kaart aanpassen.",
+    "edit.currentFormat": "Huidig formaat: {format}",
+    "edit.detectedFormat": "Gedetecteerd formaat: {format}",
+    "edit.required": "Naam en code zijn verplicht",
+
+    "edit.cancel": "Annuleren",
+    "edit.save": "Wijzigingen opslaan",
+    "edit.hint": "Wijzigingen worden pas toegepast wanneer je op ‘Wijzigingen opslaan’ drukt.",
+    "edit.updated": "Kaart bijgewerkt",
+
     "useful.title": "Handige codes",
     "useful.intro": "Extra codes voor aan de kassa, zonder klantenkaarten ingewikkelder te maken.",
     "useful.hint": "De code staat na kaarten met een gekoppelde locatie en kan onder elke geopende klantenkaart worden opgeroepen. Toon hem alleen bij deelnemende winkels. Hij wordt niet gedeeld of geëxporteerd in JSON-back-ups.",

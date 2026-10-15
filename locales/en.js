@@ -4,6 +4,17 @@
  root.FiCardLocales["en"]={
   "name": "English",
   "messages": {
+    "edit.view": "My card",
+    "edit.catalogHint": "Fi-Card manages the appearance of catalog cards. You can update your card’s alias and code.",
+    "edit.currentFormat": "Current format: {format}",
+    "edit.detectedFormat": "Detected format: {format}",
+    "edit.required": "Name and code are required",
+
+    "edit.cancel": "Cancel",
+    "edit.save": "Save changes",
+    "edit.hint": "Changes are applied only when you press “Save changes”.",
+    "edit.updated": "Card updated",
+
     "useful.title": "Useful codes",
     "useful.intro": "Extra codes to show at checkout, keeping loyalty cards simple.",
     "useful.hint": "The code stays after cards with a linked location and can be opened beneath each loyalty card. Show it only at participating stores. It is neither shared nor exported in JSON backups.",

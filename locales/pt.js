@@ -4,6 +4,17 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "edit.view": "O meu cartão",
+    "edit.catalogHint": "O Fi-Card gere o aspeto dos cartões do catálogo. Podes atualizar o nome alternativo e o código do teu cartão.",
+    "edit.currentFormat": "Formato atual: {format}",
+    "edit.detectedFormat": "Formato detetado: {format}",
+    "edit.required": "O nome e o código são obrigatórios",
+
+    "edit.cancel": "Cancelar",
+    "edit.save": "Guardar alterações",
+    "edit.hint": "As alterações só serão aplicadas quando premires «Guardar alterações».",
+    "edit.updated": "Cartão atualizado",
+
     "useful.title": "Códigos úteis",
     "useful.intro": "Códigos adicionais para mostrar na caixa, sem complicar os cartões de fidelidade.",
     "useful.hint": "O código fica depois dos cartões com localização associada e pode ser aberto abaixo de cada cartão. Mostra-o apenas se a loja participar. Não é partilhado nem exportado nas cópias JSON.",

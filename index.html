@@ -15,13 +15,13 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.2"></script>
-  <script src="./locales/it.js?v=0.9.217"></script>
-<script src="./locales/en.js?v=0.9.217"></script>
-<script src="./locales/fr.js?v=0.9.217"></script>
-<script src="./locales/es.js?v=0.9.217"></script>
-<script src="./locales/pt.js?v=0.9.217"></script>
-<script src="./locales/nl.js?v=0.9.217"></script>
-<script src="./locales/de.js?v=0.9.217"></script>
+  <script src="./locales/it.js?v=0.9.218"></script>
+<script src="./locales/en.js?v=0.9.218"></script>
+<script src="./locales/fr.js?v=0.9.218"></script>
+<script src="./locales/es.js?v=0.9.218"></script>
+<script src="./locales/pt.js?v=0.9.218"></script>
+<script src="./locales/nl.js?v=0.9.218"></script>
+<script src="./locales/de.js?v=0.9.218"></script>
 <script src="./ficard-theme.js?v=0.9.215"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
@@ -526,7 +526,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><div id="imageBrandRequestSettings" class="panel"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
 <div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2>Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><div class="panel" style="margin:10px 0"><label class="hint" for="backupAliasToggle"><input type="checkbox" id="backupAliasToggle"> Vuoi assegnare un alias alle carte importate?</label><div id="backupAliasBox" hidden style="margin-top:10px"><label for="backupAlias">Alias per le carte importate</label><input id="backupAlias" class="field" type="text" maxlength="60" placeholder="Es. Marco, Famiglia"><p class="hint">Verrà applicato alle carte aggiunte, anche se il file contiene già un alias. Le carte già presenti non cambiano.</p></div></div><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
 
-<script src="./ficard-content.js?v=0.9.217"></script>
+<script src="./ficard-content.js?v=0.9.218"></script>
 <script src="./ficard-promos.js?v=0.9.215"></script>
 <script src="./ficard-ads-config.js?v=0.9.215"></script>
 <script src="./ficard-ads.js?v=0.9.215"></script>
@@ -535,7 +535,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.15-release2-web-v0.9.217";
+const RELEASE="2026.10.15-release2-web-v0.9.218";
 const KEY="ficard.cards.v3";
 const LEGACY_KEYS=["ficard.cards.v2","ficard.cards.v1"];
 const DB_NAME="ficard-local";
@@ -1006,6 +1006,7 @@ function distanceOrderedCards(list){
  return list.slice().sort((a,b)=>(nearestFor(a,currentPos)?.d??Infinity)-(nearestFor(b,currentPos)?.d??Infinity)||mostUsedFirst(a,b));
 }
 function renderCards(){
+ window.FiCardContent?.setCardCount(cards.length);
  const q=document.getElementById("search").value.toLowerCase().trim(),active=document.querySelector(".chip[data-filter].active")?.dataset.filter||"used";
  let list=cards.filter(c=>c.name.toLowerCase().includes(q)||String(c.alias||'').toLowerCase().includes(q)||c.code.toLowerCase().includes(q));
  if(active==="fav")list=list.filter(c=>c.fav);

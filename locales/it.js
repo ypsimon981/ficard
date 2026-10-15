@@ -901,12 +901,45 @@
     "Manca un negozio sulla mappa?",
     "Puoi aggiungerlo tu, direttamente dalla mappa.",
     "Salva un backup",
-    "Conserva una copia delle tue tessere dalle Impostazioni.",
     "Metti al sicuro le tue carte dalla sezione ⚙️ Impostazioni.",
+    "Prova ScanDixit",
     "Scansiona un prodotto per cercare informazioni prima di acquistarlo.",
     "Condividi tutte le tue carte",
     "Scambiatevi i backup in famiglia: vengono aggiunte solo le carte mancanti."
   ],
+  "journey": {
+    "growth": [
+      [
+        "Hai altre carte nel portafoglio?",
+        "Scansionale con Fi-Card e tienile tutte sul telefono."
+      ],
+      [
+        "Le tue carte, tutte insieme",
+        "Aggiungi le tessere che usi più spesso. Bastano pochi tocchi."
+      ],
+      [
+        "Niente più tessere da cercare",
+        "Aggiungi le tue carte: Fi-Card ti mostra quella giusta quando sei vicino al negozio."
+      ]
+    ],
+    "importFriend": [
+      "Un amico usa già Fi-Card?",
+      "Chiedigli di condividere il suo set: importerai solo le carte che ti mancano."
+    ],
+    "referral": [
+      [
+        "Ti piace Fi-Card?",
+        "Consigliala a un amico e aiutalo a organizzare le sue carte fedeltà."
+      ],
+      [
+        "Fai conoscere Fi-Card",
+        "Invita un familiare a provarla: potrete condividere le vostre carte."
+      ]
+    ],
+    "invite": "Le tue carte fedeltà in un solo posto. Prova Fi-Card!",
+    "copied": "Link di Fi-Card copiato",
+    "copyPrompt": "Copia e condividi il link di Fi-Card:"
+  },
   "sharing": {
     "promoSubtitles": ["Condividi le tue carte con un amico: dove consentito, potete accumulare punti sulla stessa carta.","Condividi le carte con la famiglia: ognuno le avrà sul proprio telefono.","Scambiatevi i vostri set: Fi-Card aggiunge solo le carte mancanti."],
     "intro": "Condividi il tuo set in pochi tocchi",

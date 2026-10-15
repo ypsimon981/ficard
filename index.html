@@ -420,7 +420,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
           <div class="backupHeading"><span id="usefulCodesTitle">Codici utili</span></div>
           <p class="hint">Codici aggiuntivi da mostrare alla cassa, senza complicare le carte fedeltà.</p>
           <button type="button" class="secondary" id="lotterySettingsAdd">Aggiungi lotteria degli scontrini</button>
-          <p class="hint">Il codice apparirà in fondo alle carte e sotto ogni tessera fedeltà aperta. Mostralo solo se il negozio aderisce. Non viene condiviso né esportato nei backup JSON.</p>
+          <p class="hint">Il codice comparirà tra le prime carte e sotto ogni tessera fedeltà aperta. Mostralo solo se il negozio aderisce. Non viene condiviso né esportato nei backup JSON.</p>
           <button type="button" class="secondary" disabled aria-disabled="true">Aggiungi tessera sanitaria · In preparazione</button>
           <p class="hint">In futuro potrai richiamare la tessera sanitaria in farmacia. Funzione non ancora attiva.</p>
         </section>
@@ -550,7 +550,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 <div id="lotteryModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="lotteryHeading"><div class="sheet">
   <div class="grab"></div><div class="sheetHead"><h2 id="lotteryHeading">Lotteria degli scontrini</h2><button type="button" class="close" id="lotteryClose" aria-label="Chiudi">×</button></div>
   <div id="lotteryEditor">
-    <p class="hint">Salva il codice della lotteria: sarà sempre in fondo alle tue carte e richiamabile sotto ogni tessera fedeltà.</p>
+    <p class="hint">Salva il codice della lotteria: comparirà tra le prime carte e sarà richiamabile sotto ogni tessera fedeltà.</p>
     <label for="lotteryCode">Codice lotteria</label><input class="field" id="lotteryCode" type="text" maxlength="4096" autocomplete="off" autocapitalize="characters" spellcheck="false" placeholder="Inserisci il codice">
     <label for="lotteryFormat">Formato del codice</label><select class="field" id="lotteryFormat"><option value="CODE128">Code 128 (barre)</option><option value="QR_CODE">QR Code</option><option value="EAN13">EAN-13</option><option value="EAN8">EAN-8</option><option value="CODE39">Code 39</option><option value="DATA_MATRIX">Data Matrix</option></select>
     <button type="button" class="secondary" id="lotteryScan">Scansiona codice</button><div id="lotteryReader" hidden style="width:100%;min-height:180px"></div>

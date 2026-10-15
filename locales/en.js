@@ -4,6 +4,11 @@
  root.FiCardLocales["en"]={
   "name": "English",
   "messages": {
+    "backup.alias.ask": "Do you want to assign an alias to the imported cards?",
+    "backup.alias.label": "Alias for imported cards",
+    "backup.alias.hint": "It will be applied to newly added cards, even if the file already contains an alias. Existing cards will not change.",
+    "backup.alias.placeholder": "E.g. Marco, Family",
+    "backup.alias.required": "Enter an alias or turn off the option",
     "legal.trademarks.title": "Trademarks and loyalty cards",
     "legal.trademarks.independent": "Fi-Card is an independent app and is not affiliated with, sponsored by, or endorsed by the businesses shown.",
     "legal.trademarks.ownership": "Names, trademarks, logos and graphics belong to their respective owners and are displayed solely to help users identify and organize their loyalty cards.",
@@ -913,16 +918,17 @@
     "Tip",
     "Advertisement",
     "Open",
-    "Link your store",
-    "Add a store location to your card to find it more easily nearby.",
+    "Missing a store on the map?",
+    "You can add it yourself, directly on the map.",
     "Save a backup",
     "Keep a copy of your cards from Settings.",
-    "Try ScanDixit",
+    "Keep your cards safe in ⚙️ Settings.",
     "Scan a product to look up information before buying.",
     "Share all your cards",
     "Exchange family backups: only missing cards are added."
   ],
   "sharing": {
+    "promoSubtitles": ["Share your cards with a friend: where allowed, you can collect points on the same card.","Share your cards with family: everyone will have them on their own phone.","Exchange your card collections: Fi-Card adds only missing cards."],
     "intro": "Share your card set in a few taps",
     "disclaimer": "Share and use cards only where the loyalty programme permits it. Discounts and points depend on the store’s terms.",
     "items": [

@@ -4,6 +4,11 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "backup.alias.ask": "Quer atribuir um nome às cartas importadas?",
+    "backup.alias.label": "Nome para os cartões importados",
+    "backup.alias.hint": "Será aplicado aos cartões adicionados, mesmo que o ficheiro já tenha um nome. Os cartões existentes não mudam.",
+    "backup.alias.placeholder": "Ex.: Marco, Família",
+    "backup.alias.required": "Introduza um nome ou desative a opção",
     "legal.trademarks.title": "Marcas e cartões de fidelização",
     "legal.trademarks.independent": "A Fi-Card é uma aplicação independente e não é afiliada, patrocinada nem aprovada pelas empresas apresentadas.",
     "legal.trademarks.ownership": "Os nomes, marcas, logótipos e elementos gráficos pertencem aos respetivos titulares e são apresentados apenas para ajudar os utilizadores a identificar e organizar os seus cartões de fidelização.",
@@ -913,16 +918,17 @@
     "Dica",
     "Publicidade",
     "Abrir",
-    "Associe a loja",
-    "Adicione a localização ao cartão para o encontrar quando estiver perto.",
+    "Falta uma loja no mapa?",
+    "Pode adicioná-la diretamente no mapa.",
     "Guarde uma cópia",
     "Guarde uma cópia dos cartões nas Definições.",
-    "Experimente ScanDixit",
+    "Proteja os seus cartões em ⚙️ Definições.",
     "Leia um produto para procurar informações antes de comprar.",
     "Partilha todos os teus cartões",
     "Troquem cópias em família: só são adicionados os cartões em falta."
   ],
   "sharing": {
+    "promoSubtitles": ["Partilhe os seus cartões com um amigo: quando permitido, podem acumular pontos no mesmo cartão.","Partilhe os cartões com a família: cada um terá os cartões no seu telemóvel.","Troquem as vossas coleções: a Fi-Card adiciona apenas os cartões em falta."],
     "intro": "Partilha o teu conjunto de cartões em poucos toques",
     "disclaimer": "Partilha e utiliza cartões apenas quando o programa de fidelização o permitir. Descontos e pontos dependem das condições da loja.",
     "items": [

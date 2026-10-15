@@ -48,6 +48,7 @@ function render(){
  if(residence)residence.value=prefs.residence;
  if(override)override.value=prefs.override;
  const {country,source}=current();
+ if(root.document.body)root.document.body.dataset.market=country;
  if(status){
   const label=MARKETS[country].name;
   const detail=source==='gps'?'posizione rilevata sul dispositivo':source==='manual'?'scelta manuale':'Paese di residenza (posizione non determinata con certezza)';

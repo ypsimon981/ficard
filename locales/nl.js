@@ -4,6 +4,11 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "backup.alias.ask": "Wil je een alias geven aan de geïmporteerde kaarten?",
+    "backup.alias.label": "Alias voor geïmporteerde kaarten",
+    "backup.alias.hint": "Dit wordt toegepast op nieuwe kaarten, ook als het bestand al een alias bevat. Bestaande kaarten blijven ongewijzigd.",
+    "backup.alias.placeholder": "Bijv. Marco, Gezin",
+    "backup.alias.required": "Voer een alias in of schakel de optie uit",
     "legal.trademarks.title": "Merken en klantenkaarten",
     "legal.trademarks.independent": "Fi-Card is een onafhankelijke app en is niet verbonden aan, gesponsord door of goedgekeurd door de getoonde bedrijven.",
     "legal.trademarks.ownership": "Namen, handelsmerken, logo's en afbeeldingen zijn eigendom van hun respectieve rechthebbenden en worden uitsluitend getoond om gebruikers te helpen hun klantenkaarten te herkennen en te ordenen.",
@@ -913,16 +918,17 @@
     "Tip",
     "Advertentie",
     "Openen",
-    "Koppel je winkel",
-    "Voeg een winkellocatie toe om je kaart dichtbij makkelijk te vinden.",
+    "Ontbreekt er een winkel op de kaart?",
+    "Je kunt deze zelf toevoegen, rechtstreeks op de kaart.",
     "Bewaar een back-up",
     "Bewaar een kopie van je kaarten via Instellingen.",
-    "Probeer ScanDixit",
+    "Bewaar je kaarten veilig via ⚙️ Instellingen.",
     "Scan een product voor informatie voordat je het koopt.",
     "Deel al je kaarten",
     "Wissel back-ups uit met je familie: alleen ontbrekende kaarten worden toegevoegd."
   ],
   "sharing": {
+    "promoSubtitles": ["Deel je kaarten met een vriend: waar toegestaan, kun je punten sparen op dezelfde kaart.","Deel je kaarten met je gezin: iedereen heeft ze op de eigen telefoon.","Wissel jullie kaartensets uit: Fi-Card voegt alleen ontbrekende kaarten toe."],
     "intro": "Deel je kaartenset met een paar tikken",
     "disclaimer": "Deel en gebruik kaarten alleen wanneer het loyaliteitsprogramma dit toestaat. Kortingen en punten hangen af van de winkelvoorwaarden.",
     "items": [

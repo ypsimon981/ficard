@@ -4,6 +4,11 @@
  root.FiCardLocales["fr"]={
   "name": "Français",
   "messages": {
+    "backup.alias.ask": "Voulez-vous attribuer un alias aux cartes importées ?",
+    "backup.alias.label": "Alias des cartes importées",
+    "backup.alias.hint": "Il sera appliqué aux nouvelles cartes, même si le fichier contient déjà un alias. Les cartes existantes ne changeront pas.",
+    "backup.alias.placeholder": "Ex. Marco, Famille",
+    "backup.alias.required": "Saisissez un alias ou désactivez l'option",
     "legal.trademarks.title": "Marques et cartes de fidélité",
     "legal.trademarks.independent": "Fi-Card est une application indépendante, sans affiliation, parrainage ni approbation des enseignes représentées.",
     "legal.trademarks.ownership": "Les noms, marques, logos et éléments graphiques appartiennent à leurs titulaires respectifs et sont affichés uniquement pour permettre aux utilisateurs d'identifier et d'organiser leurs cartes de fidélité.",
@@ -913,16 +918,17 @@
     "Conseil",
     "Publicité",
     "Ouvrir",
-    "Associez le magasin",
-    "Ajoutez le magasin à votre carte pour la retrouver à proximité.",
+    "Un magasin manque sur la carte ?",
+    "Vous pouvez l'ajouter vous-même, directement sur la carte.",
     "Sauvegardez vos cartes",
     "Conservez une copie de vos cartes dans les paramètres.",
-    "Essayez ScanDixit",
+    "Protégez vos cartes depuis ⚙️ Paramètres.",
     "Scannez un produit pour chercher des informations avant de l’acheter.",
     "Partagez toutes vos cartes",
     "Échangez vos sauvegardes en famille : seules les cartes manquantes sont ajoutées."
   ],
   "sharing": {
+    "promoSubtitles": ["Partagez vos cartes avec un ami : si le programme le permet, vous pouvez cumuler des points sur la même carte.","Partagez vos cartes en famille : chacun les aura sur son téléphone.","Échangez vos collections : Fi-Card ajoute uniquement les cartes manquantes."],
     "intro": "Partagez vos cartes en quelques gestes",
     "disclaimer": "Partagez et utilisez les cartes uniquement si le programme de fidélité le permet. Les réductions et les points dépendent des conditions du magasin.",
     "items": [

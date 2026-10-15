@@ -4,6 +4,11 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "legal.trademarks.title": "Marcas e cartões de fidelização",
+    "legal.trademarks.independent": "A Fi-Card é uma aplicação independente e não é afiliada, patrocinada nem aprovada pelas empresas apresentadas.",
+    "legal.trademarks.ownership": "Os nomes, marcas, logótipos e elementos gráficos pertencem aos respetivos titulares e são apresentados apenas para ajudar os utilizadores a identificar e organizar os seus cartões de fidelização.",
+    "legal.trademarks.rules": "A Fi-Card não emite cartões nem altera as regras dos programas de fidelização. A utilização dos cartões está sujeita às condições de cada estabelecimento.",
+    "legal.trademarks.contact": "Para comunicar questões relacionadas com marcas:",
     "language.title": "Idioma",
     "language.subtitle": "Idioma da interface",
     "language.autoNote": "A sua escolha fica guardada neste dispositivo.",

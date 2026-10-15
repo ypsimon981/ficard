@@ -4,6 +4,11 @@
  root.FiCardLocales["de"]={
   "name": "Deutsch",
   "messages": {
+    "backup.alias.ask": "Möchtest du den importierten Karten einen Alias geben?",
+    "backup.alias.label": "Alias für importierte Karten",
+    "backup.alias.hint": "Er wird auf neu hinzugefügte Karten angewendet, auch wenn die Datei bereits einen Alias enthält. Vorhandene Karten bleiben unverändert.",
+    "backup.alias.placeholder": "Z. B. Marco, Familie",
+    "backup.alias.required": "Gib einen Alias ein oder deaktiviere die Option",
     "legal.trademarks.title": "Marken und Kundenkarten",
     "legal.trademarks.independent": "Fi-Card ist eine unabhängige App und steht in keiner geschäftlichen Verbindung zu den dargestellten Unternehmen; sie wird von diesen weder gesponsert noch unterstützt.",
     "legal.trademarks.ownership": "Namen, Marken, Logos und Grafiken gehören den jeweiligen Rechteinhabern und werden ausschließlich angezeigt, damit Nutzer ihre Kundenkarten erkennen und organisieren können.",
@@ -913,16 +918,17 @@
     "Tipp",
     "Werbung",
     "Öffnen",
-    "Geschäft verknüpfen",
-    "Füge den Standort hinzu, um deine Karte in der Nähe leichter zu finden.",
+    "Fehlt ein Geschäft auf der Karte?",
+    "Du kannst es direkt auf der Karte hinzufügen.",
     "Backup speichern",
     "Speichere eine Kopie deiner Karten in den Einstellungen.",
-    "ScanDixit testen",
+    "Sichere deine Karten unter ⚙️ Einstellungen.",
     "Scanne ein Produkt für Informationen vor dem Kauf.",
     "Teile alle deine Karten",
     "Tauscht Backups in der Familie aus: Nur fehlende Karten werden hinzugefügt."
   ],
   "sharing": {
+    "promoSubtitles": ["Teile deine Karten mit Freunden: Wo erlaubt, könnt ihr Punkte auf derselben Karte sammeln.","Teile deine Karten mit der Familie: Jeder hat sie auf dem eigenen Handy.","Tauscht eure Kartensammlungen: Fi-Card ergänzt nur fehlende Karten."],
     "intro": "Teile dein Kartenset mit wenigen Fingertipps",
     "disclaimer": "Teile und nutze Karten nur, wenn das Treueprogramm dies erlaubt. Rabatte und Punkte hängen von den Bedingungen des Geschäfts ab.",
     "items": [

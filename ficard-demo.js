@@ -1,14 +1,17 @@
 /* Fi-Card onboarding demonstration cards. Virtual only: never in personal card storage, exports or analytics. */
 (function(root){
 'use strict';
-const KEYS=['conad','leroymerlin','ovs'],MAX_RADIUS=30000,CACHE_KEY='ficard.demo.stores.v1',DONE_KEY='ficard.onboarding.cardsComplete.v1';
+const KEYS=['conad','leroymerlin','ovs'],MAX_RADIUS=30000,CACHE_KEY='ficard.demo.stores.v1';
 const ID_PREFIX='ficard-demo-';
 let center=null,points={},state='waiting',inflight=null,lastTry=0,onChange=null;
 function keys(realCards){
- if(realCards.length>=3){try{root.localStorage.setItem(DONE_KEY,'1')}catch{}return []}
- try{if(root.localStorage.getItem(DONE_KEY)==='1')return []}catch{}
- const owned=new Set(realCards.map(c=>c.brandKey));
- return KEYS.filter(key=>!owned.has(key)).slice(0,Math.max(0,3-realCards.length));
+ // Demo cards are a temporary visual filler, not a one-time onboarding reward.
+ // Re-evaluate against the current personal wallet after every add, import or deletion.
+ const personal=Array.isArray(realCards)?realCards.filter(c=>!c?.isDemo):[];
+ const missing=Math.max(0,3-personal.length);
+ if(!missing)return [];
+ const owned=new Set(personal.map(c=>String(c.brandKey||'').toLowerCase()));
+ return KEYS.filter(key=>!owned.has(key)).slice(0,missing);
 }
 function cards(realCards,brands){
  return keys(realCards).map(key=>{

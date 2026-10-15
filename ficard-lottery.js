@@ -1,4 +1,4 @@
-/* Fi-Card 0.9.219 — personal receipt-lottery code; never included in card-set exports. */
+/* Fi-Card 0.9.220 — personal receipt-lottery code; never included in card-set exports. */
 (function(root){
 'use strict';
 const KEY='ficard.personal.receipt-lottery.v1';
@@ -10,8 +10,9 @@ function t(k){let lang=root.FiCardI18n?.language?.()||'it';return (words[String(
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function read(){try{const data=JSON.parse(root.localStorage.getItem(KEY)||'null');if(data&&typeof data.code==='string'&&data.code.length>0&&data.code.length<=4096)return {code:data.code,format:typeof data.format==='string'?data.format:'CODE128'};}catch{}return null}
 function save(value){try{root.localStorage.setItem(KEY,JSON.stringify(value));return true}catch{return false}}
-function tileHtml(){if(!read())return '';return '<div class="walletTile lotteryTile"><div class="card cardItem walletLight" style="--card-color:#E8E2FF;--card-ink:#4324BC"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="lotteryTileIcon" aria-hidden="true">🎟️</span><div class="name">'+esc(t('title'))+'</div><div class="type">'+esc(t('code'))+'</div></button></div></div>'}
-function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open><span class="lotteryReminderIcon" aria-hidden="true">🎟️</span><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span aria-hidden="true">›</span></button>'}
+const LOGO='./logos-hq/lotteria-approved.png';
+function tileHtml(){if(!read())return '';return '<div class="card cardItem walletDark lotteryTile" data-brand="lotteria" style="--card-color:#07549A;--card-ink:#FFFFFF"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="brandMark" aria-hidden="true"><img class="brandLogo" src="'+LOGO+'" alt=""></span><div class="name">'+esc(t('title'))+'</div></button></div>'}
+function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><img class="lotteryReminderLogo" src="'+LOGO+'" alt="Lotteria degli scontrini"><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span class="lotteryReminderArrow" aria-hidden="true">›</span></button>'}
 let scanner=null,scanning=false;
 async function stop(){const d=scanner;scanner=null;scanning=false;const el=root.document.getElementById('lotteryReader');if(el)el.hidden=true;if(d){try{await d.stop()}catch{}try{await d.clear()}catch{}}}
 function close(){stop();root.document.getElementById('lotteryModal')?.classList.remove('show');}
@@ -36,6 +37,17 @@ function showCode(){
  modal.classList.add('show');
 }
 function refresh(){const button=root.document.getElementById('lotterySettingsAdd');if(button)button.textContent=read()?t('edit'):t('add');root.renderCards?.();}
+function isLotteryCard(c){return !!c&&(String(c.brandKey||'').toLowerCase()==='lotteria'||/^lotteria\s+degli\s+scontrini$/i.test(String(c.name||'').trim()))}
+function isDemo(c){return c?.alias==='DEMO'||/^FICARD-DEMO-/i.test(String(c?.code||''))}
+function store(code,format){const value=String(code||'').trim();if(!value||value.length>4096)return false;const ok=save({code:value,format:format||'CODE128'});if(ok)refresh();return ok}
+function migrateLegacy(collection){
+ if(!Array.isArray(collection))return [];
+ const personal=collection.filter(c=>isLotteryCard(c)&&!isDemo(c));
+ if(!personal.length||read())return [];
+ // Migrate only when persistence succeeded; never silently delete an existing different code.
+ const c=personal[0];if(!store(c.code,c.format))return [];
+ return [c.id];
+}
 function init(){
  const d=root.document;if(!d.getElementById('lotteryModal'))return;
  d.getElementById('lotterySettingsAdd')?.addEventListener('click',showEditor);
@@ -47,8 +59,8 @@ function init(){
  d.getElementById('lotterySave').onclick=()=>{
   const code=d.getElementById('lotteryCode').value.trim(),format=d.getElementById('lotteryFormat').value;
   if(!code||code.length>4096){root.toast?.(t('invalid'));return}
-  if(!save({code,format})){root.toast?.('Salvataggio non riuscito');return}
-  stop();refresh();root.toast?.(t('saved'));showCode();
+  if(!store(code,format)){root.toast?.('Salvataggio non riuscito');return}
+  stop();root.toast?.(t('saved'));showCode();
  };
  d.getElementById('lotteryRemove').onclick=()=>{if(!root.confirm(t('confirm')))return;try{root.localStorage.removeItem(KEY)}catch{}close();refresh();root.toast?.(t('removed'))};
  d.getElementById('lotteryScan').onclick=async()=>{
@@ -67,6 +79,6 @@ function init(){
  };
  refresh();
 }
-root.FiCardLottery={read,tileHtml,bannerHtml,showEditor,showCode,clear:()=>{try{root.localStorage.removeItem(KEY)}catch{}}};
+root.FiCardLottery={read,tileHtml,bannerHtml,showEditor,showCode,store,isLotteryCard,isDemo,migrateLegacy,clear:()=>{try{root.localStorage.removeItem(KEY)}catch{}}};
 if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(window);

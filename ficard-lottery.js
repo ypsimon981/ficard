@@ -1,4 +1,4 @@
-/* Fi-Card 0.9.222 — personal receipt-lottery code; never included in card-set exports. */
+/* Fi-Card 0.9.223 — personal receipt-lottery code; never included in card-set exports. */
 (function(root){
 'use strict';
 const KEY='ficard.personal.receipt-lottery.v1';
@@ -11,8 +11,9 @@ function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&l
 function read(){try{const data=JSON.parse(root.localStorage.getItem(KEY)||'null');if(data&&typeof data.code==='string'&&data.code.length>0&&data.code.length<=4096)return {code:data.code,format:typeof data.format==='string'?data.format:'CODE128'};}catch{}return null}
 function save(value){try{root.localStorage.setItem(KEY,JSON.stringify(value));return true}catch{return false}}
 const LOGO='./logos-hq/lotteria-approved.png';
-function tileHtml(){if(!read())return '';return '<div class="card cardItem walletDark lotteryTile" data-brand="lotteria" style="--card-color:#07549A;--card-ink:#FFFFFF"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="brandMark" aria-hidden="true"><img class="brandLogo" src="'+LOGO+'" alt=""></span><div class="name">'+esc(t('title'))+'</div></button></div>'}
-function bannerHtml(){if(!read())return '';return '<button type="button" class="lotteryReminder" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><img class="lotteryReminderLogo" src="'+LOGO+'" alt="Lotteria degli scontrini"><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span class="lotteryReminderArrow" aria-hidden="true">›</span></button>'}
+function available(){return root.FiCardMarkets?.enabled('receiptLottery')!==false}
+function tileHtml(){if(!read()||!available())return '';return '<div class="card cardItem walletDark lotteryTile" data-brand="lotteria" style="--card-color:#07549A;--card-ink:#FFFFFF"><button class="cardOpen" type="button" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><span class="brandMark" aria-hidden="true"><img class="brandLogo" src="'+LOGO+'" alt=""></span><div class="name">'+esc(t('title'))+'</div></button></div>'}
+function bannerHtml(){if(!read()||!available())return '';return '<button type="button" class="lotteryReminder" data-lottery-open aria-label="'+esc(t('open')+' · '+t('title'))+'"><img class="lotteryReminderLogo" src="'+LOGO+'" alt="Lotteria degli scontrini"><span class="lotteryReminderCopy"><strong>'+esc(t('reminder'))+'</strong><small>'+esc(t('sub'))+'</small></span><span class="lotteryReminderArrow" aria-hidden="true">›</span></button>'}
 let scanner=null,scanning=false;
 async function stop(){const d=scanner;scanner=null;scanning=false;const el=root.document.getElementById('lotteryReader');if(el)el.hidden=true;if(d){try{await d.stop()}catch{}try{await d.clear()}catch{}}}
 function close(){
@@ -21,6 +22,7 @@ function close(){
  root.document.getElementById('detailModal')?.classList.remove('lotteryBehind');
 }
 function showEditor(){
+ if(!available())return;
  const modal=root.document.getElementById('lotteryModal');if(!modal)return;
  const c=read();root.document.getElementById('lotteryHeading').textContent=c?t('edit'):t('add');
  root.document.getElementById('lotteryEditor').hidden=false;
@@ -33,6 +35,7 @@ function showEditor(){
  modal.classList.add('show');
 }
 function showCode(){
+ if(!available())return;
  const c=read();if(!c){showEditor();return}
  const modal=root.document.getElementById('lotteryModal');if(!modal)return;
  root.document.getElementById('lotteryHeading').textContent=t('title');
@@ -47,6 +50,7 @@ function showCode(){
 function refresh(){
  const button=root.document.getElementById('lotterySettingsAdd');
  if(button){
+  button.hidden=!available();
   const exists=!!read();
   button.textContent=exists?(root.FiCardI18n?.language?.()==='it'?'Mostra lotteria degli scontrini':'Show receipt lottery code'):t('add');
   button.setAttribute('aria-label',button.textContent);

@@ -921,12 +921,45 @@
     "Ontbreekt er een winkel op de kaart?",
     "Je kunt deze zelf toevoegen, rechtstreeks op de kaart.",
     "Bewaar een back-up",
-    "Bewaar een kopie van je kaarten via Instellingen.",
     "Bewaar je kaarten veilig via ⚙️ Instellingen.",
+    "Probeer ScanDixit",
     "Scan een product voor informatie voordat je het koopt.",
     "Deel al je kaarten",
     "Wissel back-ups uit met je familie: alleen ontbrekende kaarten worden toegevoegd."
   ],
+  "journey": {
+    "growth": [
+      [
+        "Nog meer kaarten in je portemonnee?",
+        "Scan ze met Fi-Card en bewaar ze op je telefoon."
+      ],
+      [
+        "Al je kaarten bij elkaar",
+        "Voeg je meest gebruikte kaarten toe in een paar tikken."
+      ],
+      [
+        "Nooit meer naar kaarten zoeken",
+        "Voeg je kaarten toe: Fi-Card toont de juiste kaart vlak bij de winkel."
+      ]
+    ],
+    "importFriend": [
+      "Gebruikt een vriend al Fi-Card?",
+      "Vraag om de kaartenset te delen: je importeert alleen ontbrekende kaarten."
+    ],
+    "referral": [
+      [
+        "Blij met Fi-Card?",
+        "Raad het een vriend aan om klantenkaarten te organiseren."
+      ],
+      [
+        "Vertel anderen over Fi-Card",
+        "Nodig familie uit: jullie kunnen kaarten met elkaar delen."
+      ]
+    ],
+    "invite": "Al je klantenkaarten op één plek. Probeer Fi-Card!",
+    "copied": "Fi-Card-link gekopieerd",
+    "copyPrompt": "Kopieer en deel de Fi-Card-link:"
+  },
   "sharing": {
     "promoSubtitles": ["Deel je kaarten met een vriend: waar toegestaan, kun je punten sparen op dezelfde kaart.","Deel je kaarten met je gezin: iedereen heeft ze op de eigen telefoon.","Wissel jullie kaartensets uit: Fi-Card voegt alleen ontbrekende kaarten toe."],
     "intro": "Deel je kaartenset met een paar tikken",

@@ -35,7 +35,7 @@ function mergeMatches(data,p,brands){
  for(const m of matches){
   const d=distance(p,m.point);if(d>MAX_RADIUS)continue;
   const list=points[m.cardId]||(points[m.cardId]=[]);
-  if(list.some(x=>(x.osmId&&x.osmId===m.point.osmId)||distance(x,m.point)<35))continue;
+  if(list.some(x=>S.sameStore(x,m.point)))continue;
   list.push(m.point);changed=true;
  }
  if(changed){for(const key of KEYS)if(points[key])points[key].sort((a,b)=>distance(p,a)-distance(p,b)).splice(250);notify()}
@@ -46,7 +46,7 @@ function cached(p,brands){
   const v=JSON.parse(root.localStorage.getItem(CACHE_KEY)||'null');
   if(v?.version===1&&v.center&&Number.isFinite(v.at)&&Date.now()-v.at<7*86400000&&distance(p,v.center)<5000){
    for(const key of KEYS)for(const point of (Array.isArray(v.points?.[key])?v.points[key]:[])){
-    if(point&&Number.isFinite(point.lat)&&Number.isFinite(point.lng)&&distance(p,point)<=MAX_RADIUS)(points[key]||(points[key]=[])).push(point);
+    if(point&&Number.isFinite(point.lat)&&Number.isFinite(point.lng)&&distance(p,point)<=MAX_RADIUS){const list=points[key]||(points[key]=[]);if(!list.some(x=>root.FiCardStores.sameStore(x,point)))list.push(point)}
    }
    state='partial';notify();
   }

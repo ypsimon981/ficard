@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.215";
+const APP_VERSION="0.9.216";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -126,13 +126,13 @@ const CORE=[
   "./logos-hq/studio/zooservice-98d75fef58b1.png",
   "./logos-hq/studio/zooplus-a84c6df7a77a.png",
 
-  "./locales/it.js?v=0.9.215",
-  "./locales/en.js?v=0.9.215",
-  "./locales/fr.js?v=0.9.215",
-  "./locales/es.js?v=0.9.215",
-  "./locales/pt.js?v=0.9.215",
-  "./locales/nl.js?v=0.9.215",
-  "./locales/de.js?v=0.9.215",
+  "./locales/it.js?v=0.9.216",
+  "./locales/en.js?v=0.9.216",
+  "./locales/fr.js?v=0.9.216",
+  "./locales/es.js?v=0.9.216",
+  "./locales/pt.js?v=0.9.216",
+  "./locales/nl.js?v=0.9.216",
+  "./locales/de.js?v=0.9.216",
 
   "./logos-hq/kasanova-approved.svg",
   "./logos-hq/bialetti-approved.png",

@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.223";
+const APP_VERSION="0.9.224";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -162,6 +162,7 @@ const CORE=[
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-markets.js?v=0.9.223",
+  "./ficard-demo.js?v=0.9.224",
   "./ficard-lottery.js?v=0.9.223",
   "./ficard-content.js?v=0.9.218",
   "./ficard-ads-config.js?v=0.9.215",

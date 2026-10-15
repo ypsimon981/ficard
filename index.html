@@ -15,13 +15,13 @@
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
   <script src="./ficard-reader.js?v=1.1.2"></script>
-  <script src="./locales/it.js?v=0.9.215"></script>
-<script src="./locales/en.js?v=0.9.215"></script>
-<script src="./locales/fr.js?v=0.9.215"></script>
-<script src="./locales/es.js?v=0.9.215"></script>
-<script src="./locales/pt.js?v=0.9.215"></script>
-<script src="./locales/nl.js?v=0.9.215"></script>
-<script src="./locales/de.js?v=0.9.215"></script>
+  <script src="./locales/it.js?v=0.9.216"></script>
+<script src="./locales/en.js?v=0.9.216"></script>
+<script src="./locales/fr.js?v=0.9.216"></script>
+<script src="./locales/es.js?v=0.9.216"></script>
+<script src="./locales/pt.js?v=0.9.216"></script>
+<script src="./locales/nl.js?v=0.9.216"></script>
+<script src="./locales/de.js?v=0.9.216"></script>
 <script src="./ficard-theme.js?v=0.9.215"></script>
   <link rel="stylesheet" href="./vendor/leaflet.css">
   <script src="./vendor/leaflet.js"></script>
@@ -317,7 +317,11 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
 .cardLocations .detailActions{grid-template-columns:repeat(2,minmax(0,1fr));margin-top:0;margin-bottom:12px}
 .cardLocations .detailActions button{padding:12px 8px;font-size:12px}
 #deleteBtn{background:transparent;border:0;font-size:12px;font-weight:600;min-height:44px;margin-top:8px;padding:10px;color:var(--danger)}
-</style>
+    .trademarkDisclaimer{margin:22px 0 4px;padding:16px 2px 0;border-top:1px solid var(--line);color:var(--muted);font-size:11px;line-height:1.55}
+    .trademarkDisclaimer h3{margin:0 0 8px;color:var(--text);font-size:12px;font-weight:700}
+    .trademarkDisclaimer p{margin:0 0 9px}
+    .trademarkDisclaimer a{color:var(--violet);text-decoration:underline;text-underline-offset:2px;overflow-wrap:anywhere}
+  </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.215">
 <link rel="stylesheet" href="./ficard-polish.css?v=0.9.215">
 <style>
@@ -432,6 +436,14 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
         <section class="panel" aria-label="Archivio negozi condiviso" style="margin-top:16px"><label class="hint"><input type="checkbox" id="sharedStoreCacheToggle" checked> Usa l’archivio negozi condiviso</label><p class="hint">Le zone richieste vengono importate in background. Non vengono inviati codici tessera o preferiti. Disattiva per tornare al sistema precedente, senza cancellare negozi o carte.</p></section>
         <section id="launchSettings" aria-label="Privacy e contatti" style="margin-top:16px"></section>
         <button class="danger" id="clearData">Cancella tutti i dati locali</button>
+        <section class="trademarkDisclaimer" aria-labelledby="trademarkDisclaimerTitle">
+          <h3 id="trademarkDisclaimerTitle">Marchi e carte fedeltà</h3>
+          <p>Fi-Card è un'app indipendente e non è affiliata, sponsorizzata o approvata dalle aziende rappresentate.</p>
+          <p>Nomi, marchi, loghi e grafiche appartengono ai rispettivi titolari e sono mostrati esclusivamente per identificare e organizzare le carte fedeltà degli utenti.</p>
+          <p>Fi-Card non emette carte né modifica i regolamenti dei programmi fedeltà. L'uso delle carte è soggetto alle condizioni stabilite dagli esercenti.</p>
+          <p>Per segnalazioni sui marchi: <a href="mailto:info@fi-card.app">info@fi-card.app</a></p>
+        </section>
+
       </div>
     </section>
     <section id="scandixitView" class="view" aria-label="ScanDixit">

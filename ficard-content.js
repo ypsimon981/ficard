@@ -31,7 +31,7 @@ function model(slot){
  const ad=adAvailable()&&chosen.ad?candidates.find(a=>a&&typeof a.title==='string'&&typeof a.url==='string'&&/^https:\/\//i.test(a.url)):null;
  if(ad)return {label:c[1],title:ad.title,text:ad.text||'',url:ad.url,advert:true};
  const i=chosen.tip;
- if(i>=3){const s=sharingCopy(),item=s.items[i-3];return {label:c[0],title:item[0],text:s.intro,view:'profile',sharing:true,advert:false};}
+ if(i>=3){const s=sharingCopy(),item=s.items[i-3];return {label:c[0],title:item[0],text:s.promoSubtitles?.[i-3]||s.intro,view:'profile',sharing:true,advert:false};}
  return {label:c[0],title:c[3+i*2],text:c[4+i*2],view:['map','profile','scandixit'][i],advert:false};
 }
 function html(slot,banner=false){

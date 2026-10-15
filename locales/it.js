@@ -4,6 +4,11 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "backup.alias.ask": "Vuoi assegnare un alias alle carte importate?",
+    "backup.alias.label": "Alias per le carte importate",
+    "backup.alias.hint": "Verrà applicato alle carte aggiunte, anche se il file contiene già un alias. Le carte già presenti non cambiano.",
+    "backup.alias.placeholder": "Es. Marco, Famiglia",
+    "backup.alias.required": "Scrivi un alias oppure disattiva l’opzione",
     "legal.trademarks.title": "Marchi e carte fedeltà",
     "legal.trademarks.independent": "Fi-Card è un'app indipendente e non è affiliata, sponsorizzata o approvata dalle aziende rappresentate.",
     "legal.trademarks.ownership": "Nomi, marchi, loghi e grafiche appartengono ai rispettivi titolari e sono mostrati esclusivamente per identificare e organizzare le carte fedeltà degli utenti.",
@@ -893,16 +898,17 @@
     "Consiglio",
     "Pubblicità",
     "Apri",
-    "Associa il negozio",
-    "Aggiungi il punto vendita alla tessera: sarà più facile trovarla quando sei vicino.",
+    "Manca un negozio sulla mappa?",
+    "Puoi aggiungerlo tu, direttamente dalla mappa.",
     "Salva un backup",
     "Conserva una copia delle tue tessere dalle Impostazioni.",
-    "Prova ScanDixit",
+    "Metti al sicuro le tue carte dalla sezione ⚙️ Impostazioni.",
     "Scansiona un prodotto per cercare informazioni prima di acquistarlo.",
     "Condividi tutte le tue carte",
     "Scambiatevi i backup in famiglia: vengono aggiunte solo le carte mancanti."
   ],
   "sharing": {
+    "promoSubtitles": ["Condividi le tue carte con un amico: dove consentito, potete accumulare punti sulla stessa carta.","Condividi le carte con la famiglia: ognuno le avrà sul proprio telefono.","Scambiatevi i vostri set: Fi-Card aggiunge solo le carte mancanti."],
     "intro": "Condividi il tuo set in pochi tocchi",
     "disclaimer": "Condividi e utilizza le carte solo dove consentito dal programma fedeltà. Sconti e accumulo punti dipendono dalle condizioni del negozio.",
     "items": [

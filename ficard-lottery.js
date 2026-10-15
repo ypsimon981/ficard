@@ -2,11 +2,10 @@
 (function(root){
 'use strict';
 const KEY='ficard.personal.receipt-lottery.v1';
-const words={
- it:{title:'Lotteria degli scontrini',add:'Aggiungi lotteria degli scontrini',edit:'Modifica codice lotteria',hint:'Salva il tuo codice. Comparirà tra le prime carte e sotto ogni tessera fedeltà.',reminder:'Ricorda il codice lotteria',sub:'Se il negozio aderisce, mostralo prima del pagamento.',open:'Mostra codice',code:'Codice lotteria',format:'Formato',scan:'Scansiona codice',save:'Salva codice',remove:'Elimina codice',privacy:'Codice personale: non viene condiviso nei set di carte né nei backup JSON.',saved:'Codice salvato sul dispositivo',removed:'Codice eliminato',invalid:'Inserisci un codice valido',confirm:'Eliminare il codice lotteria salvato?',scanner:'Fotocamera non disponibile. Inserisci il codice manualmente.',health:'Tessera sanitaria',healthInfo:'In futuro potrai aggiungerla qui e richiamarla in farmacia. Funzione non ancora attiva.',healthSoon:'In preparazione',back:'Torna alla carta',close:'Chiudi'},
- en:{title:'Receipt lottery',add:'Add receipt lottery code',edit:'Edit lottery code',hint:'Save your code. It will appear at the top of your cards and beneath each loyalty card.',reminder:'Remember your lottery code',sub:'If the store participates, show it before paying.',open:'Show code',code:'Lottery code',format:'Format',scan:'Scan code',save:'Save code',remove:'Delete code',privacy:'Personal code: excluded from shared card sets and JSON backups.',saved:'Code saved on this device',removed:'Code deleted',invalid:'Enter a valid code',confirm:'Delete your saved lottery code?',scanner:'Camera unavailable. Enter the code manually.',health:'Health card',healthInfo:'In the future you can add it here and access it at pharmacies. Not yet available.',healthSoon:'Coming later',back:'Back to card',close:'Close'}
-};
-function t(k){let lang=root.FiCardI18n?.language?.()||'it';return (words[String(lang).split('-')[0]]||words.en)[k]||words.it[k]}
+function t(k){
+ const key='lottery.'+k;
+ return root.FiCardI18n?.t?.(key) || root.FiCardLocales?.it?.messages[key] || key;
+}
 function esc(s){return String(s||'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
 function read(){try{const data=JSON.parse(root.localStorage.getItem(KEY)||'null');if(data&&typeof data.code==='string'&&data.code.length>0&&data.code.length<=4096)return {code:data.code,format:typeof data.format==='string'?data.format:'CODE128'};}catch{}return null}
 function save(value){try{root.localStorage.setItem(KEY,JSON.stringify(value));return true}catch{return false}}
@@ -52,7 +51,7 @@ function refresh(){
  if(button){
   button.hidden=!available();
   const exists=!!read();
-  button.textContent=exists?(root.FiCardI18n?.language?.()==='it'?'Mostra lotteria degli scontrini':'Show receipt lottery code'):t('add');
+  button.textContent=exists?t('show'):t('add');
   button.setAttribute('aria-label',button.textContent);
  }
  root.renderCards?.();
@@ -79,7 +78,7 @@ function init(){
  d.getElementById('lotterySave').onclick=()=>{
   const code=d.getElementById('lotteryCode').value.trim(),format=d.getElementById('lotteryFormat').value;
   if(!code||code.length>4096){root.toast?.(t('invalid'));return}
-  if(!store(code,format)){root.toast?.('Salvataggio non riuscito');return}
+  if(!store(code,format)){root.toast?.(t('saveFailed'));return}
   stop();root.toast?.(t('saved'));showCode();
  };
  const removeSavedCode=()=>{
@@ -106,5 +105,6 @@ function init(){
  refresh();
 }
 root.FiCardLottery={read,tileHtml,bannerHtml,showEditor,showCode,store,isLotteryCard,isDemo,migrateLegacy,clear:()=>{try{root.localStorage.removeItem(KEY)}catch{}}};
+root.addEventListener?.('ficard:languagechange',refresh);
 if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(window);

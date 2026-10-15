@@ -50,9 +50,10 @@ function render(){
  const {country,source}=current();
  if(root.document.body)root.document.body.dataset.market=country;
  if(status){
-  const label=MARKETS[country].name;
-  const detail=source==='gps'?'posizione rilevata sul dispositivo':source==='manual'?'scelta manuale':'Paese di residenza (posizione non determinata con certezza)';
-  status.textContent='Mercato attivo: '+label+' · '+detail;
+  const t=(key,vars)=>root.FiCardI18n?.t?.(key,vars)||root.FiCardLocales?.it?.messages[key]||key;
+  const label=t('market.'+country.toLowerCase());
+  const detail=t('market.'+(source==='gps'?'gps':source==='manual'?'manual':'fallback'));
+  status.textContent=root.FiCardI18n?.t? t('market.status',{country:label,source:detail}):'Mercato attivo: '+label+' · '+detail;
  }
  const codes=root.document.getElementById('usefulCodesBox');
  if(codes)codes.hidden=!enabled('receiptLottery')&&!enabled('healthCard');
@@ -66,5 +67,6 @@ function init(){
  render();
 }
 root.FiCardMarkets={MARKETS,current,enabled,setPosition,onChange:fn=>{listener=fn},render,detect,read:()=>({...prefs})};
+root.addEventListener?.('ficard:languagechange',render);
 if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init);else init();
 })(window);

@@ -73,7 +73,7 @@ function model(slot){
  return {label:c[0],title:c[3+i*2],text:c[4+i*2],action:id==='map'?'map':id==='backup'?'backup':'scandixit',advert:false};
 }
 function html(slot,banner=false){
- const m=model(slot),action=m.advert?'href="'+esc(m.url)+'" target="_blank" rel="noopener noreferrer"':'href="#'+esc(m.action)+'" data-content-action="'+esc(m.action)+'"';
+ const m=model(slot),action=m.advert?'href="'+esc(m.url)+'" target="_blank" rel="noopener noreferrer"':'href="#'+esc(m.action)+'" data-content-action="'+esc(m.action)+'"'+(slot==='scandixit'&&m.action==='share'?' data-content-view="profile"':'');
  return '<a data-ad-slot="'+esc(slot)+'" data-promo-campaign="'+esc(choices[slot].tip)+'" data-ad-format="'+(banner&&slot!=='scandixit'?'banner':'native')+'" class="'+(banner?'contentBanner':'card advertisingCard contentTile')+'" '+action+' style="--card-color:#E4F8F3;--card-ink:#4324BC"><div class="advertisingContent"><span class="advertisingLabel">'+esc(m.label)+'</span><strong>'+esc(m.title)+'</strong><small>'+esc(m.text)+'</small></div>'+(banner?'<span class="badge">'+esc(copy()[2])+'</span>':'')+'</a>';
 }
 function renderSharing(){

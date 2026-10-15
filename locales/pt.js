@@ -921,12 +921,45 @@
     "Falta uma loja no mapa?",
     "Pode adicioná-la diretamente no mapa.",
     "Guarde uma cópia",
-    "Guarde uma cópia dos cartões nas Definições.",
     "Proteja os seus cartões em ⚙️ Definições.",
+    "Experimente o ScanDixit",
     "Leia um produto para procurar informações antes de comprar.",
     "Partilha todos os teus cartões",
     "Troquem cópias em família: só são adicionados os cartões em falta."
   ],
+  "journey": {
+    "growth": [
+      [
+        "Mais cartões na carteira?",
+        "Digitalize-os com a Fi-Card e guarde-os no telemóvel."
+      ],
+      [
+        "Todos os cartões num só lugar",
+        "Adicione os cartões que mais usa em poucos toques."
+      ],
+      [
+        "Não volte a procurar cartões",
+        "Adicione os seus cartões: a Fi-Card mostra o certo quando está perto da loja."
+      ]
+    ],
+    "importFriend": [
+      "Um amigo já usa a Fi-Card?",
+      "Peça-lhe que partilhe os cartões: só serão importados os que lhe faltam."
+    ],
+    "referral": [
+      [
+        "Gosta da Fi-Card?",
+        "Recomende-a a um amigo e ajude-o a organizar os cartões de fidelização."
+      ],
+      [
+        "Divulgue a Fi-Card",
+        "Convide um familiar a experimentar: poderão partilhar os cartões."
+      ]
+    ],
+    "invite": "Todos os cartões de fidelização num só lugar. Experimente a Fi-Card!",
+    "copied": "Ligação da Fi-Card copiada",
+    "copyPrompt": "Copie e partilhe a ligação da Fi-Card:"
+  },
   "sharing": {
     "promoSubtitles": ["Partilhe os seus cartões com um amigo: quando permitido, podem acumular pontos no mesmo cartão.","Partilhe os cartões com a família: cada um terá os cartões no seu telemóvel.","Troquem as vossas coleções: a Fi-Card adiciona apenas os cartões em falta."],
     "intro": "Partilha o teu conjunto de cartões em poucos toques",

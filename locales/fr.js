@@ -921,12 +921,45 @@
     "Un magasin manque sur la carte ?",
     "Vous pouvez l'ajouter vous-même, directement sur la carte.",
     "Sauvegardez vos cartes",
-    "Conservez une copie de vos cartes dans les paramètres.",
     "Protégez vos cartes depuis ⚙️ Paramètres.",
+    "Essayez ScanDixit",
     "Scannez un produit pour chercher des informations avant de l’acheter.",
     "Partagez toutes vos cartes",
     "Échangez vos sauvegardes en famille : seules les cartes manquantes sont ajoutées."
   ],
+  "journey": {
+    "growth": [
+      [
+        "D'autres cartes dans votre portefeuille ?",
+        "Scannez-les avec Fi-Card pour les garder sur votre téléphone."
+      ],
+      [
+        "Toutes vos cartes au même endroit",
+        "Ajoutez vos cartes les plus utilisées en quelques gestes."
+      ],
+      [
+        "Ne cherchez plus vos cartes",
+        "Ajoutez vos cartes : Fi-Card affiche la bonne près du magasin."
+      ]
+    ],
+    "importFriend": [
+      "Un ami utilise déjà Fi-Card ?",
+      "Demandez-lui de partager ses cartes : seules celles qui vous manquent seront importées."
+    ],
+    "referral": [
+      [
+        "Vous aimez Fi-Card ?",
+        "Recommandez-la à un ami pour l'aider à organiser ses cartes de fidélité."
+      ],
+      [
+        "Faites découvrir Fi-Card",
+        "Invitez un proche à l'essayer : vous pourrez partager vos cartes."
+      ]
+    ],
+    "invite": "Toutes vos cartes de fidélité au même endroit. Essayez Fi-Card !",
+    "copied": "Lien Fi-Card copié",
+    "copyPrompt": "Copiez et partagez le lien Fi-Card :"
+  },
   "sharing": {
     "promoSubtitles": ["Partagez vos cartes avec un ami : si le programme le permet, vous pouvez cumuler des points sur la même carte.","Partagez vos cartes en famille : chacun les aura sur son téléphone.","Échangez vos collections : Fi-Card ajoute uniquement les cartes manquantes."],
     "intro": "Partagez vos cartes en quelques gestes",

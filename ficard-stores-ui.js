@@ -125,7 +125,7 @@ function scheduleDiscovery(){
   try{const p=currentPos||await getPosition();currentPos=p;await search(p)}catch(e){console.warn('Fi-Card ricerca in background:',e)}
  },600);
 }
-const baseSave=save;save=function(){const pending=baseSave(),next=JSON.stringify(descriptors());if(next!==discoverySignature){discoverySignature=next;matchCachedShops(true);scheduleDiscovery()}return pending};
+const baseSave=save;save=function(){const pending=baseSave(),next=JSON.stringify(descriptors());if(next!==discoverySignature){discoverySignature=next;matchCachedShops(true);scheduleDiscovery();if(currentPos&&window.FiCardDemo?.keys(cards).length)window.FiCardDemo.updatePosition(currentPos,cards,BRANDS)}return pending};
 window.addEventListener('online',scheduleDiscovery);
 function openMapForCard(c){
  matchCachedShops();document.getElementById('shopCategory').value='';document.getElementById('shopFavorites').checked=false;populate();document.getElementById('shopCard').value=storeBrand(c).key;mapFramed=false;hideModal('detailModal');go('map');

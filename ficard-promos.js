@@ -15,7 +15,7 @@ function init(){
  if(root.IntersectionObserver){observer=new root.IntersectionObserver(entries=>{for(const entry of entries){const el=entry.target,key=el.dataset.adSlot+':'+el.dataset.promoCampaign;if(entry.intersectionRatio>=.5&&!root.document.hidden&&!seen.has(key)&&analytics()?.enabled()){seen.add(key);count('promo_impression',el)}}},{threshold:.5});scan();new root.MutationObserver(scan).observe(root.document.body,{childList:true,subtree:true});}
  root.document.addEventListener('visibilitychange',scan);
  root.document.addEventListener('click',e=>{const el=e.target.closest?.('[data-promo-campaign]');if(!el)return;count('promo_click',el);
-  if(page()==='scandixit'&&el.dataset.contentView){e.preventDefault();try{if(root.parent!==root&&root.parent.go){root.parent.go(el.dataset.contentView);root.parent.document.getElementById('cardSharingMessages')?.scrollIntoView({block:'center'});return}}catch{}root.location.href=root.ScanDixitStandalone?'/#download':'./#profile';}
+  if(page()==='scandixit'&&el.dataset.contentView){e.preventDefault();try{if(root.parent!==root&&root.parent.go){root.parent.go(el.dataset.contentView);root.parent.document.getElementById('cardSharingMessages')?.scrollIntoView({block:'center'});return}}catch{}root.location.href=root.ScanDixitStandalone?'/#download':'./#backup';}
  },true);
 }
 root.FiCardPromoCount=count;

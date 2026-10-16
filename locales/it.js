@@ -4,6 +4,8 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "nav.backup": "Condivisione e backup",
+
     "settings.group.residenceSpecial": "Residenza e carte speciali",
     "settings.compact.codes": "Come funzionano",
     "settings.compact.country": "Dettagli sul Paese",

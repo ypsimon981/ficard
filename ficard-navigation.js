@@ -71,7 +71,7 @@ function forceVersion(){
   release.textContent=release.textContent.replace(/v\d+\.\d+\.\d+/,'v'+VERSION);
 }
 function init(){
-  if(['#profile','#map','#scandixit'].includes(root.location?.hash))root.go?.(root.location.hash.slice(1));
+  if(['#profile','#map','#scandixit','#backup'].includes(root.location?.hash))root.go?.(root.location.hash.slice(1));
   installScrollIsolation();
   installStandbyRefresh();
   forceVersion();

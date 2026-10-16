@@ -4,6 +4,8 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "nav.backup": "Delen en back-up",
+
     "settings.group.residenceSpecial": "Woonland en speciale kaarten",
     "settings.compact.codes": "Hoe het werkt",
     "settings.compact.country": "Landdetails",

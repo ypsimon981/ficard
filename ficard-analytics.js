@@ -9,7 +9,7 @@ const BRAND_EVENTS=new Set(['card_added','card_open']);
 let controllers=new Set(),recent=new Map(),lastOpen=0,hiddenAt=0,memoryChoice=null,detailObserver=null,installPending=false,lastCatalogCheck=0,catalogBusy=false;
 function enabled(){if(memoryChoice!==null)return memoryChoice;try{const value=root.localStorage.getItem(PREFERENCE);return value===null?root.localStorage.getItem(LEGACY)!=='no':value!=='no'}catch{return true}}
 function removeLegacyID(){try{root.localStorage.removeItem('ficard.analytics.install.v1')}catch{}}
-function currentPage(){return root.document?.querySelector('.view.active')?.id?.replace(/View$/,'')||'home'}
+function currentPage(){const page=root.document?.querySelector('.view.active')?.id?.replace(/View$/,'')||'home';return page==='backup'?'profile':page}
 function config(){const c=root.FICARD_ANALYTICS_CONFIG;return c?.key&&/^https:\/\/[a-z0-9]+\.supabase\.co$/.test(c.url)?c:null}
 function market(){const explicit=String(root.FICARD_MARKET||'IT').toUpperCase();return /^[A-Z]{2}$/.test(explicit)?explicit:'IT'}
 function localBrands(){try{return typeof BRANDS==='object'&&BRANDS?BRANDS:null}catch{return null}}

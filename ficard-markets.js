@@ -55,7 +55,7 @@ function render(){
   const detail=t('market.'+(source==='gps'?'gps':source==='manual'?'manual':'fallback'));
   status.textContent=root.FiCardI18n?.t? t('market.status',{country:label,source:detail}):'Mercato attivo: '+label+' · '+detail;
  }
- const codes=root.document.getElementById('usefulCodesBox');
+ const codes=root.document.getElementById('specialCardsContent');
  if(codes)codes.hidden=!enabled('receiptLottery')&&!enabled('healthCard');
  const quickAdd=root.document.getElementById('lotteryAddFromCard');
  if(quickAdd)quickAdd.hidden=!enabled('receiptLottery');

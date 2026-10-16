@@ -493,8 +493,8 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 #profileView>.backupPanel{padding:14px 16px}
 #profileView>.backupPanel+.backupPanel{margin-top:12px}
 #profileView .backupHeading{margin-bottom:10px}
-#usefulCodesBox>button{min-height:42px;margin-top:8px;padding:10px 12px}
-#usefulCodesBox>button:disabled{font-size:12px;opacity:.6;min-height:34px;padding:7px 10px}
+#specialCardsContent>button{min-height:42px;margin-top:8px;padding:10px 12px}
+#specialCardsContent>button:disabled{font-size:12px;opacity:.6;min-height:34px;padding:7px 10px}
 #marketSettingsBox .ficardLanguageSetting,.localeSetting{display:grid;grid-template-columns:minmax(95px,1fr) minmax(0,1.4fr);align-items:center;gap:12px;margin:0;padding:8px 0;border:0}
 #marketSettingsBox .ficardLanguageCopy small{display:none}
 #marketSettingsBox .ficardLanguageCopy b,.localeSetting>label{font-size:13px;font-weight:600;margin:0}
@@ -506,3 +506,6 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .settingsDetails[open]>summary,.settingsMore[open]>summary{margin-bottom:10px}
 #profileView>.settingsMore{margin-top:12px;padding:12px 16px}
 #profileView>.settingsMore>.profileBrand{margin-top:14px}
+
+#specialCardsContent[hidden]{display:none!important}
+#usefulCodesBox .localeSetting .field{margin:0;min-height:42px;padding:9px 10px;font-size:13px}

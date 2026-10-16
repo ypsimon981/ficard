@@ -529,3 +529,10 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .bottom #addFab{background:var(--surface)!important;border-radius:32px 32px 0 0;isolation:isolate}
 .bottom #addFab::before{content:"";position:absolute;z-index:0;pointer-events:none;left:0;right:0;top:0;height:calc(50% + 4px);box-sizing:border-box;border:4px solid transparent;border-bottom:0;border-radius:32px 32px 0 0;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,var(--violet) 0 50%,var(--teal) 50% 100%) border-box}
 .bottom #addFab svg{position:relative;z-index:1;filter:none}
+
+/* The raised edge follows a six-unit offset of the three-card logo silhouette. */
+.bottom #addFab{width:84px;height:72px;min-height:72px;background:transparent!important;border-radius:0}
+.bottom #addFab::before{display:none}
+.bottom #addFab svg{width:84px;height:72px;min-height:0}
+.bottom{padding-top:36px!important}
+@media(max-width:360px){.bottom #addFab{width:78px;height:67px;min-height:67px}.bottom #addFab svg{width:78px;height:67px}}

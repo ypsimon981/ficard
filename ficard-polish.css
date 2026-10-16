@@ -523,3 +523,9 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 
 /* The add stack bridges the bottom divider, above all five destination tabs. */
 .bottom{padding-top:32px!important;overflow:visible}
+
+/* Continue the menu divider around the raised add button. */
+.bottom{background:var(--surface)!important}
+.bottom #addFab{background:var(--surface)!important;border-radius:32px 32px 0 0;isolation:isolate}
+.bottom #addFab::before{content:"";position:absolute;z-index:0;pointer-events:none;left:0;right:0;top:0;height:calc(50% + 4px);box-sizing:border-box;border:4px solid transparent;border-bottom:0;border-radius:32px 32px 0 0;background:linear-gradient(var(--surface),var(--surface)) padding-box,linear-gradient(90deg,var(--violet) 0 50%,var(--teal) 50% 100%) border-box}
+.bottom #addFab svg{position:relative;z-index:1;filter:none}

@@ -514,10 +514,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .bottom{grid-template-columns:repeat(5,minmax(0,1fr))!important;align-items:start}
 .bottom .nav{white-space:normal;min-height:56px;grid-template-rows:24px auto;gap:4px;font-size:10px}
 .bottom .navLabel{display:block;min-height:24px;line-height:1.2;text-align:center;max-width:100%;overflow-wrap:anywhere}
-.top{margin-bottom:32px}
-.top #addFab{position:absolute;left:50%;bottom:0;transform:translate(-50%,50%);width:72px;height:56px;min-height:56px;margin:0;padding:0;z-index:3;background:var(--bg)!important;box-shadow:none;border-radius:18px}
-.top #addFab svg{width:72px;height:56px}
+.bottom #addFab{position:absolute;left:50%;top:0;transform:translate(-50%,-50%);width:72px;height:56px;min-height:56px;margin:0;padding:0;z-index:3;background:var(--bg)!important;box-shadow:none;border-radius:18px}
+.bottom #addFab svg{width:72px;height:56px}
 #backupView>#sharingCardsBox{margin-bottom:14px}
 #backupView>#backupSettingsBox{margin-top:0;margin-bottom:18px}
 #backupView .backupQuickActions{margin-top:12px}
-@media(max-width:360px){.bottom .nav{font-size:9px}.top #addFab,.top #addFab svg{width:66px;height:52px;min-height:52px}}
+@media(max-width:360px){.bottom .nav{font-size:9px}.bottom #addFab,.bottom #addFab svg{width:66px;height:52px;min-height:52px}}
+
+/* The add stack bridges the bottom divider, above all five destination tabs. */
+.bottom{padding-top:32px!important;overflow:visible}

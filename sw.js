@@ -1,4 +1,4 @@
-const APP_VERSION="0.9.234";
+const APP_VERSION="0.9.235";
 const CACHE="ficard-v"+APP_VERSION;
 const CORE=[
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -126,13 +126,13 @@ const CORE=[
   "./logos-hq/studio/zooservice-98d75fef58b1.png",
   "./logos-hq/studio/zooplus-a84c6df7a77a.png",
 
-  "./locales/it.js?v=0.9.233",
-  "./locales/en.js?v=0.9.233",
-  "./locales/fr.js?v=0.9.233",
-  "./locales/es.js?v=0.9.233",
-  "./locales/pt.js?v=0.9.233",
-  "./locales/nl.js?v=0.9.233",
-  "./locales/de.js?v=0.9.233",
+  "./locales/it.js?v=0.9.235",
+  "./locales/en.js?v=0.9.235",
+  "./locales/fr.js?v=0.9.235",
+  "./locales/es.js?v=0.9.235",
+  "./locales/pt.js?v=0.9.235",
+  "./locales/nl.js?v=0.9.235",
+  "./locales/de.js?v=0.9.235",
 
   "./logos-hq/kasanova-approved.svg",
   "./logos-hq/bialetti-approved.png",
@@ -158,10 +158,10 @@ const CORE=[
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
   "./ficard-i18n.js?v=2.1.1",
-  "./ficard-polish.css?v=0.9.234",
+  "./ficard-polish.css?v=0.9.235",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
-  "./ficard-markets.js?v=0.9.234",
+  "./ficard-markets.js?v=0.9.235",
   "./ficard-demo.js?v=0.9.229",
   "./ficard-lottery.js?v=0.9.233",
   "./ficard-content.js?v=0.9.233",

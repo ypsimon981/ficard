@@ -4,6 +4,7 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "settings.group.residenceSpecial": "Residência e cartões especiais",
     "settings.compact.codes": "Como funciona",
     "settings.compact.country": "Detalhes do país",
     "settings.compact.create": "Criar cópia",

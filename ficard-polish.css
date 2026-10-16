@@ -531,3 +531,13 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
 .bottom #addFab svg{position:relative;width:72px;height:56px;min-height:0;filter:none}
 .bottom #addFab svg rect{stroke:#fff;stroke-width:1px;vector-effect:non-scaling-stroke;paint-order:stroke fill}
 @media(max-width:360px){.bottom #addFab,.bottom #addFab svg{width:66px;height:52px;min-height:52px}}
+
+/* Centre the purple card/plus while keeping the rear cards visible. */
+.bottom #addFab svg{overflow:visible}
+/* Three border pulses after a one-second delay, only on a fresh card opening. */
+.lotteryReminder.lotteryAttention{animation:lotteryBorderPulse 1s ease-in-out 1s 3}
+@keyframes lotteryBorderPulse{
+  0%,100%{box-shadow:0 0 0 0 rgba(7,84,154,0),0 4px 14px rgba(7,84,154,.17)}
+  50%{box-shadow:0 0 0 5px rgba(7,84,154,.35),0 4px 14px rgba(7,84,154,.17)}
+}
+@media(prefers-reduced-motion:reduce){.lotteryReminder.lotteryAttention{animation:none}}

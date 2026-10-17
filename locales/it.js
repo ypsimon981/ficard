@@ -4,6 +4,8 @@
  root.FiCardLocales["it"]={
   "name": "Italiano",
   "messages": {
+    "arrival.found": "Non cercare la carta, è lei che ha trovato te.",
+    "arrival.elapsed": "In {seconds} secondi.",
     "startup.loading": "Caricamento carte…",
     "nav.backup": "Condivisione e backup",
 

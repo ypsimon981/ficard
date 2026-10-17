@@ -4,6 +4,8 @@
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
   "messages": {
+    "arrival.found": "Zoek je kaart niet: die heeft jou gevonden.",
+    "arrival.elapsed": "In {seconds} seconden.",
     "startup.loading": "Kaarten laden…",
     "nav.backup": "Delen en back-up",
 

@@ -4,6 +4,8 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "arrival.found": "Não procures o cartão: foi ele que te encontrou.",
+    "arrival.elapsed": "Em {seconds} segundos.",
     "startup.loading": "A carregar cartões…",
     "nav.backup": "Partilha e cópias de segurança",
 

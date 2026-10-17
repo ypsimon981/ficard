@@ -550,3 +550,5 @@ body.isStarting>.app,body.isStarting>.bottom{visibility:hidden}
 .startupSpinner{width:42px;height:42px;border:4px solid var(--line);border-top-color:var(--violet);border-right-color:var(--teal);border-radius:50%;animation:startupSpin .85s linear infinite}
 @keyframes startupSpin{to{transform:rotate(360deg)}}
 @media(prefers-reduced-motion:reduce){.startupSpinner{animation:none}}
+#cardGrid .arrivalSentence{display:block}
+#cardGrid .arrivalElapsed{display:block;margin-top:4px;font-size:13px;font-weight:600;line-height:1.3;color:var(--violet)}

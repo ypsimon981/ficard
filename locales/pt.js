@@ -4,6 +4,7 @@
  root.FiCardLocales["pt"]={
   "name": "Português",
   "messages": {
+    "startup.loading": "A carregar cartões…",
     "nav.backup": "Partilha e cópias de segurança",
 
     "settings.group.residenceSpecial": "Residência e cartões especiais",

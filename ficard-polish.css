@@ -541,3 +541,12 @@ body.scanDixitPage .app{padding-top:0;padding-bottom:24px}
   35%,65%{box-shadow:0 0 0 2px #2DD4BF,0 0 0 4px #5B3DF5,0 0 16px rgba(45,212,191,.65)}
 }
 @media(prefers-reduced-motion:reduce){.lotteryReminder.lotteryAttention{animation:none}}
+
+/* Hide provisional ordering until the first location attempt has settled. */
+#startupLoading{display:none}
+body.isStarting #startupLoading{position:fixed;inset:0;z-index:200;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;background:var(--bg);color:var(--muted)}
+body.isStarting>.app,body.isStarting>.bottom{visibility:hidden}
+#startupLoading p{margin:0;font-size:14px}
+.startupSpinner{width:42px;height:42px;border:4px solid var(--line);border-top-color:var(--violet);border-right-color:var(--teal);border-radius:50%;animation:startupSpin .85s linear infinite}
+@keyframes startupSpin{to{transform:rotate(360deg)}}
+@media(prefers-reduced-motion:reduce){.startupSpinner{animation:none}}

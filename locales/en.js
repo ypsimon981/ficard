@@ -6,8 +6,7 @@
   "messages": {
     "photo.fullscreen": "Show photo fullscreen",
     "arrival.found": "Don't look for your card. It found you.",
-    "arrival.elapsed": "In about {seconds} seconds.",
-    "arrival.elapsedOne": "In about {seconds} second.",
+    "arrival.elapsed": "In {seconds} seconds.",
     "startup.loading": "Loading cards…",
     "nav.backup": "Sharing and backup",
 

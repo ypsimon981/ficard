@@ -6,8 +6,7 @@
   "messages": {
     "photo.fullscreen": "Foto op volledig scherm tonen",
     "arrival.found": "Zoek je kaart niet: die heeft jou gevonden.",
-    "arrival.elapsed": "In ongeveer {seconds} seconden.",
-    "arrival.elapsedOne": "In ongeveer {seconds} seconde.",
+    "arrival.elapsed": "In {seconds} seconden.",
     "startup.loading": "Kaarten laden…",
     "nav.backup": "Delen en back-up",
 

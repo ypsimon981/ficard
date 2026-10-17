@@ -4,6 +4,7 @@
  root.FiCardLocales["de"]={
   "name": "Deutsch",
   "messages": {
+    "photo.fullscreen": "Foto im Vollbild anzeigen",
     "arrival.found": "Such nicht nach deiner Karte: Sie hat dich gefunden.",
     "arrival.elapsed": "In {seconds} Sekunden.",
     "startup.loading": "Karten werden geladen…",

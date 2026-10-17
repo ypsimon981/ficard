@@ -552,3 +552,11 @@ body.isStarting>.app,body.isStarting>.bottom{visibility:hidden}
 @media(prefers-reduced-motion:reduce){.startupSpinner{animation:none}}
 #cardGrid .arrivalSentence{display:inline;white-space:nowrap}
 #cardGrid .arrivalElapsed{display:inline;margin:0;font:inherit;font-weight:600;color:var(--violet)}
+.photoPreview{display:block;width:100%;padding:12px;margin:0 0 20px;background:transparent;color:var(--violet);border:1px solid var(--line);border-radius:16px;cursor:zoom-in}
+.photoPreview .originalPhoto{max-height:300px;margin:0 auto 12px}
+.photoPreview span{display:block;font-size:14px;font-weight:650}
+#fullPhoto{display:none}
+#fullBarcode.photoMode{padding:calc(12px + env(safe-area-inset-top,0px)) 12px calc(12px + env(safe-area-inset-bottom,0px));overflow:hidden;box-sizing:border-box}
+#fullBarcode.photoMode .fullCardHeader,#fullBarcode.photoMode canvas,#fullBarcode.photoMode .num,#fullBarcode.photoMode .codeRenderWarning{display:none}
+#fullBarcode.photoMode #fullPhoto{display:block;width:100%;min-height:0;flex:1 1 0;object-fit:contain;max-width:100%;image-rendering:auto}
+#fullBarcode.photoMode #closeFull{flex:0 0 auto;margin-top:12px}

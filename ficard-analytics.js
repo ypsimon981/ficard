@@ -5,6 +5,11 @@ const VERSION='0.9.211',PREFERENCE='ficard.analytics.aggregate.v1',LEGACY='ficar
 const CATALOG_CACHE='ficard.catalog.cache.v1',CATALOG_VERSION='ficard.catalog.version.v1',CATALOG_CHECK_MS=15*60*1000;
 const PAGES=new Set(['home','map','scandixit','profile']);
 const EVENTS=new Set(['install_observed','analytics_disabled','analytics_enabled','app_open','page_view','card_added','card_open','favorite_toggled','fullscreen_open','scan_started','navigation_started','location_association_started','backup_created','card_share_started','promo_impression','promo_click','share_started','share_completed','backup_merged']);
+const STARTUP_OUTCOMES=new Set(['found','no_card','gps_denied','gps_unavailable','timeout','empty','error']);
+const STARTUP_BUCKETS=['lt1','1to2','2to3','3to5','over5'];
+for(const outcome of STARTUP_OUTCOMES)EVENTS.add('startup_'+outcome);
+for(const bucket of STARTUP_BUCKETS)EVENTS.add('arrival_time_'+bucket);
+let startupReported=false,arrivalReported=false;
 const BRAND_EVENTS=new Set(['card_added','card_open']);
 let controllers=new Set(),recent=new Map(),lastOpen=0,hiddenAt=0,memoryChoice=null,detailObserver=null,installPending=false,lastCatalogCheck=0,catalogBusy=false;
 function enabled(){if(memoryChoice!==null)return memoryChoice;try{const value=root.localStorage.getItem(PREFERENCE);return value===null?root.localStorage.getItem(LEGACY)!=='no':value!=='no'}catch{return true}}
@@ -60,6 +65,17 @@ function sendCount(event,page=currentPage(),brandKey='',force=false){
  }catch{return Promise.resolve(false)}
 }
 function track(event,page=currentPage(),brandKey=''){return sendCount(event,page,brandKey,false)}
+function startupOutcome(outcome){
+ if(startupReported||!STARTUP_OUTCOMES.has(outcome))return Promise.resolve(false);
+ startupReported=true;
+ return track('startup_'+outcome,'home');
+}
+function arrivalLatency(ms){
+ if(arrivalReported||!Number.isFinite(ms)||ms<0||ms>30000)return Promise.resolve(false);
+ arrivalReported=true;
+ const bucket=ms<1000?'lt1':ms<2000?'1to2':ms<3000?'2to3':ms<=5000?'3to5':'over5';
+ return track('arrival_time_'+bucket,'home');
+}
 async function observeInstallation(){if(installPending||!enabled())return;try{if(root.localStorage.getItem(INSTALL_SEEN)==='yes')return}catch{}installPending=true;const ok=await sendCount('install_observed','home','',false);if(ok)try{root.localStorage.setItem(INSTALL_SEEN,'yes')}catch{}installPending=false}
 function opened(){if(Date.now()-lastOpen<180000)return;lastOpen=Date.now();observeInstallation();track('app_open');track('page_view');syncCatalog(false)}
 function setConsent(value,reportChoice=false){const previous=enabled(),next=!!value;if(previous===next){const check=root.document?.getElementById('analyticsConsent');if(check)check.checked=next;return}controllers.forEach(c=>c.abort());controllers.clear();recent.clear();if(reportChoice&&previous&&!next)sendCount('analytics_disabled',currentPage(),'',true);memoryChoice=next;try{root.localStorage.setItem(PREFERENCE,next?'yes':'no')}catch{}removeLegacyID();if(next){if(reportChoice)sendCount('analytics_enabled',currentPage(),'',true);lastOpen=0;opened()}const check=root.document?.getElementById('analyticsConsent');if(check)check.checked=enabled()}
@@ -68,6 +84,6 @@ function render(){const box=root.document?.getElementById('launchSettings');if(!
 function trackGenericUi(event){const target=event.target?.closest?.('button,a,input');if(!target)return;if(target.matches('[data-toggle-fav]'))track('favorite_toggled');else if(target.id==='fullBtn')track('fullscreen_open');else if(['scanBtn','imageScanBtn','importImagesProfile'].includes(target.id))track('scan_started');else if(target.matches('[data-navigate],[data-nav-loc]'))track('navigation_started');else if(['assocBtn','mapAssocBtn','pickerSave'].includes(target.id))track('location_association_started');else if(target.id==='exportData')track('backup_created','profile');else if(target.id==='shareBtn')track('card_share_started')}
 function watchCardDetail(){const modal=root.document?.getElementById('detailModal');if(!modal||typeof MutationObserver==='undefined')return;detailObserver?.disconnect();detailObserver=new MutationObserver(()=>{if(!modal.classList.contains('show'))return;const key=modal.querySelector('.detailBrandHeader[data-brand]')?.dataset.brand||'';track('card_open',currentPage(),key)});detailObserver.observe(modal,{attributes:true,attributeFilter:['class']})}
 function init(){removeLegacyID();applyCachedCatalog();render();watchCardDetail();syncCatalog(false);if(enabled())opened();root.document?.addEventListener('click',trackGenericUi,true);root.document?.addEventListener('visibilitychange',()=>{if(root.document.hidden)hiddenAt=Date.now();else{syncCatalog(false);if(hiddenAt&&Date.now()-hiddenAt>=180000){hiddenAt=0;opened()}}});root.addEventListener?.('online',()=>syncCatalog(true));root.addEventListener?.('storage',e=>{if(e.key===PREFERENCE){memoryChoice=null;if(!enabled()){controllers.forEach(c=>c.abort());controllers.clear();recent.clear()}render()}})}
-root.FiCardAnalytics={track,setConsent,enabled};root.FiCardCatalog={sync:()=>syncCatalog(true),market,version:()=>{try{return Number(root.localStorage.getItem(CATALOG_VERSION)||0)}catch{return 0}}};
+root.FiCardAnalytics={track,setConsent,enabled,startupOutcome,arrivalLatency};root.FiCardCatalog={sync:()=>syncCatalog(true),market,version:()=>{try{return Number(root.localStorage.getItem(CATALOG_VERSION)||0)}catch{return 0}}};
 if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init,{once:true});else init();
 })(typeof window==='undefined'?globalThis:window);

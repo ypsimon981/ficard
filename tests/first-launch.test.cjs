@@ -8,21 +8,21 @@ function setup(seed={},embedded=false){
  ctx.window=ctx;ctx.parent=embedded?{}:ctx;vm.createContext(ctx);for(const l of ['it','en','fr','es','pt','nl','de'])vm.runInContext(read('locales/'+l+'.js'),ctx);vm.runInContext(read('ficard-onboarding.js'),ctx);
  return {ctx,data,nodes,bodyClasses,show:()=>listeners.DOMContentLoaded(),get reloads(){return reloads},get market(){return market},submit(){nodes.firstLaunch.querySelector('form').onsubmit({preventDefault(){}})}};
 }
-test('first launch waits for confirmation, defaults both choices on and persists settings',async()=>{
+test('first launch waits for confirmation, explains GPS without a checkbox and persists settings',async()=>{
  const s=setup();let ready=false;s.ctx.FiCardOnboarding.ready.then(()=>ready=true);s.show();await Promise.resolve();assert.equal(ready,false);
- const form=s.nodes.firstLaunch;assert.equal(form.querySelector('#welcomeGps').checked,true);assert.equal(form.querySelector('#welcomeAnalytics').checked,true);
- form.querySelector('#welcomeResidence').value='FR';form.querySelector('#welcomeMarket').value='IT';form.querySelector('#welcomeGps').checked=false;form.querySelector('#welcomeAnalytics').checked=false;s.submit();await s.ctx.FiCardOnboarding.ready;
- assert.equal(s.ctx.FiCardOnboarding.pending(),false);assert.equal(s.ctx.FiCardOnboarding.gpsEnabled(),false);assert.equal(s.data.get('ficard.analytics.aggregate.v1'),'no');assert.equal(s.market.residence,'FR');assert.equal(s.market.override,'IT');assert.equal(s.nodes.firstLaunch,undefined);
- const again=setup(Object.fromEntries(s.data));again.show();assert.equal(again.nodes.firstLaunch,undefined);assert.equal(again.ctx.FiCardOnboarding.gpsEnabled(),false);
+ const form=s.nodes.firstLaunch;assert.equal(form.querySelector('#welcomeGps'),null);assert.match(form.html,/Posizione GPS/);assert.equal(form.querySelector('#welcomeAnalytics').checked,true);
+ form.querySelector('#welcomeResidence').value='FR';form.querySelector('#welcomeMarket').value='IT';form.querySelector('#welcomeAnalytics').checked=false;s.submit();await s.ctx.FiCardOnboarding.ready;
+ assert.equal(s.ctx.FiCardOnboarding.pending(),false);assert.equal(s.ctx.FiCardOnboarding.gpsEnabled(),true);assert.equal(s.data.get('ficard.analytics.aggregate.v1'),'no');assert.equal(s.market.residence,'FR');assert.equal(s.market.override,'IT');assert.equal(s.nodes.firstLaunch,undefined);
+ const again=setup(Object.fromEntries(s.data));again.show();assert.equal(again.nodes.firstLaunch,undefined);assert.equal(again.ctx.FiCardOnboarding.gpsEnabled(),true);
 });
 test('language preview preserves choices and confirmation reloads once into the selected language',()=>{
- const s=setup();s.show();s.nodes.firstLaunch.querySelector('#welcomeResidence').value='FR';s.nodes.firstLaunch.querySelector('#welcomeGps').checked=false;
+ const s=setup({'ficard.gps.enabled.v1':'no'});s.show();s.nodes.firstLaunch.querySelector('#welcomeResidence').value='FR';
  s.nodes.firstLaunch.querySelector('#welcomeLanguage').onchange({target:{value:'en'}});
- assert.match(s.nodes.firstLaunch.html,/Welcome to Fi-Card/);assert.equal(s.nodes.firstLaunch.querySelector('#welcomeResidence').value,'FR');assert.equal(s.nodes.firstLaunch.querySelector('#welcomeGps').checked,false);
+ assert.match(s.nodes.firstLaunch.html,/Welcome to Fi-Card/);assert.equal(s.nodes.firstLaunch.querySelector('#welcomeResidence').value,'FR');assert.equal(s.nodes.firstLaunch.querySelector('#welcomeGps'),null);
  s.submit();assert.equal(s.reloads,1);assert.equal(s.data.get('ficard.language.v2'),'en');assert.equal(s.data.get('ficard.onboarding.complete.v1'),'yes');assert.equal(s.data.get('ficard.gps.enabled.v1'),'no');
 });
 test('existing opt-outs stay off and embedded scanners never show the introduction',()=>{
- const s=setup({'ficard.analytics.aggregate.v1':'no','ficard.gps.enabled.v1':'no'});s.show();assert.equal(s.nodes.firstLaunch.querySelector('#welcomeAnalytics').checked,false);assert.equal(s.nodes.firstLaunch.querySelector('#welcomeGps').checked,false);
+ const s=setup({'ficard.analytics.aggregate.v1':'no','ficard.gps.enabled.v1':'no'});s.show();assert.equal(s.nodes.firstLaunch.querySelector('#welcomeAnalytics').checked,false);s.submit();assert.equal(s.ctx.FiCardOnboarding.gpsEnabled(),false);
  const embedded=setup({},true);embedded.show();assert.equal(embedded.ctx.FiCardOnboarding.pending(),false);assert.equal(embedded.nodes.firstLaunch,undefined);
 });
 test('residence determines special card availability independently of the market',()=>{

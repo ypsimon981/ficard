@@ -27,7 +27,7 @@ function show(){
  clearTimeout(root.ficardStartupTimer);
  const markets=root.FiCardMarkets.read();
  const aggregate=read('ficard.analytics.aggregate.v1');
- const state={language:language(),override:markets.override,residence:markets.residence,gps,analytics:root.FiCardAnalytics?.enabled()??(aggregate!==null?aggregate!=='no':read('ficard.analytics.consent.v1')!=='no')};
+ const state={language:language(),override:markets.override,residence:markets.residence,analytics:root.FiCardAnalytics?.enabled()??(aggregate!==null?aggregate!=='no':read('ficard.analytics.consent.v1')!=='no')};
  const screen=root.document.createElement('section');screen.id='firstLaunch';screen.className='firstLaunch';screen.setAttribute('data-i18n-skip','');
  screen.setAttribute('aria-labelledby','firstLaunchTitle');screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');
  root.document.body.classList.add('isOnboarding');root.document.body.appendChild(screen);
@@ -37,12 +37,11 @@ function show(){
   const options=(items,selected)=>items.map(([value,label])=>'<option value="'+value+'"'+(value===selected?' selected':'')+'>'+esc(label)+'</option>').join('');
   const field=(id,title,help,items,selected)=>'<div class="firstLaunchField"><label for="'+id+'">'+esc(title)+'</label><select id="'+id+'" class="field">'+options(items,selected)+'</select><p class="hint">'+esc(help)+'</p></div>';
   const check=(id,title,help,checked)=>'<div class="firstLaunchField"><label class="onboardingCheck"><input id="'+id+'" type="checkbox"'+(checked?' checked':'')+'><span>'+esc(title)+'</span></label><p class="hint">'+esc(help)+'</p></div>';
-  screen.innerHTML='<form class="firstLaunchSheet"><div class="firstLaunchBrand" aria-label="Fi-Card">Fi-Card</div><h1 id="firstLaunchTitle">'+esc(c.title)+'</h1><p class="hint">'+esc(c.intro)+'</p>'+field('welcomeLanguage',c.language,c.languageHelp,Object.entries(langs),state.language)+field('welcomeMarket',c.market,c.marketHelp,[['auto',c.auto],...countries],state.override)+field('welcomeResidence',c.residence,c.residenceHelp,countries,state.residence)+check('welcomeGps',c.gps,c.gpsHelp,state.gps)+check('welcomeAnalytics',c.analytics,c.analyticsHelp,state.analytics)+'<a href="./privacy.html" target="_blank" rel="noopener">'+esc(c.privacy)+'</a><button type="submit" class="primary">'+esc(c.continue)+'</button></form>';
+  screen.innerHTML='<form class="firstLaunchSheet"><div class="firstLaunchBrand" aria-label="Fi-Card">Fi-Card</div><h1 id="firstLaunchTitle">'+esc(c.title)+'</h1><p class="hint">'+esc(c.intro)+'</p>'+field('welcomeLanguage',c.language,c.languageHelp,Object.entries(langs),state.language)+field('welcomeMarket',c.market,c.marketHelp,[['auto',c.auto],...countries],state.override)+field('welcomeResidence',c.residence,c.residenceHelp,countries,state.residence)+'<div class="firstLaunchField"><strong>'+esc(c.gps)+'</strong><p class="hint">'+esc(c.gpsHelp)+'</p></div>'+check('welcomeAnalytics',c.analytics,c.analyticsHelp,state.analytics)+'<a href="./privacy.html" target="_blank" rel="noopener">'+esc(c.privacy)+'</a><button type="submit" class="primary">'+esc(c.continue)+'</button></form>';
   screen.querySelector('#welcomeLanguage').onchange=e=>{capture();state.language=e.target.value;render();screen.querySelector('#welcomeLanguage').focus()};
   screen.querySelector('form').onsubmit=e=>{
    e.preventDefault();capture();
    root.FiCardMarkets.setPreferences({override:state.override,residence:state.residence});
-   gps=state.gps;write(GPS,gps?'yes':'no');
    write('ficard.analytics.aggregate.v1',state.analytics?'yes':'no');
    root.FiCardAnalytics?.setConsent(state.analytics,false);
    write(COMPLETE,'yes');
@@ -57,7 +56,7 @@ function show(){
    resolveReady();
   };
  }
- function capture(){state.override=screen.querySelector('#welcomeMarket').value;state.residence=screen.querySelector('#welcomeResidence').value;state.gps=screen.querySelector('#welcomeGps').checked;state.analytics=screen.querySelector('#welcomeAnalytics').checked}
+ function capture(){state.override=screen.querySelector('#welcomeMarket').value;state.residence=screen.querySelector('#welcomeResidence').value;state.analytics=screen.querySelector('#welcomeAnalytics').checked}
  render();screen.querySelector('#welcomeLanguage').focus();
 }
 root.FiCardOnboarding={ready,pending:()=>waiting,gpsEnabled:()=>gps,disabledMessage:()=>copy(language()).gpsDisabled};

@@ -3,6 +3,27 @@
  root.FiCardLocales=root.FiCardLocales||{};
  root.FiCardLocales["pt"]={
   "name": "Português",
+  "onboarding": {
+  "title": "Bem-vindo ao Fi-Card",
+  "intro": "Podes alterar estas opções nas Definições.",
+  "language": "Idioma",
+  "languageHelp": "O idioma dos menus e das mensagens.",
+  "market": "Mercado",
+  "marketHelp": "O país onde usas a app determina os lembretes locais. Os cartões funcionam em qualquer lugar.",
+  "residence": "Residência",
+  "residenceHelp": "O teu país de residência determina os cartões especiais disponíveis, como a lotaria dos recibos em Itália.",
+  "gps": "Localização GPS",
+  "gpsHelp": "Ordena os cartões por distância e destaca o da loja próxima. Após confirmares, o telefone pedirá autorização. Também podes usar a app sem GPS.",
+  "analytics": "Estatísticas agregadas",
+  "analyticsHelp": "Ajudam-nos a perceber a utilização e a rapidez da app: apenas contagens agregadas, sem identificadores pessoais, números de cartão, fotografias ou coordenadas.",
+  "privacy": "Política de privacidade",
+  "continue": "Começar",
+  "italy": "Itália",
+  "france": "França",
+  "other": "Outro país",
+  "auto": "Automático, se detetável",
+  "gpsDisabled": "O GPS está desativado no Fi-Card. Podes ativá-lo nas Definições."
+},
   "messages": {
     "photo.fullscreen": "Mostrar foto em ecrã inteiro",
     "arrival.found": "Não procures o cartão: foi ele que te encontrou.",
@@ -39,7 +60,7 @@
     "health.soon": "Adicionar cartão de saúde · Em preparação",
     "health.hint": "No futuro poderás consultar o cartão de saúde na farmácia. Funcionalidade ainda indisponível.",
     "market.title": "País e funcionalidades locais",
-    "market.intro": "Os cartões funcionam em todo o lado. Os códigos especiais e os lembretes dependem do país onde usas o Fi-Card, não do idioma da aplicação.",
+    "market.intro": "Os cartões funcionam em todo o lado. A residência determina os cartões especiais disponíveis; o mercado adapta os lembretes ao país onde usas o Fi-Card.",
     "market.residence": "País de residência",
     "market.use": "País de utilização",
     "market.other": "Outro país",

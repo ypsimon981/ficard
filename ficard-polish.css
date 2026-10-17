@@ -560,3 +560,17 @@ body.isStarting>.app,body.isStarting>.bottom{visibility:hidden}
 #fullBarcode.photoMode .fullCardHeader,#fullBarcode.photoMode canvas,#fullBarcode.photoMode .num,#fullBarcode.photoMode .codeRenderWarning{display:none}
 #fullBarcode.photoMode #fullPhoto{display:block;width:100%;min-height:0;flex:1 1 0;object-fit:contain;max-width:100%;image-rendering:auto}
 #fullBarcode.photoMode #closeFull{flex:0 0 auto;margin-top:12px}
+body.isOnboarding>.app,body.isOnboarding>.bottom{visibility:hidden}
+.firstLaunch{position:fixed;inset:0;z-index:250;background:var(--bg);overflow:auto;overscroll-behavior:contain;padding:calc(20px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));box-sizing:border-box}
+.firstLaunchSheet{max-width:520px;margin:0 auto;padding:24px;background:var(--surface);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);color:var(--text)}
+.firstLaunchBrand{font-size:26px;font-weight:850;color:var(--violet);margin-bottom:14px}
+.firstLaunch h1{font-size:24px;margin:0 0 8px}
+.firstLaunchField{margin-top:20px}
+.firstLaunchField>label{display:block;font-size:16px;font-weight:700;margin-bottom:8px}
+.firstLaunch .field{width:100%;margin:0}
+.firstLaunch .hint{font-size:14px;line-height:1.45;margin:8px 0 0}
+.firstLaunchField>.onboardingCheck,.onboardingCheck{display:flex!important;align-items:center;gap:12px}
+.onboardingCheck input{appearance:auto;flex:0 0 22px;width:22px;height:22px;accent-color:var(--violet);margin:0}
+.firstLaunch a{display:inline-block;margin-top:22px;color:var(--violet);font-size:14px}
+.firstLaunch button[type=submit]{display:block;width:100%;margin-top:20px;min-height:48px}
+@media(max-width:360px){.firstLaunchSheet{padding:18px}}

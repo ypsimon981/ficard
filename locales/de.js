@@ -3,6 +3,27 @@
  root.FiCardLocales=root.FiCardLocales||{};
  root.FiCardLocales["de"]={
   "name": "Deutsch",
+  "onboarding": {
+  "title": "Willkommen bei Fi-Card",
+  "intro": "Du kannst diese Auswahl in den Einstellungen ändern.",
+  "language": "Sprache",
+  "languageHelp": "Die Sprache für Menüs und Meldungen.",
+  "market": "Markt",
+  "marketHelp": "Das Land, in dem du die App nutzt, bestimmt lokale Erinnerungen. Deine Karten funktionieren überall.",
+  "residence": "Wohnsitz",
+  "residenceHelp": "Dein Wohnsitzland bestimmt die verfügbaren Sonderkarten, etwa die Kassenbonlotterie für Italien.",
+  "gps": "GPS-Standort",
+  "gpsHelp": "Sortiert Karten nach Entfernung und zeigt die Karte des nahen Geschäfts vorne an. Nach der Bestätigung fragt das Telefon nach deiner Erlaubnis. Du kannst die App auch ohne GPS nutzen.",
+  "analytics": "Aggregierte Statistiken",
+  "analyticsHelp": "Helfen uns, Nutzung und Geschwindigkeit zu verstehen: nur aggregierte Zähler, ohne persönliche Kennungen, Kartennummern, Fotos oder Koordinaten.",
+  "privacy": "Datenschutzerklärung",
+  "continue": "Starten",
+  "italy": "Italien",
+  "france": "Frankreich",
+  "other": "Anderes Land",
+  "auto": "Automatisch, falls erkennbar",
+  "gpsDisabled": "GPS ist in Fi-Card deaktiviert. Du kannst es in den Einstellungen aktivieren."
+},
   "messages": {
     "photo.fullscreen": "Foto im Vollbild anzeigen",
     "arrival.found": "Such nicht nach deiner Karte: Sie hat dich gefunden.",
@@ -39,7 +60,7 @@
     "health.soon": "Gesundheitskarte hinzufügen · In Vorbereitung",
     "health.hint": "Künftig kannst du deine Gesundheitskarte in der Apotheke aufrufen. Diese Funktion ist noch nicht verfügbar.",
     "market.title": "Land und lokale Funktionen",
-    "market.intro": "Karten funktionieren überall. Spezielle Codes und Erinnerungen hängen vom Land ab, in dem du Fi-Card nutzt, nicht von der Sprache der App.",
+    "market.intro": "Karten funktionieren überall. Dein Wohnsitz bestimmt die verfügbaren Sonderkarten; der Markt passt Erinnerungen an das Land an, in dem du Fi-Card nutzt.",
     "market.residence": "Wohnsitzland",
     "market.use": "Nutzungsland",
     "market.other": "Anderes Land",

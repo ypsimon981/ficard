@@ -3,6 +3,27 @@
  root.FiCardLocales=root.FiCardLocales||{};
  root.FiCardLocales["nl"]={
   "name": "Nederlands",
+  "onboarding": {
+  "title": "Welkom bij Fi-Card",
+  "intro": "Je kunt deze keuzes wijzigen in Instellingen.",
+  "language": "Taal",
+  "languageHelp": "De taal voor menu’s en berichten.",
+  "market": "Markt",
+  "marketHelp": "Het land waar je de app gebruikt bepaalt lokale herinneringen. Je kaarten werken overal.",
+  "residence": "Woonland",
+  "residenceHelp": "Je woonland bepaalt welke speciale kaarten beschikbaar zijn, zoals de kassabonnenloterij voor Italië.",
+  "gps": "GPS-locatie",
+  "gpsHelp": "Sorteert kaarten op afstand en zet de kaart van de nabije winkel vooraan. Na bevestiging vraagt je telefoon om toestemming. Je kunt de app ook zonder GPS gebruiken.",
+  "analytics": "Geaggregeerde statistieken",
+  "analyticsHelp": "Helpen ons het gebruik en de snelheid te begrijpen: alleen geaggregeerde aantallen, zonder persoonlijke identificatoren, kaartnummers, foto’s of coördinaten.",
+  "privacy": "Privacybeleid",
+  "continue": "Beginnen",
+  "italy": "Italië",
+  "france": "Frankrijk",
+  "other": "Ander land",
+  "auto": "Automatisch, indien detecteerbaar",
+  "gpsDisabled": "GPS is uitgeschakeld in Fi-Card. Je kunt dit inschakelen in Instellingen."
+},
   "messages": {
     "photo.fullscreen": "Foto op volledig scherm tonen",
     "arrival.found": "Zoek je kaart niet: die heeft jou gevonden.",
@@ -39,7 +60,7 @@
     "health.soon": "Zorgpas toevoegen · In voorbereiding",
     "health.hint": "Later kun je je zorgpas bij de apotheek openen. Deze functie is nog niet beschikbaar.",
     "market.title": "Land en lokale functies",
-    "market.intro": "Kaarten werken overal. Speciale codes en herinneringen hangen af van het land waar je Fi-Card gebruikt, niet van de taal van de app.",
+    "market.intro": "Kaarten werken overal. Je woonland bepaalt de beschikbare speciale kaarten; de markt past herinneringen aan het land aan waar je Fi-Card gebruikt.",
     "market.residence": "Woonland",
     "market.use": "Land van gebruik",
     "market.other": "Ander land",

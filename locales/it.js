@@ -3,6 +3,27 @@
  root.FiCardLocales=root.FiCardLocales||{};
  root.FiCardLocales["it"]={
   "name": "Italiano",
+  "onboarding": {
+  "title": "Benvenuto in Fi-Card",
+  "intro": "Puoi cambiare queste scelte nelle Impostazioni.",
+  "language": "Lingua",
+  "languageHelp": "La lingua dei menu e dei messaggi.",
+  "market": "Mercato",
+  "marketHelp": "Il Paese in cui usi l’app: adatta i promemoria locali. Le carte funzionano ovunque.",
+  "residence": "Residenza",
+  "residenceHelp": "Il Paese in cui risiedi determina le carte speciali disponibili, come la lotteria degli scontrini per l’Italia.",
+  "gps": "Posizione GPS",
+  "gpsHelp": "Ordina le carte per distanza e mette davanti quella del negozio vicino. Dopo la conferma chiederemo il permesso al telefono. Puoi usare l’app anche senza GPS.",
+  "analytics": "Statistiche aggregate",
+  "analyticsHelp": "Ci aiutano a capire l’uso e la rapidità dell’app: solo contatori aggregati, senza identificativi personali, numeri delle carte, foto o coordinate.",
+  "privacy": "Informativa privacy",
+  "continue": "Inizia",
+  "italy": "Italia",
+  "france": "Francia",
+  "other": "Altro Paese",
+  "auto": "Automatico, se rilevabile",
+  "gpsDisabled": "Il GPS è disattivato in Fi-Card. Puoi attivarlo nelle Impostazioni."
+},
   "messages": {
     "photo.fullscreen": "Mostra foto a schermo pieno",
     "arrival.found": "Non cercare la carta, è lei che ha trovato te.",
@@ -39,7 +60,7 @@
     "health.soon": "Aggiungi tessera sanitaria · In preparazione",
     "health.hint": "In futuro potrai richiamare la tessera sanitaria in farmacia. Funzione non ancora attiva.",
     "market.title": "Paese e funzionalità locali",
-    "market.intro": "Le carte funzionano ovunque. I codici speciali e i promemoria dipendono dal mercato in cui usi Fi-Card, non dalla lingua dell'app.",
+    "market.intro": "Le carte funzionano ovunque. La residenza determina le carte speciali disponibili; il mercato adatta i promemoria al Paese in cui usi Fi-Card.",
     "market.residence": "Paese di residenza",
     "market.use": "Paese di utilizzo",
     "market.other": "Altro Paese",

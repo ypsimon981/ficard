@@ -3,6 +3,27 @@
  root.FiCardLocales=root.FiCardLocales||{};
  root.FiCardLocales["en"]={
   "name": "English",
+  "onboarding": {
+  "title": "Welcome to Fi-Card",
+  "intro": "You can change these choices in Settings.",
+  "language": "Language",
+  "languageHelp": "The language of menus and messages.",
+  "market": "Market",
+  "marketHelp": "The country where you use the app determines local reminders. Your cards work everywhere.",
+  "residence": "Residence",
+  "residenceHelp": "Your country of residence determines the available special cards, such as the receipt lottery for Italy.",
+  "gps": "GPS location",
+  "gpsHelp": "Orders cards by distance and brings the nearby shop’s card to the front. After confirmation, we will request permission from your phone. You can also use the app without GPS.",
+  "analytics": "Aggregate statistics",
+  "analyticsHelp": "Help us understand app usage and speed: only aggregate counts, without personal identifiers, card numbers, photos or coordinates.",
+  "privacy": "Privacy policy",
+  "continue": "Get started",
+  "italy": "Italy",
+  "france": "France",
+  "other": "Other country",
+  "auto": "Automatic, if detectable",
+  "gpsDisabled": "GPS is disabled in Fi-Card. You can enable it in Settings."
+},
   "messages": {
     "photo.fullscreen": "Show photo fullscreen",
     "arrival.found": "Don't look for your card. It found you.",
@@ -39,7 +60,7 @@
     "health.soon": "Add health card · Coming later",
     "health.hint": "You will be able to access your health card at pharmacies. This feature is not available yet.",
     "market.title": "Country and local features",
-    "market.intro": "Cards work everywhere. Special codes and reminders depend on the country where you use Fi-Card, not on the app language.",
+    "market.intro": "Cards work everywhere. Your residence determines available special cards; the market adapts reminders to the country where you use Fi-Card.",
     "market.residence": "Country of residence",
     "market.use": "Country of use",
     "market.other": "Other country",

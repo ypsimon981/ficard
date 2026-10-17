@@ -34,6 +34,7 @@ function current(){
  return detected?{country:detected,source:'gps'}:{country:prefs.residence,source:'residence'};
 }
 function enabled(feature){return !!MARKETS[current().country]?.features[feature]}
+function residentFeature(feature){return !!MARKETS[prefs.residence]?.features[feature]}
 function notify(){render();listener?.()}
 function store(next){
  prefs={residence:cleanCountry(next.residence),override:['auto','IT','FR','XX'].includes(next.override)?next.override:'auto'};
@@ -56,9 +57,11 @@ function render(){
   status.textContent=root.FiCardI18n?.t? t('market.status',{country:label,source:detail}):'Mercato attivo: '+label+' · '+detail;
  }
  const codes=root.document.getElementById('specialCardsContent');
- if(codes)codes.hidden=!enabled('receiptLottery')&&!enabled('healthCard');
+ if(codes)codes.hidden=!residentFeature('receiptLottery')&&!residentFeature('healthCard');
  const quickAdd=root.document.getElementById('lotteryAddFromCard');
- if(quickAdd)quickAdd.hidden=!enabled('receiptLottery');
+ if(quickAdd)quickAdd.hidden=!residentFeature('receiptLottery');
+ const lotterySettings=root.document.getElementById('lotterySettingsAdd');
+ if(lotterySettings)lotterySettings.hidden=!residentFeature('receiptLottery');
 }
 function init(){
  const d=root.document;
@@ -66,7 +69,7 @@ function init(){
  d.getElementById('marketOverride')?.addEventListener('change',e=>store({...prefs,override:e.target.value}));
  render();
 }
-root.FiCardMarkets={MARKETS,current,enabled,setPosition,onChange:fn=>{listener=fn},render,detect,read:()=>({...prefs})};
+root.FiCardMarkets={MARKETS,current,enabled,residentFeature,setPosition,setPreferences:store,onChange:fn=>{listener=fn},render,detect,read:()=>({...prefs})};
 root.addEventListener?.('ficard:languagechange',render);
 if(root.document.readyState==='loading')root.document.addEventListener('DOMContentLoaded',init);else init();
 })(window);

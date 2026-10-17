@@ -10,7 +10,7 @@ function setup(){
  return {c,label,set time(value){time=value},set loading(value){loading=value},set id(value){id=value},flush(){while(frames.length)frames.shift()()}};
 }
 test('arrival time includes loading and is captured only after the hero is displayed',()=>{
- const s=setup();s.time=1500;s.c.queueArrivalTiming();s.flush();assert.equal(s.label.innerHTML,'');s.loading=false;s.time=2800;s.c.queueArrivalTiming();assert.equal(s.label.innerHTML,'');s.flush();assert.match(s.label.innerHTML,/2,8 secondi/);assert.match(s.label.innerHTML,/ha trovato te/);
+ const s=setup();s.time=1500;s.c.queueArrivalTiming();s.flush();assert.equal(s.label.innerHTML,'');s.loading=false;s.time=2800;s.c.queueArrivalTiming();assert.equal(s.label.innerHTML,'');s.flush();assert.match(s.label.innerHTML,/2,8 secondi/);assert.match(s.label.innerHTML,/ha trovato te <span class="arrivalElapsed">in/);assert.doesNotMatch(s.label.innerHTML,/<br/);
  s.time=9000;s.label.dataset={};s.c.queueArrivalTiming();assert.match(s.label.innerHTML,/2,8 secondi/);
 });
 test('a different card does not inherit the first card startup timing',()=>{

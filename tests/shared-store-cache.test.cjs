@@ -20,3 +20,14 @@ test('published shell precaches the new module and offers a reversible setting',
 
 test('wide Naples viewport is split into bounded batches, not reported as a server outage',async()=>{let calls=0;const f=fixture(async(url,options)=>{const cells=JSON.parse(options.body).cells;calls++;assert.ok(cells.length<=16);return {ok:true,json:async()=>({cells:cells.map(c=>({...c,complete:false,elements:[]}))})};});const region=[40.83,14.10,40.98,14.38];const count=f.api.cellsFor(region).length;assert.ok(count>16);const result=await f.api.request(region);assert.equal(calls,Math.ceil(count/16));assert.equal(result.pending,count);assert.equal(result.coverage.length,0);});
 test('area limits are shown as zoom instructions while saved shops remain',async()=>{const error=Error('Avvicina la mappa per cercare una zona più piccola.');error.code='AREA_TOO_LARGE';const c=uiFixture({enabled:()=>true,request:async()=>{throw error}});await c.search({lat:41.915,lng:12.415},true);assert.match(c.status,/Avvicina la mappa/);assert.doesNotMatch(c.status,/server non disponibile/);assert.equal(c.shopCache.elements.length,1);});
+
+test('official pharmacy points are opt-in and retain separate identifiers',async()=>{
+ const point={type:'pharmacy-it',id:123,lat:41.915,lon:12.415,tags:{amenity:'pharmacy',name:'Comunale',source:'Ministero della Salute','ref:msal':'123'}};
+ const f=fixture(async(url,options)=>{const body=JSON.parse(options.body);assert.equal(body.pharmacies,true);assert.deepEqual(Object.keys(body).sort(),['cells','pharmacies']);return {ok:true,json:async()=>({pharmacies_included:true,cells:body.cells.map(c=>({...c,complete:true,elements:[point]}))})}});
+ const data=await f.api.request(area,undefined,{pharmacies:true});assert.equal(data.elements[0].type,'pharmacy-it');assert.equal(data.pharmacyCoverage.length,1);
+});
+test('adding health card fetches pharmacies despite previous area coverage',async()=>{
+ let called=false;const c=uiFixture({enabled:()=>true,request:async(b,signal,options)=>{called=true;assert.equal(options.pharmacies,true);return {source:'shared',elements:[],coverage:[],pharmacyCoverage:[[41.9,12.4,41.95,12.45]],pending:0}}});
+ c.descriptors=()=>[{id:'health',healthCard:true,names:['Farmacia']}];c.shopCache=c.S.mergeCache(c.shopCache,{elements:[]},[41.8,12.3,42,12.6]);
+ await c.search({lat:41.915,lng:12.415});assert.equal(called,true);assert.equal(c.shopCache.pharmacyZones.length,1);
+});

@@ -21,3 +21,9 @@ test('health card is magnified only at one close pharmacy with precise GPS',()=>
  c.candidates=[{c:health,l:pharmacy},{c:other,l:pharmacy}];assert.equal(c.arrivalCard([other,health],{accuracy:10}),health);
  c.candidates=[{c:other,l:pharmacy}];assert.equal(c.arrivalCard([other],{accuracy:10}),other);
 });
+
+test('ministerial pharmacies survive offline caching and match health card',()=>{
+ const c=setup(),S=c.window.FiCardStores,point={type:'pharmacy-it',id:123,lat:41.91,lon:12.41,tags:{amenity:'pharmacy',name:'Comunale',source:'Ministero della Salute','ref:msal':'123','addr:street':'Via Roma, 1'}};
+ const cache=S.mergeCache({pharmacyZones:[{bounds:[41.9,12.4,41.95,12.45],at:Date.now()}]},{elements:[point]});
+ const found=S.parse(cache,[{id:'health',healthCard:true,names:['Farmacia']}]);assert.equal(found.length,1);assert.equal(found[0].point.osmId,'pharmacy-it/123');assert.equal(found[0].point.source,'ministero-salute');assert.equal(cache.elements[0].tags['ref:msal'],'123');assert.equal(cache.pharmacyZones.length,1);
+});

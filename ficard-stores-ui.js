@@ -28,7 +28,7 @@ function shops(cardId=''){
  const origin=currentPos||searchCenter;
  return unique.map(x=>({...x,d:origin?distanceM(origin,x.l):Infinity})).sort((a,b)=>a.d-b.d||a.c.name.localeCompare(b.c.name,'it'));
 }
-function storeBrand(c){const key=c.brandKey||inferredBrandKey(c);return {key:key||'custom:'+c.name.trim().toLocaleLowerCase('it'),name:BRANDS[key]?.name||c.name}}
+function storeBrand(c){if(isHealthCard(c))return {key:'farmacia',name:'Farmacia'};const key=c.brandKey||inferredBrandKey(c);return {key:key||'custom:'+c.name.trim().toLocaleLowerCase('it'),name:BRANDS[key]?.name||c.name}}
 function heartSvg(active){return '<svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true" fill="'+(active?'currentColor':'none')+'" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1.1-1.1a5.5 5.5 0 0 0-7.8 7.8L12 21l8.8-8.6a5.5 5.5 0 0 0 0-7.8Z"/></svg>'}
 function filtered(){const category=document.getElementById('shopCategory').value,brand=document.getElementById('shopCard').value,fav=document.getElementById('shopFavorites').checked;return shops().filter(x=>(!category||categoryFor(x.c)===category)&&(!brand||storeBrand(x.c).key===brand)&&(!fav||x.favorite))}
 function populate(){
@@ -47,7 +47,7 @@ function favorite(x){if(x.c.isDemo)return;let l=savedAt(x.c,x.l);if(l)l.favorite
 function cardBarcodeSvg(){return '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="3"/><path d="M6 8h5M6 12v5M9 12v5M12 12v5M16 10v7M19 10v7"/></svg>'}
 async function findAddress(x){const address=await S.reverseAddress(x.l,localStorage);if(address&&cards.includes(x.c)&&(x.c.locations||[]).includes(x.l)){x.l.address=address;save();renderShopUpdates()}return address}
 function shopAddressLabel(l){return l.address||[l.street,l.houseNumber].filter(Boolean).join(' ')||l.zone||l.suburb||l.neighbourhood||l.quarter||l.postcode||l.city||''}
-function row(x){const el=document.createElement('div');el.className='promo locationResult'+(x.favorite?' favoriteStore':'');el.innerHTML=shopMiniCardHtml(x.c)+'<div class="grow"><b>'+esc(x.l.name||x.c.name)+'</b><small class="shopAddress">'+esc(shopAddressLabel(x.l)||'Indirizzo non disponibile')+'</small><small class="shopDistance">'+esc(distanceLabel(x.d))+'</small><small class="shopOrigin">'+(x.saved&&isManualLocation(x.l)?'Aggiunto a mano':'Da OpenStreetMap')+'</small></div><div class="shopActions"><button type="button" class="chip" data-shop-open aria-label="Apri carta" title="Apri carta">'+cardBarcodeSvg()+'</button><button type="button" class="chip" data-shop-nav aria-label="Naviga">'+pinSvg()+'</button><button type="button" class="chip" data-shop-fav aria-label="'+(x.favorite?'Rimuovi negozio dai preferiti':'Salva negozio tra i preferiti')+'" aria-pressed="'+x.favorite+'">'+heartSvg(x.favorite)+'</button></div>';
+function row(x){const el=document.createElement('div');el.className='promo locationResult'+(x.favorite?' favoriteStore':'');el.innerHTML=shopMiniCardHtml(x.c)+'<div class="grow"><b>'+esc(x.l.name||x.c.name)+'</b><small class="shopAddress">'+esc(shopAddressLabel(x.l)||'Indirizzo non disponibile')+'</small><small class="shopDistance">'+esc(distanceLabel(x.d))+'</small><small class="shopOrigin">'+(x.saved&&isManualLocation(x.l)?'Aggiunto a mano':x.l.source==='ministero-salute'||x.l.osmId?.startsWith('pharmacy-it/')?'Ministero della Salute':'Da OpenStreetMap')+'</small></div><div class="shopActions"><button type="button" class="chip" data-shop-open aria-label="Apri carta" title="Apri carta">'+cardBarcodeSvg()+'</button><button type="button" class="chip" data-shop-nav aria-label="Naviga">'+pinSvg()+'</button><button type="button" class="chip" data-shop-fav aria-label="'+(x.favorite?'Rimuovi negozio dai preferiti':'Salva negozio tra i preferiti')+'" aria-pressed="'+x.favorite+'">'+heartSvg(x.favorite)+'</button></div>';
  el.querySelector('[data-shop-open]').onclick=()=>openCard(x.c.id);el.querySelector('[data-shop-nav]').onclick=()=>navigate(x);if(x.c.isDemo){el.querySelector('[data-shop-fav]').remove()}else el.querySelector('[data-shop-fav]').onclick=()=>favorite(x);
  if(x.saved&&isManualLocation(x.l)){const remove=document.createElement('button');remove.className='chip';remove.innerHTML=trashSvg();remove.setAttribute('aria-label','Dissocia punto vendita');remove.title='Dissocia punto vendita';remove.dataset.shopRemove='';remove.onclick=()=>{const i=x.c.locations.indexOf(x.l);if(i>=0){removeLocation(x.c.id,i);renderDetail()}};el.querySelector('.shopActions').append(remove)}
  if(x.saved&&isManualLocation(x.l)&&!x.l.address){const addressButton=document.createElement('button');addressButton.type='button';addressButton.className='shopAddressLookup';addressButton.textContent='Trova indirizzo';addressButton.onclick=async()=>{addressButton.disabled=true;addressButton.textContent='Cerco indirizzo…';const address=await findAddress(x);if(address){addressButton.replaceWith(Object.assign(document.createElement('small'),{textContent:address}))}else{addressButton.disabled=false;addressButton.textContent='Trova indirizzo';toast('Indirizzo non disponibile. Riprova con una connessione attiva.')}};el.querySelector('.grow').append(addressButton)}return el;}
@@ -63,7 +63,7 @@ renderLocations=function(){
  list(document.getElementById('locationsList'),others,'Nessun altro negozio con questi filtri. Cerca nella zona o aggiungi un punto dalla tessera.');
  }
  document.getElementById('otherStoresTitle').hidden=document.getElementById('shopFavorites').checked;document.getElementById('locationsList').hidden=document.getElementById('shopFavorites').checked;
- document.getElementById('mapInfo').textContent=(busy?'Ricerca in corso… ':status?status+' ':'')+items.length+' negozi · '+favorites.length+' preferiti · distanze in linea d’aria. Dati © OpenStreetMap contributors.';
+ document.getElementById('mapInfo').textContent=(busy?'Ricerca in corso… ':status?status+' ':'')+items.length+' negozi · '+favorites.length+' preferiti · distanze in linea d’aria. Dati © OpenStreetMap contributors.'+(allVisibleCards().some(isHealthCard)?' Farmacie: Ministero della Salute · IODL 2.0.':'');
  document.getElementById('shopSearchHere').disabled=false;
  document.getElementById('shopSearchHere').textContent=busy?'Annulla ricerca':'Cerca in questa zona';
 };
@@ -106,18 +106,18 @@ renderOverviewMap=function(){
 function renderShopUpdates(){renderSmartCarousel();renderCards();renderLocations();renderOverviewMap();renderDetail()}
 async function search(center,force=false,bounds=null){
  clearTimeout(sharedRetry);sharedRetry=null;if(!force)sharedRetryCount=0;
- matchCachedShops();const ds=descriptors(),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
+ matchCachedShops();const ds=descriptors(),wantsPharmacies=ds.some(d=>d.healthCard),allNames=[...new Set(ds.flatMap(d=>d.names))].sort();if(!allNames.length){status='Aggiungi prima una tessera.';renderLocations();return}
  let query;try{query=S.query(center,allNames,1500,bounds)}catch(e){status=e.message;renderLocations();return}
  const area=bounds||S.boundsFor(center,1500),needed=bounds||S.boundsFor(center,1000),key=area.map(n=>n.toFixed(5)).join(',');
  searchCenter={lat:center.lat,lng:center.lng};
  const shared=typeof window!=='undefined'?window.FiCardSharedStores:null;
  // Small GPS movements and card changes reuse the same stored geographic area.
- if(!force&&S.cacheCovers(shopCache,needed)){status='Negozi dalla cache locale.';renderShopUpdates();if(shared?.enabled())shared.prime(area).then(data=>{if(data?.pending&&data.queue!=='capacity'&&shared.enabled()&&searchCenter.lat===center.lat&&searchCenter.lng===center.lng){status='Negozi locali disponibili. Archivio server in preparazione: '+data.pending+' settori.';renderLocations();if(!sharedRetry){sharedRetryCount=0;sharedRetry=setTimeout(()=>{sharedRetry=null;search(center,true,bounds)},15000)}}});return}
+ if(!force&&S.cacheCovers(shopCache,needed)&&(!wantsPharmacies||S.cacheCovers({zones:shopCache.pharmacyZones||[]},needed))){status='Negozi dalla cache locale.';renderShopUpdates();if(shared?.enabled())shared.prime(area).then(data=>{if(data?.pending&&data.queue!=='capacity'&&shared.enabled()&&searchCenter.lat===center.lat&&searchCenter.lng===center.lng){status='Negozi locali disponibili. Archivio server in preparazione: '+data.pending+' settori.';renderLocations();if(!sharedRetry){sharedRetryCount=0;sharedRetry=setTimeout(()=>{sharedRetry=null;search(center,true,bounds)},15000)}}});return}
  if(busy&&key===lastKey)return;
  controller?.abort();controller=new AbortController();const active=controller,id=++requestId;lastKey=key;busy=true;status='';renderShopUpdates();
  try{let data;
   if(shared?.enabled()){
-   try{data=await shared.request(area,active.signal);}catch(e){if(active.signal.aborted)throw e;if(e.code==='AREA_TOO_LARGE'){status=e.message;return;}// A cache from a different district does not mean this area is covered.
+   try{data=await shared.request(area,active.signal,{pharmacies:wantsPharmacies});}catch(e){if(active.signal.aborted)throw e;if(e.code==='AREA_TOO_LARGE'){status=e.message;return;}// A cache from a different district does not mean this area is covered.
     // Always attempt a bounded live fallback; retain existing points on failure.
     try{data=await S.request(query,active.signal);status='Archivio condiviso non disponibile: ricerca locale OpenStreetMap.'}
     catch(fallbackError){status='Archivio non disponibile e ricerca OpenStreetMap non riuscita. Mostro solo i negozi già salvati; elenco incompleto.';return;}}
@@ -125,7 +125,7 @@ async function search(center,force=false,bounds=null){
   }else data=await S.request(query,active.signal);
   if(id!==requestId)return;
   if(data.source==='shared'){
-   shopCache=S.mergeCache(shopCache,data);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
+   shopCache=S.mergeCache(shopCache,data);if(data.pharmacyCoverage?.length)shopCache.pharmacyZones=[...data.pharmacyCoverage.map(bounds=>({bounds,at:Date.now()})),...(shopCache.pharmacyZones||[])].slice(0,48);for(const covered of data.coverage)shopCache=S.mergeCache(shopCache,{elements:[]},covered);
    status=data.pending?(data.queue==='capacity'?'Negozi disponibili salvati sul dispositivo. Copertura incompleta: alcune zone attendono un aggiornamento.':'Negozi disponibili salvati sul dispositivo. Copertura incompleta: altre zone sono in preparazione.'):data.partial?'Negozi dall’archivio nazionale, salvati sul dispositivo. Copertura incompleta della zona.':'Negozi dall’archivio condiviso, salvati anche sul dispositivo.';
    if(data.pending&&data.queue!=='capacity'&&sharedRetryCount<8){clearTimeout(sharedRetry);sharedRetryCount++;sharedRetry=setTimeout(()=>{sharedRetry=null;if(shared.enabled())search(center,true,bounds)},15000);}
    else{clearTimeout(sharedRetry);sharedRetry=null;sharedRetryCount=0;}

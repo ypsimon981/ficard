@@ -9,13 +9,13 @@ function cellsFor(b){
  if(cells.length>48){const error=Error('Avvicina la mappa per cercare una zona più piccola.');error.code='AREA_TOO_LARGE';throw error;}return cells;
 }
 const bounds=c=>[c.y/20,c.x/20,(c.y+1)/20,(c.x+1)/20];
-function validElement(e){return e&&['node','way','relation'].includes(e.type)&&Number.isSafeInteger(e.id)&&Number.isFinite(e.lat)&&Number.isFinite(e.lon)&&e.lat>=35&&e.lat<=48&&e.lon>=6&&e.lon<=19&&e.tags&&typeof e.tags==='object'&&!Array.isArray(e.tags);}
+function validElement(e){return e&&['node','way','relation','pharmacy-it'].includes(e.type)&&Number.isSafeInteger(e.id)&&Number.isFinite(e.lat)&&Number.isFinite(e.lon)&&e.lat>=35&&e.lat<=48&&e.lon>=6&&e.lon<=19&&e.tags&&typeof e.tags==='object'&&!Array.isArray(e.tags);}
 const pending=new Map();
-async function request(b,signal){
+async function request(b,signal,options={}){
  const cells=cellsFor(b);if(!cells)return {unsupported:true};
  const chunks=[];for(let i=0;i<cells.length;i+=16)chunks.push(cells.slice(i,i+16));
  const responses=await Promise.all(chunks.map(async batch=>{
-  const r=await fetch(ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cells:batch}),signal:AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]),cache:'no-store'});
+  const r=await fetch(ENDPOINT,{method:'POST',headers:{'content-type':'application/json'},body:JSON.stringify({cells:batch,...(options.pharmacies?{pharmacies:true}:{})}),signal:AbortSignal.any([...(signal?[signal]:[]),AbortSignal.timeout(12000)]),cache:'no-store'});
   if(!r.ok)throw Error('Archivio condiviso: HTTP '+r.status);
   const d=await r.json();if(d.disabled)return d;
   if(!Array.isArray(d.cells)||d.cells.length!==batch.length||d.cells.some(c=>!batch.some(expected=>expected.x===c.x&&expected.y===c.y)))throw Error('Risposta archivio non valida');return d;
@@ -27,7 +27,7 @@ async function request(b,signal){
   for(const e of c.elements)elements.set(e.type+'/'+e.id,e);
   if(c.complete)coverage.push(bounds(c));else{partial++;if(c.snapshot_available!==true)waiting++;}
  }
- return {elements:[...elements.values()],coverage,complete:partial===0,pending:waiting,partial,source:'shared',queue:data.queue||null};
+ return {elements:[...elements.values()],coverage,complete:partial===0,pending:waiting,partial,source:'shared',pharmacyCoverage:options.pharmacies&&responses.every(d=>d.pharmacies_included===true)?cells.map(bounds):[],queue:data.queue||null};
 }
 function prime(b){
  if(!enabled()||root.navigator?.onLine===false)return Promise.resolve(null);

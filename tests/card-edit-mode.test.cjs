@@ -5,7 +5,7 @@ function setup(custom=true){
  const node=id=>nodes[id]??=( {value:'',scrollTop:350,innerHTML:'',classList:{toggle:(key,on)=>on?classes.add(key):classes.delete(key)},insertAdjacentHTML(){},focus(){focused=id}} );
  const card={id:'one',name:'Test Card',code:'12345',alias:'Original',category:'altro',color:'#5B3DF5',format:'CODE128'};
  const ctx={document:{getElementById:node,querySelector:()=>node('sheet')},window:{FiCardI18n:{translateText:s=>s}},inferredBrandKey:()=>custom?'':'test',CATEGORIES:{altro:'Altro'},categoryFor:c=>c.category,esc:String,cardDisplayName:c=>c.name,catalogOptions:()=>'',codeFormatOptions:()=>'',normalizeFormat:x=>x,inferManualFormat:()=> 'CODE128',formatLabel:x=>x,BRANDS:{},save:()=>saves++,renderAll(){},toast(){},openCard:()=>{reopened++;ctx.setCardEditMode(false)}};
- vm.createContext(ctx);vm.runInContext(html.slice(html.indexOf('function setCardEditMode('),html.indexOf('function showFull(')),ctx);
+ vm.createContext(ctx);require('./health-fixture.cjs')(ctx,html);vm.runInContext(html.slice(html.indexOf('function setCardEditMode('),html.indexOf('function showFull(')),ctx);
  ctx.openEditCard(card);
  return {ctx,card,node,classes,get focused(){return focused},get saves(){return saves},get reopened(){return reopened}};
 }

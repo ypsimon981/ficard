@@ -6,7 +6,7 @@ function setup(){
  els.fullBarcode.classList={add:v=>classes.add(v),remove:(...vs)=>vs.forEach(v=>classes.delete(v)),toggle:(v,on)=>on?classes.add(v):classes.delete(v)};
  const trigger={isConnected:true,focus(){focus++}};
  const ctx={document:{getElementById:id=>els[id],activeElement:trigger},syncCardScreen(){sync++},drawBarcode(){draw++},cardInk:()=>'',brandLogoHtml:()=>'',brandFor:()=>'',cardDisplayName:c=>c.name,esc:String};
- vm.createContext(ctx);vm.runInContext(html.slice(html.indexOf('let fullScreenReturnFocus='),html.indexOf('const LOCATION_DUPLICATE_METERS=')),ctx);
+ els.fullCardHeader.classList={toggle(){}};vm.createContext(ctx);require('./health-fixture.cjs')(ctx,html);vm.runInContext(html.slice(html.indexOf('let fullScreenReturnFocus='),html.indexOf('const LOCATION_DUPLICATE_METERS=')),ctx);
  return {ctx,els,classes,get focus(){return focus},get sync(){return sync},get draw(){return draw}};
 }
 test('saved photo opens full screen without regenerating its code or modifying the photo',()=>{

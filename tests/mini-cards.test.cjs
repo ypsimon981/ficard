@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const html=fs.readFileSync('index.html','utf8'),css=fs.readFileSync('ficard-polish.css','utf8');
 test('all catalog mini cards use the same logo, scale and card color as the wallet',()=>{
  const c=vm.createContext({cards:[],save(){},esc:s=>String(s??''),L:{divIcon:x=>x}});
- vm.runInContext(html.slice(html.indexOf('const CATEGORIES='),html.indexOf('function demoCards()'))+'\nglobalThis.catalog=BRANDS;',c);
+ require('./health-fixture.cjs')(c,html);vm.runInContext(html.slice(html.indexOf('const CATEGORIES='),html.indexOf('function demoCards()'))+'\nglobalThis.catalog=BRANDS;',c);
  vm.runInContext(html.slice(html.indexOf('function inferredBrandKey('),html.indexOf('function renderCategoryChips(')),c);
  for(const name of ['brandLogoHtml','cardInk'])vm.runInContext(html.split('\n').find(l=>l.startsWith('function '+name+'(')),c);
  vm.runInContext(html.slice(html.indexOf('function mapBrandVisual('),html.indexOf('function renderLocations(')),c);

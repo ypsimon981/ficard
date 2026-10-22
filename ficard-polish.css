@@ -588,3 +588,7 @@ body.isOnboarding>.app,body.isOnboarding>.bottom{visibility:hidden}
 .healthCardHeader .healthSkin{min-height:0}
 .healthCardDetail .detailBrandHeader{position:relative}
 .healthCardDetail .detailBrandHeader .detailLogo{position:absolute;inset:0}
+
+/* Wallet tiles draw the skin directly: no percentage-height child in Safari. */
+.cardShelf .cardItem.healthCard,.usageGrid .cardItem.healthCard{background:#abc9e1 url('./tessera-sanitaria.png') center/133% 100% no-repeat!important}
+.cardItem.healthCard .healthSkin{display:none!important}

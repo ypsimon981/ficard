@@ -10,7 +10,7 @@ function shopSignature(items,distances=true){const rows=items.map(x=>JSON.string
 
 const savedFavorite=l=>l.favorite===true;
 function allVisibleCards(){return cards.concat(window.FiCardDemo?.cards(cards,BRANDS)||[])}
-function descriptors(){return allVisibleCards().map(c=>({id:c.id,names:S.names(c,BRANDS,inferredBrandKey(c))})).filter(d=>d.names.length)}
+function descriptors(){return allVisibleCards().map(c=>({id:c.id,healthCard:isHealthCard(c),names:isHealthCard(c)?['Farmacia']:S.names(c,BRANDS,inferredBrandKey(c))})).filter(d=>d.names.length)}
 function savedAt(c,l){return (c.locations||[]).find(p=>(l.osmId&&p.osmId===l.osmId)||distanceM(p,l)<50)}
 function shops(cardId=''){
  const items=[];for(const c of allVisibleCards()){if(cardId&&c.id!==cardId)continue;

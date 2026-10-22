@@ -592,3 +592,6 @@ body.isOnboarding>.app,body.isOnboarding>.bottom{visibility:hidden}
 /* Wallet tiles draw the skin directly: no percentage-height child in Safari. */
 .cardShelf .cardItem.healthCard,.usageGrid .cardItem.healthCard{background:#abc9e1 url('./tessera-sanitaria.png') center/133% 100% no-repeat!important}
 .cardItem.healthCard .healthSkin{display:none!important}
+
+.smartCarousel .smartCard.healthCard{background:#abc9e1 url('./tessera-sanitaria.png') center/133% 100% no-repeat!important}
+.smartCard.healthCard::before,.smartCard.healthCard .brandMark{display:none!important}

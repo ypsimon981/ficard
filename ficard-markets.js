@@ -3,7 +3,7 @@
 'use strict';
 const KEY='ficard.market.preferences.v1';
 const MARKETS=Object.freeze({
- IT:Object.freeze({name:'Italia',features:Object.freeze({receiptLottery:true,healthCard:false})}),
+ IT:Object.freeze({name:'Italia',features:Object.freeze({receiptLottery:true,healthCard:true})}),
  FR:Object.freeze({name:'Francia',features:Object.freeze({receiptLottery:false,healthCard:false})}),
  XX:Object.freeze({name:'Altri Paesi',features:Object.freeze({receiptLottery:false,healthCard:false})})
 });
@@ -60,6 +60,8 @@ function render(){
  if(codes)codes.hidden=!residentFeature('receiptLottery')&&!residentFeature('healthCard');
  const quickAdd=root.document.getElementById('lotteryAddFromCard');
  if(quickAdd)quickAdd.hidden=!residentFeature('receiptLottery');
+ const healthSettings=root.document.getElementById('healthSettingsAdd');
+ if(healthSettings)healthSettings.hidden=!residentFeature('healthCard');
  const lotterySettings=root.document.getElementById('lotterySettingsAdd');
  if(lotterySettings)lotterySettings.hidden=!residentFeature('receiptLottery');
 }

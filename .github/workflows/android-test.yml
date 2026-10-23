@@ -28,6 +28,11 @@ jobs:
       - run: npm run android:prepare
       - run: ./gradlew assembleRelease -PficardTestSigning --no-daemon
         working-directory: android
+      - name: Verify optimized permission bridge
+        run: |
+          unzip -p android/app/build/outputs/apk/release/app-release.apk classes.dex > /tmp/ficard-classes.dex
+          "$ANDROID_HOME/build-tools/36.0.0/dexdump" -d /tmp/ficard-classes.dex > /tmp/ficard-dex.txt
+          node scripts/check-android-permissions.cjs /tmp/ficard-dex.txt
       - uses: actions/upload-artifact@v4
         with:
           name: Fi-Card-Android-test

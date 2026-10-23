@@ -1,7 +1,7 @@
 function replaceOnce(html,from,to){if(!html.includes(from))throw Error('Native integration target changed: '+from.slice(0,70));return html.replace(from,to);}
 function nativeHtml(html,name){
  html=replaceOnce(html,'<head>','<head>\n<script src="./native/ficard-native.js"></script>');
- html=html.replace('</head>','<style>.app{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px))!important}.bottom{padding-bottom:calc(9px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))!important}</style></head>');
+ html=html.replace('</head>','<style>.app{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px))!important}body.appShell .bottom{min-height:0!important;padding-top:20px!important;padding-bottom:calc(3px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))!important}body.appShell .bottom .nav{min-height:48px;gap:2px;padding:2px 0}body.appShell .bottom #addFab{top:-10px}</style></head>');
  if(name!=='index.html')return html;
  html=replaceOnce(html,'if("serviceWorker" in navigator)navigator.serviceWorker.register','if(!window.FiCardNative&&"serviceWorker" in navigator)navigator.serviceWorker.register');
  html=replaceOnce(html,'if(positionRequest)return positionRequest;','if(positionRequest)return positionRequest;\n if(window.FiCardNative){positionRequest=window.FiCardNative.getPosition().finally(()=>{positionRequest=null});return positionRequest;}');

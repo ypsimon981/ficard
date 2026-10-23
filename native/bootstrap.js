@@ -16,10 +16,18 @@ if(Capacitor.isNativePlatform()){
   },
   setFullScreen(active){return CardScreen.setFullScreen({active});},
   async getPosition(){
-   const permission=await Geolocation.requestPermissions({permissions:['location']});
-   if(permission.location!=='granted'&&permission.coarseLocation!=='granted')throw Error('Permesso di posizione negato. Abilitalo nelle impostazioni del telefono.');
-   const p=await Geolocation.getCurrentPosition({enableHighAccuracy:true,timeout:15000,maximumAge:30000});
-   return {lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy,timestamp:p.timestamp};
+   // getCurrentPosition requests permission AND resolves disabled device location.
+   // requestPermissions first would reject with 0007 before Android can offer activation.
+   try{
+    const p=await Geolocation.getCurrentPosition({enableHighAccuracy:true,timeout:15000,maximumAge:30000});
+    return {lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy,timestamp:p.timestamp};
+   }catch(error){
+    const code=String(error?.code||'');
+    const message=code==='OS-PLUG-GLOC-0003'?'Permesso di posizione negato. Abilitalo nelle impostazioni del telefono.':
+     ['OS-PLUG-GLOC-0007','OS-PLUG-GLOC-0009','OS-PLUG-GLOC-0016','OS-PLUG-GLOC-0017'].includes(code)?'Posizione disattivata. Attiva la localizzazione e riprova La mia posizione.':
+     code==='OS-PLUG-GLOC-0010'?'Tempo GPS scaduto. Riprova La mia posizione.':'Posizione non disponibile. Controlla che la localizzazione sia attiva.';
+    throw Object.assign(new Error(window.FiCardI18n?.translateText(message)||message),{code:code==='OS-PLUG-GLOC-0003'?1:code==='OS-PLUG-GLOC-0010'?3:2});
+   }
   },
   async saveFile(blob,name){
    const data=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(String(reader.result).split(',')[1]);reader.onerror=reject;reader.readAsDataURL(blob);});

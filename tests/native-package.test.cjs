@@ -28,3 +28,16 @@ test('native export marks a backup saved only after the file write succeeds',asy
  const failed=ctx.downloadBackup([],'backup.json');reject(Error('WRITE_FAILED'));await assert.rejects(failed,/WRITE_FAILED/);
  assert.equal(writes.length,1);assert.equal(messages.length,1);
 });
+
+test('native GPS uses the combined permission/settings flow, without a disabled-services preflight',async()=>{
+ const source=read('native/bootstrap.js');
+ const method=source.slice(source.indexOf('  async getPosition(){'),source.indexOf('  async saveFile('));
+ let calls=0;
+ const ctx={window:{},Geolocation:{requestPermissions:()=>assert.fail('Preflight prevents the Android activation dialog'),getCurrentPosition:async options=>{calls++;assert.equal(options.enableHighAccuracy,true);return {coords:{latitude:41,longitude:12,accuracy:8},timestamp:123}}}};
+ vm.createContext(ctx);vm.runInContext('globalThis.bridge={'+method+'}',ctx);
+ const p=await ctx.bridge.getPosition();assert.equal(p.lat,41);assert.equal(p.lng,12);assert.equal(calls,1);
+ for(const [code,message,numeric] of [['0009','Posizione disattivata',2],['0003','Permesso di posizione negato',1],['0010','Tempo GPS scaduto',3]]){
+  ctx.Geolocation.getCurrentPosition=async()=>{throw {code:'OS-PLUG-GLOC-'+code,message:'Native English error'}};
+  await assert.rejects(ctx.bridge.getPosition(),e=>e.code===numeric&&e.message.startsWith(message));
+ }
+});

@@ -3,12 +3,12 @@
 ## Cosa è pronto
 Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup con selettore di destinazione Android, condivisione tessera tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
 
-Identificativo richiesto dalla scheda Google Play esistente: `fi.card.app`. Versione 0.9.181, versionCode 5; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
+Identificativo richiesto dalla scheda Google Play esistente: `fi.card.app`. Versione 0.9.262, versionCode 6; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
 
 Statistiche aggregate attive dal primo avvio con toggle per disattivarle, senza identificativo dell’installazione; scelta esplicita del titolare. Verificare minimizzazione, trattamento/log del fornitore e informativa prima dell’invio. Il consenso pubblicitario è separato. Pubblicità attualmente disattivata: nessun SDK AdMob incluso. Nella Console dichiarare quanto fa questa build, non funzioni future.
 
 ## APK di prova senza Android Studio
-In GitHub → Actions → **Build Android test APK**, aprire la build completata e scaricare l’artifact **Fi-Card-Android-test**. Estrarre lo ZIP: contiene `app-debug.apk`. Trasferirlo su Android e installarlo autorizzando quella specifica sorgente quando Android lo richiede. Non caricare l’APK debug su Play: serve solo al collaudo. Richiede Android 7 o successivo.
+In GitHub → Actions → **Build Android test APK**, aprire la build completata e scaricare l’artifact **Fi-Card-Android-test**. Estrarre lo ZIP: contiene `app-release.apk`. Trasferirlo su Android e installarlo autorizzando quella specifica sorgente quando Android lo richiede. È una build release con R8 e riduzione risorse, firmata con la chiave debug del runner solo per il collaudo. Non caricarla su Play. La firma di prova può differire dalle installazioni precedenti: esportare prima un backup se Android richiede di disinstallarle. Richiede Android 7 o successivo.
 
 ## Sul PC Windows
 Installare Node.js 22 o successivo e Android Studio 2025.2.1 o successivo, con Android SDK 36. Android Studio fornisce il JDK adatto (il progetto usa Java 21). Scaricare il repository da GitHub, estrarlo e aprire un terminale nella cartella:
@@ -45,3 +45,11 @@ Caricare l’AAB in un test interno/chiuso, completare scheda store, icona, scre
 Per account personali creati dopo il 13 novembre 2023 Google richiede un test chiuso con almeno 12 tester iscritti continuativamente per 14 giorni prima di richiedere accesso alla produzione. Questo requisito è distinto dai test interni e dall’installazione diretta dell’APK.
 
 Fonti: https://capacitorjs.com/docs/getting-started/environment-setup · https://capacitorjs.com/docs/android/deploying-to-google-play · https://support.google.com/googleplay/android-developer/answer/14151465
+
+## Preparazione release 0.9.262
+
+Package, interfaccia e `versionName` sono allineati a 0.9.262; `versionCode` 6 sostituisce il 5 della release precedente. La preparazione nativa interrompe la build se package e interfaccia divergono. Il catalogo remoto continua ad aggiornarsi indipendentemente dalla release Android.
+
+Il workflow APK usa `assembleRelease -PficardTestSigning` per verificare anche R8. Il workflow AAB usa `bundleRelease` senza questo parametro e mantiene la firma esterna esistente. Entrambi conservano `mapping.txt` come artifact separato. Non usare la chiave debug per firmare il bundle Play.
+
+Passaggio restante per lo store: firmare `app-release.aab` con la stessa upload key del bundle 0.9.181, quindi verificarlo con `jarsigner -verify`. Non occorre ricompilare per applicare la firma. Confermare in Play Console che il codice 6 non sia stato usato per caricamenti esterni a questo repository.

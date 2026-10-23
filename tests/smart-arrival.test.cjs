@@ -24,13 +24,14 @@ test('quick cards require precise GPS and show all located cards',()=>{
   assert.ok(classes.has('largeQuickCards'));assert.equal(classes.has('denseNearby'),gps);assert.equal((box.innerHTML.match(/data-card-open=/g)||[]).length,gps?3:0);assert.doesNotMatch(box.innerHTML,/class="name"/);
  }
 });
-function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0,accuracy:10},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);
+function fixture(){const ctx={cards:[],results:[],currentPos:{lat:0,lng:0,accuracy:10},BRANDS:{a:{},b:{}},inferredBrandKey:c=>c.brandKey,S:{},searchCenter:null,savedFavorite:l=>l.favorite===true};vm.createContext(ctx);require('./health-fixture.cjs')(ctx,html);vm.runInContext(fs.readFileSync(path.join(root,'ficard-stores.js'),'utf8'),ctx);ctx.S=ctx.window.FiCardStores;
+vm.runInContext(ui.match(/function allVisibleCards[^\n]+/)[0]+ui.match(/function storeBrand[^\n]+/)[0],ctx);
 vm.runInContext(section(html,'function cardAliasHtml(','function cardHtml('),ctx);
 vm.runInContext(section(html,'function distanceM(','function smartCard()')+section(html,'function quickPositionReady()','function nearbyCardCount()'),ctx);
 vm.runInContext(section(ui,'function savedAt(','function storeBrand(')+section(ui,'smartShopCandidates=function()','function resetShopFilters()'),ctx);return ctx}
 const card=(id,key)=>({id,name:id,brandKey:key,locations:[]});const point=(meters,id)=>({lat:meters/6371000*180/Math.PI,lng:0,osmId:id});
 test('OSM transient shops determine ordering even without saved locations',()=>{const c=fixture();c.cards=[card('a','a'),card('b','b')];c.results=[{cardId:'a',point:point(300,'node/1')},{cardId:'b',point:point(5,'node/2')}];assert.equal(c.smartOrder().ordered[0].id,'b');assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos).id,'b');assert.equal(c.cards[1].locations.length,0)});
-test('multiple nearby physical shops suppress the message, even for one card',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(5,'node/1')},{cardId:'a',point:point(6,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos),null)});
+test('multiple nearby physical shops suppress the message, even for one card',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(10,'node/1')},{cardId:'a',point:point(-49.9,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos),null)});
 test('multiple cards matching one OSM shop count as one shop',()=>{const c=fixture();c.cards=[card('a','a'),card('a2','a')];c.results=c.cards.map(x=>({cardId:x.id,point:point(5,'node/1')}));assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a')});
 test('message requires strictly below 35 m and a GPS position',()=>{const c=fixture();c.cards=[card('a','a')];c.cards[0].locations=[point(35.01)];assert.equal(c.arrivalCard(c.cards,c.currentPos),null);c.cards[0].locations=[point(34.99)];assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'a');assert.equal(c.arrivalCard(c.cards,null),null)});
 
@@ -48,3 +49,5 @@ test('a second shop within 50 m prevents focus but one beyond 50 m does not',()=
   assert.equal(c.arrivalCard(c.smartOrder().ordered,c.currentPos)?.id??null,expected);
  }
 });
+
+test('duplicate OSM representations of one nearby shop do not suppress arrival',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(5,'node/1')},{cardId:'a',point:point(6,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos)?.id,'a')});

@@ -2,7 +2,7 @@ const {test}=require('node:test'),assert=require('node:assert/strict'),fs=requir
 const html=fs.readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
 test('card actions use six buttons with accessible trash before store content',()=>{
  const line=html.split('\n').find(l=>l.includes('<div class="detailToolbar" aria-label='));
- const toolbar=line.slice(0,line.indexOf("'+officialFlyerHtml(c)"));
+ const toolbar=line.slice(0,line.indexOf('</div>'));
  assert.equal((toolbar.match(/<button /g)||[]).length,6);
  assert.ok(toolbar.includes('id="deleteBtn" class="deleteCardAction"'));
  assert.ok(toolbar.includes('aria-label="Elimina carta"'));

@@ -14,7 +14,7 @@ function setup(){
  const fields={shopCategory:{value:''},shopCard:{value:''},shopFavorites:{checked:false}};
  const cards=[{id:'conad',name:'Conad',category:'supermercati'},{id:'zara',name:'Zara',category:'abbigliamento'},{id:'lidl',name:'Lidl',category:'supermercati'}];
  const ctx={document:{getElementById:id=>fields[id]},cards,BRANDS:{conad:{name:'Conad'},zara:{name:'Zara'},lidl:{name:'Lidl'}},inferredBrandKey:c=>c.id,CATEGORIES:{supermercati:'Supermercati',abbigliamento:'Abbigliamento'},categoryFor:c=>c.category,esc:s=>s,shops:()=>cards.map(c=>({c,favorite:c.id==='conad'}))};
- vm.createContext(ctx);vm.runInContext(source.slice(source.indexOf('function storeBrand('),source.indexOf('function navigate(')),ctx);
+ vm.createContext(ctx);require('./health-fixture.cjs')(ctx,fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'));vm.runInContext(source.match(/function allVisibleCards[^\n]+/)[0],ctx);vm.runInContext(source.slice(source.indexOf('function storeBrand('),source.indexOf('function navigate(')),ctx);
  return {ctx,fields};
 }
 test('category removes incompatible cards and clears an incompatible previous choice',()=>{

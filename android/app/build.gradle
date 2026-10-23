@@ -8,7 +8,7 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 6
-        versionName = "0.9.209"
+        versionName = "0.9.262"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         aaptOptions {
              // Files and dirs to omit from the packaged assets dir, modified to accommodate modern web apps.
@@ -18,6 +18,11 @@ android {
     }
     buildTypes {
         release {
+            // Explicit tester-only switch: exercise R8 with an installable APK.
+            // Never use this switch for the Play bundle (which uses the existing upload key externally).
+            if (project.hasProperty('ficardTestSigning')) {
+                signingConfig signingConfigs.debug
+            }
             minifyEnabled true
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

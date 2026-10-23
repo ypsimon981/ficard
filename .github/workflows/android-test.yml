@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['android/**', 'native/**', 'scripts/**', 'package*.json', 'capacitor.config.json', '.github/workflows/android-test.yml']
+    paths: ['android/**', 'native/**', 'scripts/**', 'package*.json', 'capacitor.config.json', 'tests/**', '*.html', '*.js', '*.css', '*.png', '*.svg', '*.webmanifest', 'locales/**', 'logos/**', 'logos-hq/**', 'vendor/**', '.github/workflows/android-test.yml']
 permissions:
   contents: read
 jobs:
@@ -26,10 +26,17 @@ jobs:
       - run: npm ci
       - run: npm test
       - run: npm run android:prepare
-      - run: ./gradlew assembleDebug --no-daemon
+      - run: ./gradlew assembleRelease -PficardTestSigning --no-daemon
         working-directory: android
       - uses: actions/upload-artifact@v4
         with:
           name: Fi-Card-Android-test
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+          path: android/app/build/outputs/apk/release/app-release.apk
+          retention-days: 14
+          if-no-files-found: error
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Fi-Card-Android-test-R8-mapping
+          path: android/app/build/outputs/mapping/release/mapping.txt
+          if-no-files-found: error
           retention-days: 14

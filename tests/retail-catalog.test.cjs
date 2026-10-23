@@ -1,6 +1,6 @@
 const {test}=require('node:test'),assert=require('node:assert/strict'),vm=require('node:vm'),fs=require('node:fs'),path=require('node:path');
 const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8'),ctx=vm.createContext({});
-vm.runInContext(html.slice(html.indexOf('const CATEGORIES='),html.indexOf('function demoCards()'))+'\nglobalThis.catalog=BRANDS;globalThis.categories=CATEGORIES;',ctx);
+require('./health-fixture.cjs')(ctx,html);vm.runInContext(html.slice(html.indexOf('const CATEGORIES='),html.indexOf('function demoCards()'))+'\nglobalThis.catalog=BRANDS;globalThis.categories=CATEGORIES;',ctx);
 vm.runInContext(html.match(/function categoryFor\(c\)\{[^\n]+/)[0],ctx);
 const window={};vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../ficard-stores.js'),'utf8'),{window,AbortController,setTimeout,clearTimeout,URLSearchParams,fetch});
 test('new retail brands are available in the correct categories',()=>{

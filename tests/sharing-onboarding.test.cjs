@@ -26,8 +26,9 @@ test('fourth slot follows three visible cards at zero, one, two and three saved 
  }
  const c=ghostContext();assert.equal(c.mainCardTiles([],false,null), '');
 });
-test('ghost actions use the existing add flow and are hidden from search/favourite/category results',()=>{
- assert.match(html,/!q&&\['used','all','name'\]\.includes\(active\)\?ghostKeys:\[\]/);
+test('demo cards replace ghosts and are hidden from search/favourite/category results',()=>{
+ assert.match(html,/const demoCards=!q&&\['used','all','name'\]\.includes\(active\)\?\(window\.FiCardDemo/);
+ assert.match(html,/const ghosts=\[\];/);
  assert.match(html,/querySelectorAll\('\[data-ghost-add\]'\).*getElementById\('addFab'\)\.click\(\)/);
  assert.match(read('ficard-polish.css'),/\.ghostFace\{[^}]*opacity:\.5/);
 });
@@ -35,12 +36,14 @@ test('three sharing messages and always-visible disclaimer render in all seven l
  for(const lang of ['it','en','fr','es','pt','nl','de']){
   const events={},panel={innerHTML:''},banner={innerHTML:''};
   const root={FiCardI18n:{language:()=>lang},localStorage:{getItem:()=>null,setItem(){}},sessionStorage:{getItem:()=>null,setItem(){}},navigator:{onLine:false},document:{readyState:'loading',addEventListener:(n,fn)=>events[n]=fn,getElementById:id=>id==='cardSharingMessages'?panel:banner},addEventListener(){}};
-  vm.runInNewContext(read('ficard-content.js'),{window:root,Math:Object.assign(Object.create(Math),{random:()=>.99})});
+  vm.runInNewContext(read('ficard-content.js'),{window:root,Math:Object.assign(Object.create(Math),{random:()=>0})});
   events.DOMContentLoaded();
   assert.equal((panel.innerHTML.match(/<details>/g)||[]).length,3);
   assert.match(panel.innerHTML,/<\/details><p class="sharingDisclaimer">[^<]+<\/p>$/);
-  assert.match(root.FiCardContent.html('banner'),/data-content-sharing="true"/);
-  assert.equal(root.FiCardContent.model('banner').view,'profile');
+  assert.equal(root.FiCardContent.model('banner').action,'add');
+  root.FiCardContent.setCardCount(4);
+  assert.match(root.FiCardContent.html('banner'),/data-content-action="share"/);
+  assert.equal(root.FiCardContent.model('banner').action,'share');
   if(lang==='it'){assert.match(panel.innerHTML,/in pochi tocchi/);assert.match(panel.innerHTML,/solo dove consentito/);}
   else assert.doesNotMatch(panel.innerHTML,/in pochi tocchi|Ti manca una carta/);
  }

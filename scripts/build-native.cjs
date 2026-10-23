@@ -2,6 +2,10 @@ const fs=require('node:fs/promises'),path=require('node:path'),{build}=require('
 const root=path.resolve(__dirname,'..'),out=path.join(root,'www');
 const {nativeHtml}=require('./native-html.cjs');
 async function main(){
+ const version=JSON.parse(await fs.readFile(path.join(root,'package.json'),'utf8')).version;
+ const html=await fs.readFile(path.join(root,'index.html'),'utf8');
+ if(html.match(/name="ficard-version" content="([^"]+)"/)?.[1]!==version)
+  throw Error('Version mismatch: align package.json with the current Fi-Card interface before building Android.');
  const marker=path.join(out,'.ficard-generated');
  try{await fs.access(out);await fs.access(marker);}catch(error){
   if(await fs.stat(out).catch(()=>null))throw Error('Existing www is not a Fi-Card generated directory; preserving it.');

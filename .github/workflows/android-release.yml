@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches: [main]
-    paths: ['android/**', 'native/**', 'scripts/**', 'package*.json', 'capacitor.config.json', '.github/workflows/android-release.yml']
+    paths: ['android/**', 'native/**', 'scripts/**', 'package*.json', 'capacitor.config.json', 'tests/**', '*.html', '*.js', '*.css', '*.png', '*.svg', '*.webmanifest', 'locales/**', 'logos/**', 'logos-hq/**', 'vendor/**', '.github/workflows/android-release.yml']
 permissions:
   contents: read
 jobs:

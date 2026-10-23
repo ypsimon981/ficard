@@ -11,7 +11,7 @@ function shopSignature(items,distances=true){const rows=items.map(x=>JSON.string
 const savedFavorite=l=>l.favorite===true;
 function allVisibleCards(){return cards.concat(window.FiCardDemo?.cards(cards,BRANDS)||[])}
 function descriptors(){return allVisibleCards().map(c=>({id:c.id,healthCard:isHealthCard(c),names:isHealthCard(c)?['Farmacia']:S.names(c,BRANDS,inferredBrandKey(c))})).filter(d=>d.names.length)}
-function savedAt(c,l){return (c.locations||[]).find(p=>(l.osmId&&p.osmId===l.osmId)||distanceM(p,l)<50)}
+function savedAt(c,l){return (c.locations||[]).find(p=>(l.osmId&&p.osmId===l.osmId)||distanceM(p,l)<50||(isHealthCard(c)&&S.sameStore(p,l)))}
 function shops(cardId=''){
  const items=[];for(const c of allVisibleCards()){if(cardId&&c.id!==cardId)continue;
  for(const l of c.locations||[])items.push({c,l,saved:!c.isDemo,favorite:!c.isDemo&&savedFavorite(l)});
@@ -20,7 +20,7 @@ function shops(cardId=''){
  // Merge overlapping OSM node/way/entrance records, including already-cached demo points.
  // Prefer explicitly saved and favourite points so the user's choices are retained.
  const unique=[];
- for(const x of items.slice().sort((a,b)=>Number(b.favorite)-Number(a.favorite)||Number(b.saved)-Number(a.saved))){
+ for(const x of items.slice().sort((a,b)=>Number(b.favorite)-Number(a.favorite)||Number(b.saved)-Number(a.saved)||Number(S.isNationalPharmacy(a.l))-Number(S.isNationalPharmacy(b.l)))){
   const brand=storeBrand(x.c).key;
   if(unique.some(y=>storeBrand(y.c).key===brand&&S.sameStore(y.l,x.l)))continue;
   unique.push(x);

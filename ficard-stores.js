@@ -19,11 +19,29 @@ function query(center,list,radius=3000,bounds=null){
 }
 // OSM often represents the same shop as a building polygon and a point/entrance.
 // Compare only within the same brand/card; never merge distant stores sharing an address.
+function isNationalPharmacy(point){return point?.source==='ministero-salute'||String(point?.osmId||'').startsWith('pharmacy-it/')}
+function pharmacyAddress(value){
+ const text=normalize(value).replace(/\b\d{5}\b/g,'').trim(),match=text.match(/^(.*\D)\s+(\d{1,4})(?:\s|$)/);
+ return match?{street:match[1].trim(),number:match[2]}:null;
+}
 function sameStore(a,b){
  if(!a||!b||!Number.isFinite(a.lat)||!Number.isFinite(a.lng)||!Number.isFinite(b.lat)||!Number.isFinite(b.lng))return false;
  if(a.osmId&&b.osmId&&a.osmId===b.osmId)return true;
  const lat=(a.lat+b.lat)*Math.PI/360,dy=(a.lat-b.lat)*111320,dx=(a.lng-b.lng)*111320*Math.cos(lat);
  const meters=Math.hypot(dx,dy);
+ if(isNationalPharmacy(a)!==isNationalPharmacy(b)){
+  if(meters>400)return false;
+  const aa=pharmacyAddress(a.address),ab=pharmacyAddress(b.address);
+  // The national register includes legal names, city names and civic suffix lists.
+  // A matching street and civic number tolerates its less precise coordinates.
+  if(aa&&ab&&aa.street===ab.street)return aa.number===ab.number;
+  const stop=new Set(['farmacia','farmacie','farmaceutica','comunale','comunali','centrale','dottore','dottoressa','dott','dottssa','della','delle','degli','dello','societa','snc','srl','srls','sas','spa']);
+  const tokens=value=>normalize(value).split(' ').filter(t=>t.length>=5&&!stop.has(t));
+  const na=tokens(a.name),nb=tokens(b.name),shared=na.some(t=>nb.includes(t));
+  // Without full addresses require a distinctive shared name and closer coordinates.
+  if(!aa||!ab){if(shared&&meters<=150)return true}
+  else if(aa.street!==ab.street)return false;
+ }
  if(meters<=55)return true;
  const addressA=normalize(a.address),addressB=normalize(b.address);
  // A full street address with house number, not a city-only or district label.
@@ -38,7 +56,10 @@ function parse(data,descriptors){
  const found=[];for(const e of data.elements||[]){const lat=e.lat??e.center?.lat,lng=e.lon??e.center?.lon;if(!Number.isFinite(lat)||!Number.isFinite(lng)||Math.abs(lat)>90||Math.abs(lng)>180)continue;
  const tags=e.tags||{},address=tags['addr:street']?[tags['addr:street'],tags['addr:housenumber'],tags['addr:city']].filter(Boolean).join(' '):tags['addr:suburb']||tags['addr:neighbourhood']||tags['addr:quarter']||tags['addr:district']||tags['addr:postcode']||tags['addr:city']||'';
  for(const d of descriptors)if(d.healthCard?isPharmacy(tags):matches(tags,d.names)){const point={lat,lng,osmId:e.type+'/'+e.id,name:String(tags.name||tags.brand||d.names[0]).slice(0,200),address:address.slice(0,300),source:e.type==='pharmacy-it'?'ministero-salute':'osm-discovered'};
- if(!found.some(x=>x.cardId===d.id&&sameStore(x.point,point)))found.push({cardId:d.id,point});}
+ const existing=found.find(x=>x.cardId===d.id&&sameStore(x.point,point));
+ if(!existing)found.push({cardId:d.id,point});
+ else if(isNationalPharmacy(existing.point)&&!isNationalPharmacy(point))existing.point={...point,address:point.address||existing.point.address};
+ else if(!existing.point.address&&point.address)existing.point.address=point.address;}
  }return found;
 }
 const CACHE_KEY='ficard.nearby-shops.v4',CACHE_AGE=7*86400000;
@@ -94,6 +115,6 @@ function reverseAddress(point,storage){
   }catch(e){return ''}finally{clearTimeout(timer)}
  });addressPending.set(key,job);addressQueue=job;job.finally(()=>addressPending.delete(key));return job;
 }
-root.FiCardStores={isPharmacy,normalize,names,matches,sameStore,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
+root.FiCardStores={isNationalPharmacy,isPharmacy,normalize,names,matches,sameStore,query,parse,request,boundsFor,mergeCache,cacheCovers,readCache,writeCache,CACHE_AGE,addressText,reverseAddress};
 })(window);
 

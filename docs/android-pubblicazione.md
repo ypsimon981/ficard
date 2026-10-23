@@ -3,7 +3,7 @@
 ## Cosa è pronto
 Progetto Capacitor 8, file web inclusi nel pacchetto (`www`, generato), icona Fi-Card, avvio offline, GPS in primo piano, feedback aptico, backup con selettore di destinazione Android, condivisione tessera tramite pannello Android e tasto Indietro. La webapp GitHub Pages non viene trasformata: le integrazioni native sono applicate al bundle durante `npm run build`.
 
-Identificativo richiesto dalla scheda Google Play esistente: `fi.card.app`. Versione 0.9.264, versionCode 8; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
+Identificativo richiesto dalla scheda Google Play esistente: `fi.card.app`. Versione 1.0.0, versionCode 9; aumentare versionCode per ogni nuovo caricamento Play. Non impostare `server.url`: l’app deve usare i file locali anche senza connessione.
 
 Statistiche aggregate attive dal primo avvio con toggle per disattivarle, senza identificativo dell’installazione; scelta esplicita del titolare. Verificare minimizzazione, trattamento/log del fornitore e informativa prima dell’invio. Il consenso pubblicitario è separato. Pubblicità attualmente disattivata: nessun SDK AdMob incluso. Nella Console dichiarare quanto fa questa build, non funzioni future.
 
@@ -46,10 +46,10 @@ Per account personali creati dopo il 13 novembre 2023 Google richiede un test ch
 
 Fonti: https://capacitorjs.com/docs/getting-started/environment-setup · https://capacitorjs.com/docs/android/deploying-to-google-play · https://support.google.com/googleplay/android-developer/answer/14151465
 
-## Preparazione release 0.9.264
+## Preparazione release 1.0.0
 
-Package, interfaccia e `versionName` sono allineati a 0.9.264; `versionCode` 8 sostituisce il 5 della release precedente. La preparazione nativa interrompe la build se package e interfaccia divergono. Il catalogo remoto continua ad aggiornarsi indipendentemente dalla release Android.
+Package, interfaccia e `versionName` sono allineati a 1.0.0; `versionCode` 9 sostituisce il 5 della release precedente. La preparazione nativa interrompe la build se package e interfaccia divergono. Il catalogo remoto continua ad aggiornarsi indipendentemente dalla release Android.
 
 Il workflow APK usa `assembleRelease -PficardTestSigning` per verificare anche R8. Il workflow AAB usa `bundleRelease` senza questo parametro e mantiene la firma esterna esistente. Entrambi conservano `mapping.txt` come artifact separato. Non usare la chiave debug per firmare il bundle Play.
 
-Passaggio restante per lo store: firmare `app-release.aab` con la stessa upload key del bundle 0.9.181, quindi verificarlo con `jarsigner -verify`. Non occorre ricompilare per applicare la firma. Confermare in Play Console che il codice 8 non sia stato usato per caricamenti esterni a questo repository.
+Passaggio restante per lo store: firmare `app-release.aab` con la stessa upload key del bundle 0.9.181, quindi verificarlo con `jarsigner -verify`. Non occorre ricompilare per applicare la firma. Confermare in Play Console che il codice 9 non sia stato usato per caricamenti esterni a questo repository.

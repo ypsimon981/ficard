@@ -642,7 +642,7 @@ body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset
 .shareMini{
  position:relative;display:grid;align-content:center;gap:3px;
  box-sizing:border-box;width:100%;min-width:0;height:72px;min-height:72px;
- padding:7px 31px 7px 11px;overflow:hidden;text-align:start;
+ padding:7px 48px 7px 11px;overflow:hidden;text-align:start;
  border:0;border-radius:12px;background:var(--card-color);color:var(--card-ink);
 }
 .shareMiniName{
@@ -650,7 +650,13 @@ body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset
  overflow:hidden;overflow-wrap:anywhere;font-size:14px;font-weight:750;line-height:1.15;
 }
 .shareMiniAlias{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;opacity:.85}
-.shareTick{display:none;position:absolute;top:5px;right:5px;border-radius:50%;background:#168244;color:white;width:24px;height:24px;place-items:center}
+.shareMiniLogo{
+ position:absolute;right:7px;top:50%;transform:translateY(-50%);
+ display:grid;place-items:center;width:34px;height:24px;overflow:hidden;
+}
+.shareMiniLogo img{position:static;width:100%;height:100%;max-width:100%;max-height:100%;object-fit:contain}
+.shareMiniLogo .brandLogoFallback{display:none!important}
+.shareTick{display:none;position:absolute;top:4px;right:5px;border-radius:50%;background:#168244;color:white;width:18px;height:18px;place-items:center;font-size:12px}
 .shareMini[aria-pressed="true"] .shareTick{display:grid}
 #sendSelectedCards{width:100%}
 .gpsIntroCard{margin-block:8px;padding:12px;border-radius:14px;background:var(--bg);text-align:center}

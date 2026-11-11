@@ -1,8 +1,8 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
-test('header keeps only theme/refresh and software version lives in settings',()=>{
+test('header keeps position, theme and settings and software version lives in settings',()=>{
  const html=read('index.html'),header=html.match(/<header class="top">([\s\S]*?)<\/header>/)[1];
- assert.match(header,/id="themeBtn"/);assert.match(header,/id="refreshBtn"/);
+ assert.match(header,/id="gpsToggle"[\s\S]*id="themeBtn"[\s\S]*data-view="profile"/);assert.doesNotMatch(header,/id="refreshBtn"/);assert.match(html,/id="refreshBtn"/);
  assert.doesNotMatch(header,/gridBtn|installBtn|class="release"/);
  assert.doesNotMatch(html,/getElementById\(['"](?:gridBtn|installBtn)['"]\)/);
  const displayed=html.match(/softwareVersion[\s\S]*?class="release">v(\d+\.\d+\.\d+)</);

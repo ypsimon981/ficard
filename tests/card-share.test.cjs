@@ -28,3 +28,15 @@ test('unpublished or invalid store URLs use a clean web link',()=>{
  const text=ctx.cardShareText({name:'Conad'});assert.match(text,/https:\/\/example.test\/ficard\/$/);assert.doesNotMatch(text,/scan=|private|App Store|Google Play/);
  assert.doesNotMatch(ctx.cardShareText({name:'Conad'},{appStore:'https://example.test/fake',googlePlay:''}),/fake/);
 });
+
+test('selected set sharing excludes private cards and preserves the source wallet',()=>{
+ const source=require('node:fs').readFileSync(require('node:path').join(__dirname,'../index.html'),'utf8');
+ const fn=source.slice(source.indexOf('function canShareLoyaltyCard('),source.indexOf('function openCardSharing('));
+ const cards=[{id:'1'},{id:'2',health:true},{id:'3',lottery:true},{id:'4',isDemo:true}];
+ const result=require('node:vm').runInNewContext(fn+'\ncards.filter(canShareLoyaltyCard)',{
+  cards,isHealthCard:c=>c.health,window:{FiCardLottery:{isLotteryCard:c=>c.lottery}}
+ });
+ require('node:assert/strict').equal(result.length,1);
+ require('node:assert/strict').equal(result[0].id,'1');
+ require('node:assert/strict').equal(cards.length,4);
+});

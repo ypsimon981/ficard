@@ -1,5 +1,8 @@
 package fi.card.app;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.provider.Settings;
 import android.view.Window;
 import android.view.WindowManager;
 import com.getcapacitor.Plugin;
@@ -29,6 +32,16 @@ public class CardScreenPlugin extends Plugin {
             } else {
                 restore();
             }
+            call.resolve();
+        });
+    }
+
+    @PluginMethod
+    public void openLocationSettings(PluginCall call) {
+        Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.fromParts("package", getActivity().getPackageName(), null));
+        getActivity().runOnUiThread(() -> {
+            getActivity().startActivity(intent);
             call.resolve();
         });
     }

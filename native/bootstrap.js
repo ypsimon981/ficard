@@ -14,6 +14,7 @@ if(Capacitor.isNativePlatform()){
   async saveBackup(blob,name){
    await BackupFiles.saveBackup({data:await blob.text(),name});
   },
+  openLocationSettings:Capacitor.getPlatform()==='android'?()=>CardScreen.openLocationSettings():undefined,
   setFullScreen(active){return CardScreen.setFullScreen({active});},
   async getPosition(){
    // getCurrentPosition requests permission AND resolves disabled device location.

@@ -8,12 +8,12 @@ function setup(seed={},embedded=false){
  ctx.window=ctx;ctx.parent=embedded?{}:ctx;vm.createContext(ctx);for(const l of ['it','en','fr','es','pt','nl','de'])vm.runInContext(read('locales/'+l+'.js'),ctx);vm.runInContext(read('ficard-onboarding.js'),ctx);
  return {ctx,data,nodes,bodyClasses,show:()=>listeners.DOMContentLoaded(),get reloads(){return reloads},get market(){return market},submit(){nodes.firstLaunch.querySelector('form').onsubmit({preventDefault(){}})}};
 }
-test('first launch waits for confirmation, explains GPS without a checkbox and persists settings',async()=>{
+test('first launch waits for confirmation, leaves GPS off until explicitly activated and persists settings',async()=>{
  const s=setup();let ready=false;s.ctx.FiCardOnboarding.ready.then(()=>ready=true);s.show();await Promise.resolve();assert.equal(ready,false);
  const form=s.nodes.firstLaunch;assert.equal(form.querySelector('#welcomeGps'),null);assert.match(form.html,/Posizione GPS/);assert.equal(form.querySelector('#welcomeAnalytics').checked,true);
  form.querySelector('#welcomeResidence').value='FR';form.querySelector('#welcomeMarket').value='IT';form.querySelector('#welcomeAnalytics').checked=false;s.submit();await s.ctx.FiCardOnboarding.ready;
- assert.equal(s.ctx.FiCardOnboarding.pending(),false);assert.equal(s.ctx.FiCardOnboarding.gpsEnabled(),true);assert.equal(s.data.get('ficard.analytics.aggregate.v1'),'no');assert.equal(s.market.residence,'FR');assert.equal(s.market.override,'IT');assert.equal(s.nodes.firstLaunch,undefined);
- const again=setup(Object.fromEntries(s.data));again.show();assert.equal(again.nodes.firstLaunch,undefined);assert.equal(again.ctx.FiCardOnboarding.gpsEnabled(),true);
+ assert.equal(s.ctx.FiCardOnboarding.pending(),false);assert.equal(s.ctx.FiCardOnboarding.gpsEnabled(),false);assert.equal(s.data.get('ficard.analytics.aggregate.v1'),'no');assert.equal(s.market.residence,'FR');assert.equal(s.market.override,'IT');assert.equal(s.nodes.firstLaunch,undefined);
+ const again=setup(Object.fromEntries(s.data));again.show();assert.equal(again.nodes.firstLaunch,undefined);assert.equal(again.ctx.FiCardOnboarding.gpsEnabled(),false);
 });
 test('language preview preserves choices and confirmation reloads once into the selected language',()=>{
  const s=setup({'ficard.gps.enabled.v1':'no'});s.show();s.nodes.firstLaunch.querySelector('#welcomeResidence').value='FR';

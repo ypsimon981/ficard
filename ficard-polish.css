@@ -615,7 +615,7 @@ body.appShell .bottom{
 .bottom .navLabel{min-height:0;white-space:nowrap;line-height:1.15}
 .bottom .navIcon{
  display:grid;place-items:center;width:44px;height:44px;
- background:var(--surface);border-radius:50%;box-shadow:0 2px 8px #35286b24;
+ background:var(--surface);border-radius:50%;box-shadow:none;
 }
 .bottom .nav.active .navIcon{background:#fff;color:var(--violet)!important}
 .bottom #addFab .addNavIcon{background:var(--violet);color:var(--teal)!important}

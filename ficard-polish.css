@@ -603,14 +603,14 @@ body.appShell .bottom{
  width:min(564px,calc(100% - 16px));
  background:transparent!important;
  border:0;box-shadow:none;min-height:0;
- padding:3px 8px env(safe-area-inset-bottom)!important;
+ padding:5px 10px calc(2px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))!important;
  align-items:start;gap:0;
 }
 .bottom::before{display:none}
 body.appShell .bottom::after{
  content:"";position:absolute;z-index:-1;pointer-events:none;
  inset:0 0 max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px));
- border-radius:20px;background:rgb(255 255 255 / 16%);
+ border-radius:20px;background:rgb(255 255 255 / 25%);
  border:1px solid rgb(255 255 255 / 24%);
 }
 .bottom .nav,.bottom #addFab{
@@ -629,7 +629,7 @@ body.appShell .bottom::after{
 .bottom #addFab .addNavIcon svg{width:23px;height:23px;stroke-width:2.5}
 .bottom .navLabel{font-weight:650;padding:1px 4px;background:var(--surface);border-radius:8px}
 .bottom #addFab svg{width:42px;height:36px}
-body.appShell .app>main>.view{padding-bottom:calc(67px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
+body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
 #homeView #cardGrid{
  width:calc(100% + 12px);max-width:none;margin-inline:-6px;
  padding-inline:0;column-gap:6px;
@@ -648,4 +648,3 @@ body.appShell .app>main>.view{padding-bottom:calc(67px + max(env(safe-area-inset
 .gpsIntroCard .brandLogo{height:40px;max-width:75%;object-fit:contain}
 body:has(#detailModal.show,#fullBarcode.show,#shareCardsModal.show) .bottom{visibility:hidden}
 .bottom #addFab{font-size:10px;line-height:1.15}
-body.appShell .bottom{padding-bottom:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px))!important}

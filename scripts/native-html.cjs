@@ -1,7 +1,7 @@
 function replaceOnce(html,from,to){if(!html.includes(from))throw Error('Native integration target changed: '+from.slice(0,70));return html.replace(from,to);}
 function nativeHtml(html,name){
  html=replaceOnce(html,'<head>','<head>\n<script src="./native/ficard-native.js"></script>');
- html=html.replace('</head>','<style>.app{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px))!important}body.appShell .bottom{padding-bottom:max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px))!important}</style></head>');
+ html=html.replace('</head>','<style>.app{padding-top:max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px))!important}</style></head>');
  if(name!=='index.html')return html;
  html=replaceOnce(html,'if("serviceWorker" in navigator)navigator.serviceWorker.register','if(!window.FiCardNative&&"serviceWorker" in navigator)navigator.serviceWorker.register');
  html=replaceOnce(html,'if(positionRequest)return positionRequest;','if(positionRequest)return positionRequest;\n if(window.FiCardNative){positionRequest=window.FiCardNative.getPosition().finally(()=>{positionRequest=null});return positionRequest;}');

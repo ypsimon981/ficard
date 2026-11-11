@@ -1,8 +1,8 @@
 const APP_VERSION="1.1.0";
-const CACHE="ficard-v"+APP_VERSION+"-nav8";
+const CACHE="ficard-v"+APP_VERSION+"-welcome1";
 const CORE=[
   "./pharmacy.svg",
-  "./ficard-onboarding.js?v=1.1.0",
+  "./ficard-onboarding.js?v=1.1.0-welcome1",
   "./ficard-health.js?v=1.0.0",
   "./tessera-sanitaria.png",
   "./logos-hq/studio/action-8323e8b19bd3.png",
@@ -162,7 +162,7 @@ const CORE=[
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
   "./ficard-i18n.js?v=2.1.1",
-  "./ficard-polish.css?v=1.1.0-nav8",
+  "./ficard-polish.css?v=1.1.0-welcome1",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-markets.js?v=1.0.0",

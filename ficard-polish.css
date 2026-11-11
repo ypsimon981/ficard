@@ -648,3 +648,59 @@ body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset
 .gpsIntroCard .brandLogo{height:40px;max-width:75%;object-fit:contain}
 body:has(#detailModal.show,#fullBarcode.show,#shareCardsModal.show) .bottom{visibility:hidden}
 .bottom #addFab{font-size:10px;line-height:1.15}
+
+/* Full-screen welcome */
+.firstLaunch{
+ display:flex;flex-direction:column;
+ padding:calc(18px + max(env(safe-area-inset-top,0px),var(--safe-area-inset-top,0px))) 20px calc(18px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)));
+ color:#fff;
+ background:radial-gradient(ellipse at 82% 20%,#126c78 0,transparent 42%),radial-gradient(ellipse at 0 38%,#4b2ca0 0,transparent 64%),#15102d;
+}
+.firstLaunchSheet{
+ width:100%;max-width:440px;margin:auto;padding:0;box-sizing:border-box;
+ background:none;border:0;box-shadow:none;color:#fff;text-align:center;
+}
+.firstLaunchBrand{font-size:clamp(28px,7vw,38px);letter-spacing:-.06em;color:#fff;margin:0}
+.firstLaunchBrand span{color:#5ce4d1}
+.welcomeArt{
+ position:relative;isolation:isolate;
+ height:clamp(138px,31dvh,286px);max-width:400px;margin:0 auto;
+}
+.welcomeOrbit{
+ position:absolute;inset:14% 5%;z-index:-1;border-radius:50%;
+ background:radial-gradient(ellipse,#5b3df5 0%,#4438aa99 36%,transparent 71%);
+}
+.welcomeCard{
+ position:absolute;top:50%;left:50%;display:grid;place-items:center;
+ width:46%;aspect-ratio:1.62;border-radius:14px;border:1px solid #ffffff55;
+ box-shadow:0 14px 28px #07031e80;
+ transform:translate(-50%,-50%) translate(var(--x),var(--y)) rotate(var(--angle));
+}
+.welcomeCard img{max-width:67%;max-height:55%;width:auto;height:auto;object-fit:contain}
+.welcomeCardBack{--x:-42%;--y:1%;--angle:-18deg;background:linear-gradient(145deg,#1d65b7,#00326c)}
+.welcomeCardMiddle{--x:42%;--y:-10%;--angle:17deg;background:linear-gradient(145deg,#448ee0,#104d9e)}
+.welcomeCardMiddle img{width:33%}
+.welcomeCardFront{--x:0%;--y:14%;--angle:-3deg;background:linear-gradient(145deg,#ffe685,#f4b939)}
+.firstLaunch h1{
+ max-width:12em;margin:0 auto;font-size:clamp(31px,8vw,49px);
+ letter-spacing:-.045em;line-height:1.04;text-wrap:balance;
+}
+.firstLaunch .welcomeIntro{max-width:32ch;margin:13px auto 0;color:#e0dcf5;font-size:clamp(14px,4vw,17px)}
+.welcomeActions{margin-top:24px}
+.firstLaunch .welcomeActions button[type=submit]{
+ position:relative;margin:8px 0 0;padding:10px 24px;border-radius:16px;
+}
+.firstLaunch .welcomeActions .primary{background:#694df8!important;color:#fff}
+.welcomeActions .primary span{position:absolute;right:16px;top:50%;transform:translateY(-50%)}
+.firstLaunch .welcomeActions .secondary{background:#ffffff12;color:#fff;border:1px solid #ffffff55}
+.welcomePreferences{margin:16px 0 0;color:#e0dcf5;font-size:13px}
+.welcomePreferences summary{cursor:pointer;padding:8px}
+.welcomePreferences[open]{padding:0 16px 16px;text-align:start;background:#ffffff12;border:1px solid #ffffff38;border-radius:16px}
+.welcomePreferences .hint{color:inherit}
+.firstLaunch .welcomePreferences a{color:#8df2e5}
+@media(prefers-reduced-motion:no-preference){
+ .welcomeCard{animation:welcomeDeal 580ms cubic-bezier(.2,.7,.25,1) both}
+ .welcomeCardMiddle{animation-delay:70ms}
+ .welcomeCardFront{animation-delay:140ms}
+ @keyframes welcomeDeal{from{opacity:0;transform:translate(-50%,-40%) scale(.88)}}
+}

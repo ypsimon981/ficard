@@ -42,14 +42,30 @@ function show(){
  const screen=root.document.createElement('section');screen.id='firstLaunch';screen.className='firstLaunch';screen.setAttribute('data-i18n-skip','');
  screen.setAttribute('aria-labelledby','firstLaunchTitle');screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');
  root.document.body.classList.add('isOnboarding');root.document.body.appendChild(screen);
- function render(){
+ function render(preferencesOpen=false){
   const c=copy(state.language),langs=root.FiCardI18n?.languageNames||{it:'Italiano',en:'English',fr:'Français',es:'Español',pt:'Português',nl:'Nederlands',de:'Deutsch'};
   const countries=[['IT',c.italy],['FR',c.france],['XX',c.other]];
   const options=(items,selected)=>items.map(([value,label])=>'<option value="'+value+'"'+(value===selected?' selected':'')+'>'+esc(label)+'</option>').join('');
   const field=(id,title,help,items,selected)=>'<div class="firstLaunchField"><label for="'+id+'">'+esc(title)+'</label><select id="'+id+'" class="field">'+options(items,selected)+'</select><p class="hint">'+esc(help)+'</p></div>';
   const check=(id,title,help,checked)=>'<div class="firstLaunchField"><label class="onboardingCheck"><input id="'+id+'" type="checkbox"'+(checked?' checked':'')+'><span>'+esc(title)+'</span></label><p class="hint">'+esc(help)+'</p></div>';
-  screen.innerHTML='<form class="firstLaunchSheet"><div class="firstLaunchBrand" aria-label="Fi-Card">Fi-Card</div><h1 id="firstLaunchTitle">'+esc(c.title)+'</h1><p class="hint">'+(italian()?'Le tue carte fedeltà, sempre a portata di mano. Aggiungi la prima tessera per ritrovarla alla cassa.':esc(c.intro))+'</p>'+'<details><summary>'+(italian()?'Lingua e preferenze':'Language and preferences')+'</summary>'+field('welcomeLanguage',c.language,c.languageHelp,Object.entries(langs),state.language)+field('welcomeMarket',c.market,c.marketHelp,[['auto',c.auto],...countries],state.override)+field('welcomeResidence',c.residence,c.residenceHelp,countries,state.residence)+'<div class="firstLaunchField"><strong>'+esc(c.gps)+'</strong><p class="hint">'+esc(c.gpsHelp)+'</p></div>'+check('welcomeAnalytics',c.analytics,c.analyticsHelp,state.analytics)+'<a href="./privacy.html" target="_blank" rel="noopener">'+esc(c.privacy)+'</a></details><button type="submit" value="add" class="primary">'+(italian()?'Aggiungi una carta':'Add a card')+'</button><button type="submit" value="import" class="secondary">'+(italian()?'Hai ricevuto delle carte? Importale':'Received cards? Import them')+'</button></form>';
-  screen.querySelector('#welcomeLanguage').onchange=e=>{capture();state.language=e.target.value;render();screen.querySelector('#welcomeLanguage').focus()};
+  const artwork='<div class="welcomeArt" aria-hidden="true"><div class="welcomeOrbit"></div>'+
+   '<div class="welcomeCard welcomeCardBack"><img src="./logos-hq/ikea.svg" alt=""></div>'+
+   '<div class="welcomeCard welcomeCardMiddle"><img src="./logos-hq/lidl.svg" alt=""></div>'+
+   '<div class="welcomeCard welcomeCardFront"><img src="./logos-hq/conad.svg" alt=""></div></div>';
+  const heading=italian()?'La carta giusta, al momento giusto.':c.title;
+  const intro=italian()?'Aggiungi le tue carte fedeltà e ritrovale in un attimo quando sei alla cassa.':c.intro;
+  screen.innerHTML='<form class="firstLaunchSheet"><div class="firstLaunchBrand" aria-label="Fi-Card">Fi<span>-Card</span></div>'+
+   artwork+'<h1 id="firstLaunchTitle">'+esc(heading)+'</h1><p class="hint welcomeIntro">'+esc(intro)+'</p>'+
+   '<div class="welcomeActions"><button type="submit" value="add" class="primary">'+(italian()?'Aggiungi una carta':'Add a card')+'<span aria-hidden="true">→</span></button>'+
+   '<button type="submit" value="import" class="secondary">'+(italian()?'Hai ricevuto delle carte? Importale':'Received cards? Import them')+'</button></div>'+
+   '<details class="welcomePreferences"'+(preferencesOpen?' open':'')+'><summary>'+(italian()?'Lingua e preferenze':'Language and preferences')+'</summary>'+
+   field('welcomeLanguage',c.language,c.languageHelp,Object.entries(langs),state.language)+
+   field('welcomeMarket',c.market,c.marketHelp,[['auto',c.auto],...countries],state.override)+
+   field('welcomeResidence',c.residence,c.residenceHelp,countries,state.residence)+
+   '<div class="firstLaunchField"><strong>'+esc(c.gps)+'</strong><p class="hint">'+esc(c.gpsHelp)+'</p></div>'+
+   check('welcomeAnalytics',c.analytics,c.analyticsHelp,state.analytics)+
+   '<a href="./privacy.html" target="_blank" rel="noopener">'+esc(c.privacy)+'</a></details></form>';
+  screen.querySelector('#welcomeLanguage').onchange=e=>{capture();state.language=e.target.value;render(true);screen.querySelector('#welcomeLanguage').focus()};
   screen.querySelector('form').onsubmit=e=>{
    e.preventDefault();capture();
    root.FiCardMarkets.setPreferences({override:state.override,residence:state.residence});
@@ -72,7 +88,7 @@ function show(){
   };
  }
  function capture(){state.override=screen.querySelector('#welcomeMarket').value;state.residence=screen.querySelector('#welcomeResidence').value;state.analytics=screen.querySelector('#welcomeAnalytics').checked}
- render();screen.querySelector('#welcomeLanguage').focus();
+ render();screen.querySelector('[value=add]')?.focus({preventScroll:true});
 }
 function runWelcomeAction(afterReload=false){
  const action=read('ficard.onboarding.action');

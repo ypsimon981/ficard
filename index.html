@@ -1790,7 +1790,10 @@ function openCardSharing(){
  const grid=document.getElementById("shareCardsGrid");
  const send=document.getElementById("sendSelectedCards");
  send.textContent="Condividi";send.disabled=true;
- const eligible=cards.filter(canShareLoyaltyCard);
+ const alphabetical=new Intl.Collator(document.documentElement.lang||"it",{sensitivity:"base",numeric:true});
+ const eligible=cards.filter(canShareLoyaltyCard).sort((a,b)=>
+  alphabetical.compare(a.name,b.name)||alphabetical.compare(a.alias||"",b.alias||"")
+ );
  grid.innerHTML=eligible.map(card=>{
   const alias=String(card.alias||"").trim();
   const label='<span class="shareMiniName">'+esc(card.name)+'</span>';

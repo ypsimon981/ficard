@@ -32,6 +32,16 @@ function settings(){
  const residence=root.document.getElementById('marketResidence');
  if(residence){let help=root.document.getElementById('residenceHelp');if(!help){help=root.document.createElement('p');help.id='residenceHelp';help.className='hint';help.setAttribute('data-i18n-skip','');residence.after(help)}help.textContent=c.residenceHelp}
 }
+const welcomeFeatures=[
+ ['privacy','Senza account','Per usare Fi-Card non devi iscriverti né fornire dati personali.','No account needed','Use Fi-Card without signing up or providing personal information.','M12 22s7-3 7-11V6l-7-3-7 3v5c0 8 7 11 7 11Z M9 12l2 2 4-4'],
+ ['cards','Le tue carte, sempre con te','Aggiungi le tue carte fedeltà e apri il codice quando ti serve.','Your cards, always with you','Add your loyalty cards and open their codes whenever you need them.','M5 6h14a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2Z M3 10h18 M7 14h4'],
+ ['offline','Funziona anche offline','Le carte salvate restano consultabili anche senza connessione.','Works offline','Your saved cards are available even without a connection.','M3 3l18 18 M3 9a14 14 0 0 1 18 0 M6 13a10 10 0 0 1 12 0 M9 17a5 5 0 0 1 6 0 M12 21h.01'],
+ ['backup','Cambi telefono? Porta le tue carte','Crea un backup e importalo sul nuovo dispositivo per ritrovare le tue carte in un attimo.','Switching phones? Bring your cards','Create a backup and import it on your new device to restore your cards.','M7 18H5a3 3 0 0 1 0-6 6 6 0 0 1 11-3 4.5 4.5 0 0 1 3 9h-2 M12 12v9 M9 18l3 3 3-3'],
+ ['share','Condividi le carte che scegli','Seleziona le tessere e inviale a chi vuoi. Chi le riceve può importare solo quelle che gli mancano.','Share the cards you choose','Pick the cards you want to send. The recipient can import just the missing ones.','M8 12l8-5 M8 12l8 5 M8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z M20 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z M20 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0Z'],
+ ['gps','La carta pronta alla cassa','Più carte aggiungi, più Fi-Card ti aiuta. Se attivi la posizione, mette in evidenza la tessera del negozio in cui ti trovi.','Your card, ready at checkout','The more cards you add, the more Fi-Card can help. Enable location to see the card for the store you are visiting.','M12 22s7-7 7-13a7 7 0 1 0-14 0c0 6 7 13 7 13Z M15 9a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z'],
+ ['lottery','La fortuna va aiutata','Aggiungi il codice della Lotteria degli scontrini e Fi-Card ti ricorderà di usarlo.','Remember your receipt lottery code','Add your Italian receipt lottery code and Fi-Card will remind you to use it.','M3 6h18v4a2 2 0 0 0 0 4v4H3v-4a2 2 0 0 0 0-4Z M12 8v2 M12 12v1 M12 15v1'],
+ ['health','Tessera sanitaria pronta in farmacia','Inserisci il codice fiscale per aggiungerla. Con la posizione attiva, Fi-Card può metterla in evidenza vicino a una farmacia.','Health card ready at the pharmacy','Add your Italian health card using your tax code. With location enabled, Fi-Card can highlight it near a pharmacy.','M4 5h16a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V6a1 1 0 0 1 1-1Z M8 9v6 M5 12h6 M14 10h4 M14 14h4']
+];
 function show(){
  settings();if(!waiting){if(!embedded)runWelcomeAction(true);return}
  clearTimeout(root.ficardStartupTimer);
@@ -52,10 +62,22 @@ function show(){
    '<div class="welcomeCard welcomeCardBack"><img src="./logos-hq/ikea.svg" alt=""></div>'+
    '<div class="welcomeCard welcomeCardMiddle"><img src="./logos-hq/lidl.svg" alt=""></div>'+
    '<div class="welcomeCard welcomeCardFront"><img src="./logos-hq/conad.svg" alt=""></div></div>';
-  const heading=italian()?'La carta giusta, al momento giusto.':c.title;
-  const intro=italian()?'Aggiungi le tue carte fedeltà e ritrovale in un attimo quando sei alla cassa.':c.intro;
+  const slides=[
+   [italian()?'Benvenuti in Fi-Card':c.title,italian()?'Il tuo nuovo wallet di carte fedeltà e non solo.':c.intro,artwork],
+   ...welcomeFeatures.map(([key,itTitle,itText,enTitle,enText,path])=>[
+    italian()?itTitle:enTitle,italian()?itText:enText,
+    '<div class="welcomeArt welcomeFeature welcomeFeature-'+key+'" aria-hidden="true"><div class="welcomeOrbit"></div><div class="welcomeSymbol"><svg viewBox="0 0 24 24"><path d="'+path+'"/></svg></div></div>'
+   ])
+  ];
+  const panels=slides.map(([heading,intro,visual],index)=>
+   '<section class="welcomeSlide">'+visual+'<h2'+(index===0?' id="firstLaunchTitle"':'')+'>'+esc(heading)+'</h2><p class="hint welcomeIntro">'+esc(intro)+'</p></section>'
+  ).join('');
+  const dots=slides.map(([heading],index)=>
+   '<button type="button" aria-label="'+esc(heading)+'"'+(index===0?' aria-current="true"':'')+'></button>'
+  ).join('');
   screen.innerHTML='<form class="firstLaunchSheet"><div class="firstLaunchBrand" aria-label="Fi-Card">Fi<span>-Card</span></div>'+
-   artwork+'<h1 id="firstLaunchTitle">'+esc(heading)+'</h1><p class="hint welcomeIntro">'+esc(intro)+'</p>'+
+   '<div class="welcomeTrack" tabindex="0" aria-label="'+(italian()?'Scorri per scoprire Fi-Card':'Swipe to discover Fi-Card')+'">'+panels+'</div>'+
+   '<div class="welcomeDots">'+dots+'</div>'+
    '<div class="welcomeActions"><button type="submit" value="add" class="primary">'+(italian()?'Aggiungi una carta':'Add a card')+'<span aria-hidden="true">→</span></button>'+
    '<button type="submit" value="import" class="secondary">'+(italian()?'Hai ricevuto delle carte? Importale':'Received cards? Import them')+'</button></div>'+
    '<details class="welcomePreferences"'+(preferencesOpen?' open':'')+'><summary>'+(italian()?'Lingua e preferenze':'Language and preferences')+'</summary>'+
@@ -65,6 +87,27 @@ function show(){
    '<div class="firstLaunchField"><strong>'+esc(c.gps)+'</strong><p class="hint">'+esc(c.gpsHelp)+'</p></div>'+
    check('welcomeAnalytics',c.analytics,c.analyticsHelp,state.analytics)+
    '<a href="./privacy.html" target="_blank" rel="noopener">'+esc(c.privacy)+'</a></details></form>';
+  const track=screen.querySelector('.welcomeTrack');
+  const dotsRow=screen.querySelector('.welcomeDots');
+  if(track&&dotsRow){
+   const buttons=[...dotsRow.querySelectorAll('button')];
+   const current=()=>Math.max(0,Math.min(buttons.length-1,Math.round(track.scrollLeft/track.clientWidth)||0));
+   const move=index=>track.scrollTo({
+    left:Math.max(0,Math.min(buttons.length-1,index))*track.clientWidth,
+    behavior:root.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'
+   });
+   buttons.forEach((button,index)=>button.onclick=()=>move(index));
+   track.addEventListener('scroll',()=>{
+    buttons.forEach((button,index)=>{
+     if(index===current())button.setAttribute('aria-current','true');
+     else button.removeAttribute('aria-current');
+    });
+   },{passive:true});
+   track.addEventListener('keydown',e=>{
+    if(e.key!=='ArrowLeft'&&e.key!=='ArrowRight')return;
+    e.preventDefault();move(current()+(e.key==='ArrowRight'?1:-1));
+   });
+  }
   screen.querySelector('#welcomeLanguage').onchange=e=>{capture();state.language=e.target.value;render(true);screen.querySelector('#welcomeLanguage').focus()};
   screen.querySelector('form').onsubmit=e=>{
    e.preventDefault();capture();

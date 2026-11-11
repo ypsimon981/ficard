@@ -704,3 +704,31 @@ body:has(#detailModal.show,#fullBarcode.show,#shareCardsModal.show) .bottom{visi
  .welcomeCardFront{animation-delay:140ms}
  @keyframes welcomeDeal{from{opacity:0;transform:translate(-50%,-40%) scale(.88)}}
 }
+
+.welcomeTrack{
+ display:flex;overflow-x:auto;overscroll-behavior-inline:contain;
+ scroll-snap-type:x mandatory;scrollbar-width:none;
+}
+.welcomeTrack::-webkit-scrollbar{display:none}
+.welcomeSlide{flex:0 0 100%;min-width:0;scroll-snap-align:start;padding-bottom:2px}
+.welcomeSlide h2{
+ max-width:14em;margin:0 auto;font-size:clamp(27px,7.5vw,44px);
+ letter-spacing:-.045em;line-height:1.06;text-wrap:balance;
+}
+.welcomeSlide .welcomeArt{height:clamp(115px,25dvh,230px)}
+.welcomeFeature{display:grid;place-items:center}
+.welcomeFeature .welcomeOrbit{inset:2% 9%}
+.welcomeSymbol{
+ display:grid;place-items:center;width:clamp(74px,24vw,114px);aspect-ratio:1;
+ border:1px solid #ffffff65;border-radius:26%;transform:rotate(-8deg);
+ background:linear-gradient(145deg,#7b59f8,#332376);box-shadow:0 16px 38px #0b062866;
+}
+.welcomeFeature-backup .welcomeSymbol,.welcomeFeature-gps .welcomeSymbol,.welcomeFeature-health .welcomeSymbol{
+ background:linear-gradient(145deg,#197e8b,#153963);
+}
+.welcomeSymbol svg{width:57%;fill:none;stroke:#91f5e5;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;transform:rotate(8deg)}
+.welcomeDots{display:flex;justify-content:center;margin-top:5px}
+.welcomeDots button{display:grid;place-items:center;width:clamp(21px,6.3vw,32px);height:34px;border:0;background:transparent;padding:0}
+.welcomeDots button::before{content:"";width:6px;height:6px;border-radius:9px;background:#ffffff63}
+.welcomeDots button[aria-current=true]::before{width:15px;background:#71ead8}
+.welcomeActions{margin-top:6px}

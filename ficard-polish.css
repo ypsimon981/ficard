@@ -610,7 +610,7 @@ body.appShell .bottom{
 body.appShell .bottom::after{
  content:"";position:absolute;z-index:-1;pointer-events:none;
  inset:0 0 max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px));
- border-radius:20px;background:rgb(255 255 255 / 10%);
+ border-radius:20px;background:rgb(255 255 255 / 16%);
  border:1px solid rgb(255 255 255 / 24%);
 }
 .bottom .nav,.bottom #addFab{
@@ -627,7 +627,7 @@ body.appShell .bottom::after{
 .bottom .nav.active .navIcon{background:#fff;color:var(--violet)!important}
 .bottom #addFab .addNavIcon{background:var(--violet);color:var(--teal)!important}
 .bottom #addFab .addNavIcon svg{width:23px;height:23px;stroke-width:2.5}
-.bottom .navLabel{font-weight:650;padding:1px 0}
+.bottom .navLabel{font-weight:650;padding:1px 4px;background:var(--surface);border-radius:8px}
 .bottom #addFab svg{width:42px;height:36px}
 body.appShell .app>main>.view{padding-bottom:calc(67px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
 #homeView #cardGrid{

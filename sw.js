@@ -1,5 +1,5 @@
 const APP_VERSION="1.1.0";
-const CACHE="ficard-v"+APP_VERSION+"-nav6";
+const CACHE="ficard-v"+APP_VERSION+"-nav7";
 const CORE=[
   "./pharmacy.svg",
   "./ficard-onboarding.js?v=1.1.0",
@@ -162,7 +162,7 @@ const CORE=[
   "./ficard-runtime.js?v="+APP_VERSION,
   "./ficard-navigation.js?v="+APP_VERSION,
   "./ficard-i18n.js?v=2.1.1",
-  "./ficard-polish.css?v=1.1.0-nav6",
+  "./ficard-polish.css?v=1.1.0-nav7",
   "./ficard-viewport.js?v=0.9.119",
   "./ficard-promo.js?v=0.9.120",
   "./ficard-markets.js?v=1.0.0",

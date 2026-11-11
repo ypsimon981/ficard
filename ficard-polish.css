@@ -608,13 +608,13 @@ body.appShell .bottom{
 .bottom::before{display:none}
 .bottom .nav,.bottom #addFab{
  position:static;transform:none;display:grid;justify-items:center;pointer-events:auto;
- grid-template-rows:36px auto;gap:2px;
- width:100%;height:auto;min-width:44px;min-height:48px;padding:1px 0;
+ grid-template-rows:44px auto;gap:2px;
+ width:100%;height:auto;min-width:44px;min-height:56px;padding:1px 0;
  color:var(--violet);background:transparent!important;box-shadow:none;border:0;
 }
 .bottom .navLabel{min-height:0;white-space:nowrap;line-height:1.15}
 .bottom .navIcon{
- display:grid;place-items:center;width:36px;height:36px;
+ display:grid;place-items:center;width:44px;height:44px;
  background:var(--surface);border-radius:50%;box-shadow:0 2px 8px #35286b24;
 }
 .bottom .nav.active .navIcon{background:#fff;color:var(--violet)!important}
@@ -622,7 +622,7 @@ body.appShell .bottom{
 .bottom #addFab .addNavIcon svg{width:23px;height:23px;stroke-width:2.5}
 .bottom .navLabel{background:var(--surface);border-radius:8px;padding:1px 4px}
 .bottom #addFab svg{width:42px;height:36px}
-body.appShell .app>main>.view{padding-bottom:calc(59px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
+body.appShell .app>main>.view{padding-bottom:calc(67px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
 #homeView #cardGrid{
  width:calc(100% + 12px);max-width:none;margin-inline:-6px;
  padding-inline:0;column-gap:6px;

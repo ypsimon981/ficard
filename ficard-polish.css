@@ -598,6 +598,8 @@ body.isOnboarding>.app,body.isOnboarding>.bottom{visibility:hidden}
 
 /* Compact floating wallet navigation */
 body.appShell .bottom{
+ position:fixed!important;left:50%;bottom:0;top:auto;transform:translateX(-50%);
+ pointer-events:none;
  background:transparent!important;
  border:0;box-shadow:none;min-height:0;
  padding:3px 8px env(safe-area-inset-bottom)!important;
@@ -605,7 +607,7 @@ body.appShell .bottom{
 }
 .bottom::before{display:none}
 .bottom .nav,.bottom #addFab{
- position:static;transform:none;display:grid;justify-items:center;
+ position:static;transform:none;display:grid;justify-items:center;pointer-events:auto;
  grid-template-rows:36px auto;gap:2px;
  width:100%;height:auto;min-width:44px;min-height:48px;padding:1px 0;
  color:var(--violet);background:transparent!important;box-shadow:none;border:0;
@@ -615,9 +617,12 @@ body.appShell .bottom{
  display:grid;place-items:center;width:36px;height:36px;
  background:var(--surface);border-radius:50%;box-shadow:0 2px 8px #35286b24;
 }
-.bottom .nav.active .navIcon{background:var(--violet);color:white}
+.bottom .nav.active .navIcon{background:var(--violet);color:white!important}
+.bottom #addFab .addNavIcon{background:var(--violet);color:var(--teal)!important}
+.bottom #addFab .addNavIcon svg{width:23px;height:23px;stroke-width:2.5}
+.bottom .navLabel{background:var(--surface);border-radius:8px;padding:1px 4px}
 .bottom #addFab svg{width:42px;height:36px}
-body.appShell .app>main>.view{padding-bottom:8px}
+body.appShell .app>main>.view{padding-bottom:calc(59px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
 #homeView #cardGrid{
  width:calc(100% + 12px);max-width:none;margin-inline:-6px;
  padding-inline:0;column-gap:6px;

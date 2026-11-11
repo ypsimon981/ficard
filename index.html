@@ -365,7 +365,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     .lotteryCodePreview .num{overflow-wrap:anywhere}
   </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.215">
-<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0">
+<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0-nav2">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -570,7 +570,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
 <nav class="bottom">
   <button class="nav active" data-view="home"><span class="navIcon navHome" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M6 10h12M7 14v2M10 14v2M13 14v2M16 14v2"/></svg></span><span class="navLabel">Card</span></button>
   <button class="nav" data-view="map"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2Z"/><path d="M9 3v16M15 5v16"/></svg></span><span class="navLabel">Mappa</span></button>
-  <button class="nav fab addCardStack" id="addFab" aria-label="Aggiungi una carta"><svg viewBox="0 0 82 68" aria-hidden="true"><g transform="translate(-6 0)"><rect x="10" y="17" width="54" height="34" rx="6" fill="var(--teal)" transform="rotate(-20 37 34)"/><rect x="15" y="22" width="54" height="34" rx="6" fill="var(--teal)" stroke="rgba(255,255,255,.65)" stroke-width="1.5" transform="rotate(-10 42 39)"/><rect x="20" y="27" width="54" height="34" rx="6" fill="var(--violet)"/><path d="M47 35v18M38 44h18" stroke="#fff" stroke-width="3.5" stroke-linecap="round"/></g></svg><span class="navLabel">Aggiungi</span></button>
+  <button class="nav fab" id="addFab" aria-label="Aggiungi una carta"><span class="navIcon addNavIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></svg></span><span class="navLabel">Aggiungi</span></button>
   <button class="nav" data-view="scandixit"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M8 3H3v5M16 3h5v5M21 16v5h-5M8 21H3v-5M7 8v8M10 7v10M14 7v10M17 8v8"/></svg></span><span class="navLabel">ScanDixit</span></button>
   <button class="nav" id="shareSelectedNav" type="button"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="m7 11 9-5M7 13l9 5"/></svg></span><span class="navLabel">Condividi</span></button>
 </nav>

@@ -617,7 +617,7 @@ body.appShell .bottom{
  display:grid;place-items:center;width:36px;height:36px;
  background:var(--surface);border-radius:50%;box-shadow:0 2px 8px #35286b24;
 }
-.bottom .nav.active .navIcon{background:var(--violet);color:white!important}
+.bottom .nav.active .navIcon{background:#fff;color:var(--violet)!important}
 .bottom #addFab .addNavIcon{background:var(--violet);color:var(--teal)!important}
 .bottom #addFab .addNavIcon svg{width:23px;height:23px;stroke-width:2.5}
 .bottom .navLabel{background:var(--surface);border-radius:8px;padding:1px 4px}

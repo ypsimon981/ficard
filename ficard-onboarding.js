@@ -110,7 +110,7 @@ function show(){
      if(root.document.hidden||reducedMotion?.matches)return;
      const next=current()+1;
      move(next%buttons.length,next===buttons.length);
-    },5000);
+    },2000);
    }
    buttons.forEach((button,index)=>button.onclick=()=>move(index));
    track.addEventListener('scroll',()=>{

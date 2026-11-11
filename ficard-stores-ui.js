@@ -12,7 +12,7 @@ const savedFavorite=l=>l.favorite===true;
 function allVisibleCards(){return cards.concat(window.FiCardDemo?.cards(cards,BRANDS)||[])}
 function descriptors(){return allVisibleCards().map(c=>({id:c.id,healthCard:isHealthCard(c),names:isHealthCard(c)?['Farmacia']:S.names(c,BRANDS,inferredBrandKey(c))})).filter(d=>d.names.length)}
 function savedAt(c,l){return (c.locations||[]).find(p=>(l.osmId&&p.osmId===l.osmId)||distanceM(p,l)<50||(isHealthCard(c)&&S.sameStore(p,l)))}
-function shops(cardId=''){
+function shops(cardId='',keepCardMatches=false){
  const items=[];for(const c of allVisibleCards()){if(cardId&&c.id!==cardId)continue;
  for(const l of c.locations||[])items.push({c,l,saved:!c.isDemo,favorite:!c.isDemo&&savedFavorite(l)});
  for(const x of results.filter(x=>x.cardId===c.id)){if(!savedAt(c,x.point))items.push({c,l:x.point,saved:false,favorite:false})}
@@ -22,7 +22,7 @@ function shops(cardId=''){
  const unique=[];
  for(const x of items.slice().sort((a,b)=>Number(b.favorite)-Number(a.favorite)||Number(b.saved)-Number(a.saved)||Number(S.isNationalPharmacy(a.l))-Number(S.isNationalPharmacy(b.l)))){
   const brand=storeBrand(x.c).key;
-  if(unique.some(y=>storeBrand(y.c).key===brand&&S.sameStore(y.l,x.l)))continue;
+  if(unique.some(y=>(!keepCardMatches||y.c.id===x.c.id)&&storeBrand(y.c).key===brand&&S.sameStore(y.l,x.l)))continue;
   unique.push(x);
  }
  const origin=currentPos||searchCenter;
@@ -136,8 +136,8 @@ async function search(center,force=false,bounds=null){
  finally{if(id===requestId){busy=false;renderShopUpdates()}}
 }
 function renderDetail(){if(!document.getElementById('detailModal')?.classList.contains('show'))return;const el=document.getElementById('cardNearbyStores');if(!el)return;const c=cards.find(c=>c.id===currentCardId);if(!c)return;const items=shops(c.id),favorites=items.filter(x=>x.favorite),nearby=items.filter(x=>!x.favorite);el.replaceChildren();for(const [title,rows] of [['Negozi preferiti',favorites],['Altri negozi vicini',nearby]]){const h=document.createElement('h3');h.textContent=title==='Negozi preferiti'?'♥ '+title:title;const section=document.createElement('section');if(title==='Negozi preferiti'){section.className='favoriteStoresSection';section.setAttribute('aria-label',title)}section.append(h);el.append(section);const box=document.createElement('div');list(box,rows,busy?'Cerco i negozi…':title==='Negozi preferiti'?'Tocca il cuore su un negozio per salvarlo.':'Nessun altro negozio trovato in questa zona.');section.append(box)}const button=document.createElement('button');button.className='secondary';button.textContent='Trova negozi vicini';button.onclick=async()=>{try{const p=currentPos||await getPosition();currentPos=p;await search(p,true)}catch(e){toast(e.message)}};el.append(button)}
-const baseOpen=openCard;openCard=function(id,recordUse=true){baseOpen(id,recordUse);const c=cards.find(c=>c.id===id),mapButton=document.getElementById('cardMapBtn');if(c&&mapButton)mapButton.onclick=()=>openMapForCard(c);const section=document.querySelector('#detailContent .cardLocations');if(section){const actions=section.querySelector('.detailActions');section.replaceChildren(actions);const box=document.createElement('div');box.id='cardNearbyStores';section.append(box);renderDetail();if(currentPos&&!busy)search(currentPos)}};
-smartShopCandidates=function(){return shops().filter(x=>!x.c.isDemo).map(x=>({c:x.c,l:x.l}))};
+const baseOpen=openCard;openCard=function(id,recordUse=true,fromSuggestion=false){baseOpen(id,recordUse,fromSuggestion);const c=cards.find(c=>c.id===id),mapButton=document.getElementById('cardMapBtn');if(c&&mapButton)mapButton.onclick=()=>openMapForCard(c);const section=document.querySelector('#detailContent .cardLocations');if(section){const actions=section.querySelector('.detailActions');section.replaceChildren(actions);const box=document.createElement('div');box.id='cardNearbyStores';section.append(box);renderDetail();if(currentPos&&!busy)search(currentPos)}};
+smartShopCandidates=function(){return shops("",true).filter(x=>!x.c.isDemo).map(x=>({c:x.c,l:x.l}))};
 const baseNearest=nearestFor;nearestFor=function(c,pos){let n=baseNearest(c,pos);if(pos)for(const x of results.filter(x=>x.cardId===c.id)){const d=distanceM(pos,x.point);if(!n||d<n.d)n={...x.point,d}}return n};
 function resetShopFilters(){document.getElementById('shopCategory').value='';document.getElementById('shopCard').value='';document.getElementById('shopFavorites').checked=false;mapFramed=false;renderLocations();renderOverviewMap()}
 document.getElementById('shopReset').onclick=resetShopFilters;

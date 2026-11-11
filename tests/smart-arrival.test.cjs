@@ -51,3 +51,16 @@ test('a second shop within 50 m prevents focus but one beyond 50 m does not',()=
 });
 
 test('duplicate OSM representations of one nearby shop do not suppress arrival',()=>{const c=fixture();c.cards=[card('a','a')];c.results=[{cardId:'a',point:point(5,'node/1')},{cardId:'a',point:point(6,'node/2')}];assert.equal(c.arrivalCard(c.cards,c.currentPos)?.id,'a')});
+
+test('GPS prefers the most opened matching card within 30 days',()=>{
+ const c=fixture(), now=Date.now(), day=86400000;
+ const simone={...card('simone','a'),alias:'Simone',openedAt:[now-day,now-2*day]};
+ const ciccio={...card('ciccio','a'),alias:'Ciccio',openedAt:[now-1000,now-31*day,now-32*day]};
+ c.cards=[ciccio,simone];
+ c.results=c.cards.map(x=>({cardId:x.id,point:point(5,'node/1')}));
+ assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'simone');
+ simone.openedAt.pop();
+ assert.equal(c.arrivalCard(c.cards,c.currentPos).id,'ciccio');
+ simone.openedAt=[];ciccio.openedAt=[];
+ assert.equal(c.arrivalCard([simone,ciccio],c.currentPos).id,'ciccio');
+});

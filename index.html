@@ -1017,12 +1017,29 @@ function smartOrder(){
  return {ordered,geoReady:true}
 }
 function smartShopCandidates(){return cards.flatMap(c=>(c.locations||[]).map(l=>({c,l})))}
+const CARD_USAGE_WINDOW=30*24*60*60*1000;
+function recentCardUses(card,now){
+ return (Array.isArray(card.openedAt)?card.openedAt:[]).filter(at=>Number.isFinite(at)&&at>now-CARD_USAGE_WINDOW&&at<=now);
+}
+function preferredArrivalCard(shop,available,now=Date.now()){
+ const walletOrder=new Map(cards.map((card,index)=>[card.id,index]));
+ let best=null,bestCount=-1,bestLast=0;
+ for(const card of available){
+  if(!shop.cardIds.has(card.id))continue;
+  const uses=recentCardUses(card,now);
+  const last=uses.reduce((latest,at)=>Math.max(latest,at),0);
+  if(uses.length>bestCount||(uses.length===bestCount&&(last>bestLast||(last===bestLast&&walletOrder.get(card.id)<walletOrder.get(best?.id))))){
+   best=card;bestCount=uses.length;bestLast=last;
+  }
+ }
+ return best;
+}
 function arrivalCard(ordered,pos){
  if(!pos)return null;
  // Super mode: one unambiguous shop within 50 m and that shop is below 35 m.
  const nearby=smartShopCandidates().filter(x=>distanceM(pos,x.l)<=50),unique=[];
  for(const x of nearby){const key=inferredBrandKey(x.c)||x.c.brandKey||x.c.name;
-  let shop=unique.find(y=>(x.l.osmId&&y.l.osmId===x.l.osmId)||((!x.l.osmId||!y.l.osmId)&&y.key===key&&distanceM(y.l,x.l)<2));
+  let shop=unique.find(y=>(y.key===key&&window.FiCardStores?.sameStore(y.l,x.l))||(x.l.osmId&&y.l.osmId===x.l.osmId)||((!x.l.osmId||!y.l.osmId)&&y.key===key&&distanceM(y.l,x.l)<2));
   if(!shop){shop={l:x.l,key,d:distanceM(pos,x.l),cardIds:new Set()};unique.push(shop)}
   else shop.d=Math.min(shop.d,distanceM(pos,x.l));
   shop.cardIds.add(x.c.id);
@@ -1030,7 +1047,7 @@ function arrivalCard(ordered,pos){
  if(unique.length!==1||unique[0].d>=35)return null;
  const health=ordered.find(c=>isHealthCard(c)&&unique[0].cardIds.has(c.id));
  if(health){const accuracy=Number(pos.accuracy);if(!Number.isFinite(accuracy)||accuracy>35)return null;return health}
- return ordered.find(c=>unique[0].cardIds.has(c.id))||null;
+ return preferredArrivalCard(unique[0],ordered);
 }
 function nearbyCardCount(){return currentPos?cards.filter(c=>{const n=nearestFor(c,currentPos);return n&&n.d<=100}).length:0}
 function updateSmartDepth(){
@@ -1084,7 +1101,7 @@ function renderSmartCarousel(){
 
 function renderAll(){renderCategoryChips();renderSmartCarousel();renderCards();renderLocations();if(document.getElementById("mapView")?.classList.contains("active"))renderOverviewMap()}
 function bindCardInteractions(root){
- root.querySelectorAll("[data-card-open]").forEach(x=>x.onclick=()=>openCard(x.dataset.cardOpen));
+ root.querySelectorAll("[data-card-open]").forEach(x=>x.onclick=()=>openCard(x.dataset.cardOpen,true,!!x.closest(".nearbyHero,.proximityFocus .smartCard:first-child")));
  root.querySelectorAll("[data-toggle-fav]").forEach(x=>x.onclick=e=>{e.preventDefault();e.stopPropagation();toggleFavorite(x.dataset.toggleFav)})
 }
 function toggleFavorite(id){
@@ -1149,7 +1166,7 @@ function fitArrivalMessages(){
  });
 }
 function queueArrivalFit(){if(!arrivalFitFrame)arrivalFitFrame=requestAnimationFrame(()=>{arrivalFitFrame=0;fitArrivalMessages()})}
-let arrivalTimingRecord=null,arrivalTimingPending=false;
+let arrivalTimingRecord=null,arrivalTimingPending=false,lastSuggestionId=null;
 function arrivalTimingTarget(){
  if(document.body.classList.contains('isStarting')||!document.getElementById('homeView')?.classList.contains('active'))return null;
  const tile=document.querySelector('#cardGrid .walletTile.nearbyHero');
@@ -1172,6 +1189,10 @@ function showArrivalTiming(target){
 }
 function queueArrivalTiming(){
  const target=arrivalTimingTarget();
+ if((target?.id||null)!==lastSuggestionId){
+  lastSuggestionId=target?.id||null;
+  if(target)window.FiCardAnalytics?.gpsSuggested?.();
+ }
  if(arrivalTimingRecord){showArrivalTiming(target);return}
  // A later visit to a shop is not an app-start measurement.
  if(!target||arrivalTimingPending||performance.now()>30000)return;
@@ -1332,7 +1353,7 @@ function drawBarcode(id,c){
  const format=isHealthCard(c)?'CODE39':normalizeFormat(c.format||inferManualFormat(c.code));
  try{
    if(isHealthCard(c)&&!window.FiCardHealth.valid(c.code)){el.hidden=true;const warning=document.createElement('p');warning.className='hint codeRenderWarning';warning.textContent=window.FiCardHealth.error;el.after(warning);return}
-   if(window.bwipjs&&el.tagName==="CANVAS"){const is2d=["QR_CODE","AZTEC","DATA_MATRIX","PDF417"].includes(format);el.classList.toggle("matrixCode",is2d);bwipjs.toCanvas(el,{bcid:bwipBcid(format),text:String(c.code),scale:4,...(is2d?{}:{height:22}),includetext:false,paddingwidth:4,paddingheight:4,backgroundcolor:"FFFFFF"});return}
+   if(window.bwipjs&&el.tagName==="CANVAS"){const is2d=["QR_CODE","AZTEC","DATA_MATRIX","PDF417"].includes(format);el.classList.toggle("matrixCode",is2d);bwipjs.toCanvas(el,{bcid:bwipBcid(format),text:String(c.code),scale:4,...(is2d?{}:{height:22}),includetext:false,paddingwidth:4,paddingheight:4,backgroundcolor:"FFFFFF"});return true}
  }catch(e){const warning=document.createElement('p');warning.className='hint codeRenderWarning';warning.textContent='Contenuto salvato. Questo formato non può rappresentarlo: scegli QR Code in Modifica per visualizzarlo come QR.';el.hidden=true;el.after(warning);return}
  if(!window.bwipjs)toast('Generatore codici non disponibile. Aggiorna Fi-Card quando sei connesso.');
 }
@@ -1379,16 +1400,24 @@ function openDemoCard(id){
  document.getElementById('demoContent').innerHTML='<div class="demoDetailBrand" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><span class="brandMark">'+brandLogoHtml(b,'wallet')+'</span><b>'+esc(c.name)+'</b><small>Carta dimostrativa</small></div><div class="panel demoDetailInfo">'+info+'</div>';
  showModal('demoModal');
 }
-function openCard(id,recordUse=true){
+function openCard(id,recordUse=true,fromSuggestion=false){
  setCardEditMode(false);
  if(window.FiCardDemo?.isDemoId(id))return openDemoCard(id);
- const c=cards.find(x=>x.id===id);if(!c)return;currentCardId=id;if(overviewMap)overviewMap.closePopup();if(overviewLayer?.unspiderfy)overviewLayer.unspiderfy();if(recordUse){c.lastUsed=Date.now();c.useCount=(c.useCount||0)+1;save();renderCards()}
+ const c=cards.find(x=>x.id===id);if(!c)return;currentCardId=id;if(overviewMap)overviewMap.closePopup();if(overviewLayer?.unspiderfy)overviewLayer.unspiderfy();
  const b=brandFor(c),n=nearestFor(c,currentPos),locs=(c.locations||[]).map((l,i)=>({l,i,d:currentPos?distanceM(currentPos,l):Infinity})).sort((a,b)=>a.d-b.d||a.i-b.i);
  const locHtml=locs.length?'<div class="panel" style="margin-top:12px"><b>Punti vendita associati</b>'+locs.map(x=>'<div class="promo" style="margin-bottom:0"><div class="locationBrandIcon" style="background:'+esc(c.color||"#5B3DF5")+'"><span>'+mapBrandInnerHtml(c)+'</span></div><div class="grow"><small>'+esc(distanceLabel(x.d))+'</small></div><button class="chip" title="Naviga" aria-label="Naviga" data-nav-loc="'+x.i+'">'+pinSvg()+'</button><button class="chip" data-remove-loc="'+x.i+'">Dissocia</button></div>').join("")+'</div>':'<p class="hint">Vuoi ritrovare questa carta quando sei in negozio? Tocca “Associa posizione attuale”: dalla prossima visita la vedrai tra le carte vicine.</p>';
  document.getElementById("detailContent").innerHTML='<div class="detailHero"><div class="detailBrandHeader '+(cardInk(c.color)==='#FFFFFF'?'walletDark':'walletLight')+'" data-brand="'+esc(inferredBrandKey(c)||c.brandKey||'')+'" style="--card-color:'+esc(c.color)+';--card-ink:'+cardInk(c.color)+'"><span class="detailLogo">'+brandLogoHtml(b,'wallet')+'</span><h2>'+esc(c.name)+'</h2>'+cardAliasHtml(c)+'<p>'+esc(categoryLabel(c))+'</p></div><div class="barcodeBox"><canvas id="detailSvg"></canvas><div class="num">'+esc(c.code)+'</div></div></div>'+
  '<div class="detailToolbar" aria-label="Azioni della carta"><button id="fullBtn" type="button" aria-label="Tutto schermo" title="Tutto schermo"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 3h6v6M21 3l-7 7M9 21H3v-6M3 21l7-7"/></svg></button><button id="cardMapBtn" type="button" aria-label="Mappa dei negozi di questa carta" title="Mappa dei negozi"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m3 5 6-2 6 2 6-2v16l-6 2-6-2-6 2V5ZM9 3v16M15 5v16"/></svg></button><button id="editBtn" type="button" aria-label="Modifica carta" title="Modifica carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m16 3 5 5L9 20l-6 1 1-6L16 3ZM13 6l5 5"/></svg></button><button id="photoBtn" type="button" aria-label="Foto tessera" title="Foto tessera"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="16" rx="3"/><circle cx="8" cy="9" r="1.5"/><path d="m3 17 6-6 4 4 3-4 5 6"/></svg></button><button id="shareBtn" type="button" aria-label="Condividi carta" title="Condividi carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m8 10 8-5M8 14l8 5"/><circle cx="5" cy="12" r="3"/><circle cx="19" cy="4" r="3"/><circle cx="19" cy="20" r="3"/></svg></button><button id="deleteBtn" class="deleteCardAction" type="button" aria-label="Elimina carta" title="Elimina carta"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7"/></svg></button></div>'+(window.FiCardLottery?.bannerHtml()||'')+officialFlyerHtml(c)+'<div id="cardExtras"></div><section class="cardLocations" aria-label="Punti vendita"><div class="detailActions"><button id="assocBtn">⌖ Associa posizione attuale</button><button id="mapAssocBtn">＋ Scegli sulla mappa</button></div>'+locHtml+'</section>';
  document.getElementById('detailContent').classList.toggle('healthCardDetail',isHealthCard(c));
- drawBarcode("detailSvg",c);showModal("detailModal");
+ const codeShown=drawBarcode("detailSvg",c);showModal("detailModal");
+ if(recordUse&&codeShown){
+  const now=Date.now();
+  c.openedAt=recentCardUses(c,now).concat(now);
+  c.lastUsed=now;
+  c.useCount=(Number(c.useCount)||0)+1;
+  save();renderCards();
+  window.FiCardAnalytics?.codeShown?.(inferredBrandKey(c)||c.brandKey,fromSuggestion);
+ }
  if(recordUse)document.querySelector('#detailContent .lotteryReminder')?.classList.add('lotteryAttention');
  document.querySelector("#detailContent .barcodeBox").insertAdjacentHTML("beforeend",'<p class="hint" data-screen-awake role="status"></p>');syncCardScreen();
  document.getElementById("fullBtn").onclick=()=>showFull(c);
@@ -1686,7 +1715,7 @@ document.getElementById("saveCard").onclick=()=>{
  if(isHealthCard({brandKey,name})){
  if(!window.FiCardHealth.valid(code))return toast(window.FiCardHealth.error);
 }
- const c={id:crypto.randomUUID(),name,alias:document.getElementById("addAlias").value.trim().slice(0,60),brandKey,category,code,format,color,fav:false,locations:[]};normalizeHealthCard(c);if(BRANDS[brandKey])Object.assign(c,{name:BRANDS[brandKey].name,category:BRANDS[brandKey].category,color:BRANDS[brandKey].color});cards.unshift(c);save();window.FiCardAnalytics?.track("card_added","home",c.brandKey);if(!inferredBrandKey(c)&&!isHealthCard(c))window.FiCardBrandRequests?.submit(c);renderAll();hideModal("addModal");["addName","addAlias","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id)
+ const c={id:crypto.randomUUID(),name,alias:document.getElementById("addAlias").value.trim().slice(0,60),brandKey,category,code,format,color,fav:false,locations:[]};normalizeHealthCard(c);if(BRANDS[brandKey])Object.assign(c,{name:BRANDS[brandKey].name,category:BRANDS[brandKey].category,color:BRANDS[brandKey].color});cards.unshift(c);save();window.FiCardAnalytics?.track("card_added","home",c.brandKey);if(!inferredBrandKey(c)&&!isHealthCard(c))window.FiCardBrandRequests?.submit(c);renderAll();hideModal("addModal");["addName","addAlias","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id,false)
 };
 
 let scanGeneration=0,scanStarting=false;
@@ -1746,10 +1775,10 @@ function captureImageImportDefaults(){return {brandKey:document.getElementById('
 function initCatalog(){document.getElementById('addFormat').innerHTML=codeFormatOptions('',true);document.getElementById('addBrand').innerHTML=catalogOptions();document.getElementById('brandSearch').oninput=renderBrandResults;renderBrandResults();document.getElementById('imageScanBtn').onclick=()=>{const health=document.getElementById('addModal').dataset.cardKind==='health-it';clearNewCardDraft();if(health){configureHealthDraft();imageImportDefaults={...captureImageImportDefaults(),kind:'health-it'}}document.getElementById('imageFiles').click()};document.getElementById('importImagesProfile').onclick=()=>{imageImportDefaults=null;document.getElementById('imageFiles').click()};document.getElementById('imageFiles').onchange=importImages;document.getElementById('saveImages').onclick=saveImageDrafts;const date=localStorage.getItem('ficard.lastBackup');if(date)document.getElementById('backupInfo').textContent='Ultimo backup creato: '+new Date(date).toLocaleString('it-IT')+'. Salvalo in File o iCloud Drive.'}
 function renderBrandResults(){const q=document.getElementById('brandSearch').value.toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'');const popular=['conad','coop','esselunga','tigota','carrefour','ikea','mediaworld','decathlon','lidl','unieuro','acquaesapone','eurospin'];const matches=Object.entries(BRANDS).filter(([k,b])=>(b.name+' '+CATEGORIES[b.category]).toLocaleLowerCase('it').normalize('NFD').replace(/[\u0300-\u036f]/g,'').includes(q)).sort((a,b)=>q?a[1].name.localeCompare(b[1].name,'it'):(popular.includes(a[0])?popular.indexOf(a[0]):99)-(popular.includes(b[0])?popular.indexOf(b[0]):99));const box=document.getElementById('brandResults');box.innerHTML=(q?matches:matches.slice(0,12)).map(([k,b])=>'<button type="button" class="brandPick" data-brand="'+esc(k)+'"><span class="catalogLogo" style="background:'+esc(b.color)+';color:'+cardInk(b.color)+'">'+brandLogoHtml(b,'wallet')+'</span><span>'+esc(b.name)+'</span></button>').join('')||'<p class="hint">Nessun marchio trovato. Puoi creare una carta personalizzata.</p>';box.querySelectorAll('[data-brand]').forEach(btn=>btn.onclick=()=>{const el=document.getElementById('addBrand');el.value=btn.dataset.brand;el.dispatchEvent(new Event('change'));document.getElementById('addName').scrollIntoView({behavior:'smooth',block:'center'})})}
 
-function downloadBackup(data,filename=''){const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data.filter(c=>!window.FiCardLottery?.isLotteryCard(c))};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);localStorage.setItem('ficard.lastBackup',payload.exportedAt);document.getElementById('backupInfo').textContent='Backup creato: '+new Date().toLocaleString('it-IT')+'. Conserva il file per ripristinare le carte.';toast('Backup pronto da salvare in File')}
+function downloadBackup(data,filename=''){const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data.filter(c=>!window.FiCardLottery?.isLotteryCard(c)).map(({openedAt,...card})=>card)};const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=filename||'fi-card-backup-'+new Date().toISOString().slice(0,10)+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),10000);localStorage.setItem('ficard.lastBackup',payload.exportedAt);document.getElementById('backupInfo').textContent='Backup creato: '+new Date().toLocaleString('it-IT')+'. Conserva il file per ripristinare le carte.';toast('Backup pronto da salvare in File')}
 async function shareBackup(data,personal=false){
  window.FiCardAnalytics?.track('share_started','profile');
- const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data.filter(c=>!window.FiCardLottery?.isLotteryCard(c))};
+ const payload={app:'Fi-Card',version:2,exportedAt:new Date().toISOString(),cards:data.filter(c=>!window.FiCardLottery?.isLotteryCard(c)).map(({openedAt,...card})=>card)};
  const name='fi-card-backup-'+payload.exportedAt.slice(0,10)+'.json';
  const blob=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'});
  try{

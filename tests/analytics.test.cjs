@@ -5,3 +5,24 @@ test('unknown brands are anonymized and unrecognised events and pages are reject
 test('old opt-outs are respected and initialization removes the old persistent ID',async()=>{const {a,data,calls,init}=setup({'ficard.analytics.consent.v1':'no','ficard.analytics.install.v1':'old-id'});init();assert.equal(data.has('ficard.analytics.install.v1'),false);await a.track('app_open','home');assert.equal(calls.length,0);a.setConsent(true);assert.equal(calls.length,3);assert.equal(data.has('ficard.analytics.install.v1'),false);a.setConsent(false);await a.track('page_view','map');assert.equal(calls.length,3);assert.equal(data.get('ficard.analytics.aggregate.v1'),'no')});
 test('offline, embeds and server failures do not interrupt the app; opt-out works without storage',async()=>{const {a,c,calls}=setup();c.navigator.onLine=false;await a.track('page_view','map');c.navigator.onLine=true;c.parent={};await a.track('page_view','map');assert.equal(calls.length,0);c.parent=c;c.fetch=async()=>{throw Error('offline')};assert.equal(await a.track('page_view','map'),false);c.localStorage.getItem=()=>{throw Error('storage')};c.localStorage.setItem=()=>{throw Error('storage')};a.setConsent(false);assert.equal(a.enabled(),false);assert.equal(await a.track('card_added','home','conad'),false)});
 test('promo counters accept only fixed campaign/position pairs and obey opt-out',async()=>{const {a,calls}=setup();await a.track('promo_click','scandixit','scandixit:tip3');assert.equal(calls[0].body.p_brand,'scandixit:tip3');await a.track('promo_click','scandixit','private barcode 123');assert.equal(calls.length,1);a.setConsent(false);await a.track('promo_impression','home','fourth:tip4');assert.equal(calls.length,1)});
+test('code displays stay distinct and offline counters flush without card identifiers',async()=>{
+ const {a,c,calls,init}=setup();
+ c.navigator.onLine=false;
+ const handlers={};
+ c.addEventListener=(event,handler)=>handlers[event]=handler;
+ init();
+ a.gpsSuggested();
+ a.codeShown('conad',true);
+ a.codeShown('conad',false);
+ assert.equal(calls.length,0);
+ c.navigator.onLine=true;
+ handlers.online();
+ await new Promise(setImmediate);
+ const events=calls.filter(call=>call.body?.p_event).map(call=>call.body);
+ assert.deepEqual(events,[
+  {p_event:'gps_card_suggested',p_page:'home',p_brand:null},
+  {p_event:'code_shown',p_page:'home',p_brand:'conad'},
+  {p_event:'gps_code_shown',p_page:'home',p_brand:null},
+  {p_event:'code_shown',p_page:'home',p_brand:'conad'}
+ ]);
+});

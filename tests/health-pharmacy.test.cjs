@@ -11,9 +11,9 @@ test('health card matches pharmacy category and legacy Italian names, excludes u
 });
 test('health card is magnified only at one close pharmacy with precise GPS',()=>{
  const c=setup();c.distanceM=(p,l)=>l.m;c.inferredBrandKey=x=>x.brandKey||'';c.smartShopCandidates=()=>c.candidates;
- vm.runInContext(html.slice(html.indexOf('function arrivalCard('),html.indexOf('function nearbyCardCount(')),c);
+ vm.runInContext(html.slice(html.indexOf('const CARD_USAGE_WINDOW='),html.indexOf('function nearbyCardCount(')),c);
  const pharmacy={m:10,osmId:'node/1'},shop={m:40,osmId:'node/2'};
- c.candidates=[{c:health,l:pharmacy}];assert.equal(c.arrivalCard([health],{accuracy:10}),health);
+ c.cards=[health,other];c.candidates=[{c:health,l:pharmacy}];assert.equal(c.arrivalCard([health],{accuracy:10}),health);
  assert.equal(c.arrivalCard([health],{accuracy:100}),null);assert.equal(c.arrivalCard([health],{}),null);
  c.candidates=[{c:health,l:{...pharmacy,m:35}}];assert.equal(c.arrivalCard([health],{accuracy:10}),null);
  c.candidates=[{c:health,l:pharmacy},{c:other,l:shop}];assert.equal(c.arrivalCard([health,other],{accuracy:10}),null);

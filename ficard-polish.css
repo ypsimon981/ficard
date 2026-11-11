@@ -639,8 +639,17 @@ body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset
 .topActions .iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8}
 #gpsToggle[aria-pressed="true"] .gpsSlash{display:none}
 #shareCardsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-block:10px}
-.shareMini{position:relative;display:grid;justify-items:center;align-content:center;gap:5px;min-height:96px;padding:12px 6px;border:0;border-radius:14px;background:var(--card-color);color:var(--card-ink)}
-.shareMini .brandLogo{width:80%;height:40px;object-fit:contain}
+.shareMini{
+ position:relative;display:grid;align-content:center;gap:3px;
+ box-sizing:border-box;width:100%;min-width:0;height:72px;min-height:72px;
+ padding:7px 31px 7px 11px;overflow:hidden;text-align:start;
+ border:0;border-radius:12px;background:var(--card-color);color:var(--card-ink);
+}
+.shareMiniName{
+ display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;
+ overflow:hidden;overflow-wrap:anywhere;font-size:14px;font-weight:750;line-height:1.15;
+}
+.shareMiniAlias{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;line-height:1.2;opacity:.85}
 .shareTick{display:none;position:absolute;top:5px;right:5px;border-radius:50%;background:#168244;color:white;width:24px;height:24px;place-items:center}
 .shareMini[aria-pressed="true"] .shareTick{display:grid}
 #sendSelectedCards{width:100%}

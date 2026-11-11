@@ -52,6 +52,15 @@ function show(){
  const screen=root.document.createElement('section');screen.id='firstLaunch';screen.className='firstLaunch';screen.setAttribute('data-i18n-skip','');
  screen.setAttribute('aria-labelledby','firstLaunchTitle');screen.setAttribute('role','dialog');screen.setAttribute('aria-modal','true');
  root.document.body.classList.add('isOnboarding');root.document.body.appendChild(screen);
+ let autoAdvanceTimer=null,manualControl=false;
+ const reducedMotion=root.matchMedia?.('(prefers-reduced-motion: reduce)');
+ function stopAutoAdvance(){
+  manualControl=true;
+  if(autoAdvanceTimer!==null){root.clearInterval(autoAdvanceTimer);autoAdvanceTimer=null}
+ }
+ for(const event of ['pointerdown','touchstart','keydown','wheel','click']){
+  screen.addEventListener?.(event,stopAutoAdvance,{capture:true,passive:true,once:true});
+ }
  function render(preferencesOpen=false){
   const c=copy(state.language),langs=root.FiCardI18n?.languageNames||{it:'Italiano',en:'English',fr:'Français',es:'Español',pt:'Português',nl:'Nederlands',de:'Deutsch'};
   const countries=[['IT',c.italy],['FR',c.france],['XX',c.other]];
@@ -92,10 +101,17 @@ function show(){
   if(track&&dotsRow){
    const buttons=[...dotsRow.querySelectorAll('button')];
    const current=()=>Math.max(0,Math.min(buttons.length-1,Math.round(track.scrollLeft/track.clientWidth)||0));
-   const move=index=>track.scrollTo({
+   const move=(index,wrap=false)=>track.scrollTo({
     left:Math.max(0,Math.min(buttons.length-1,index))*track.clientWidth,
-    behavior:root.matchMedia?.('(prefers-reduced-motion: reduce)').matches?'instant':'smooth'
+    behavior:wrap||reducedMotion?.matches?'instant':'smooth'
    });
+   if(!manualControl&&!reducedMotion?.matches){
+    autoAdvanceTimer=root.setInterval(()=>{
+     if(root.document.hidden||reducedMotion?.matches)return;
+     const next=current()+1;
+     move(next%buttons.length,next===buttons.length);
+    },5000);
+   }
    buttons.forEach((button,index)=>button.onclick=()=>move(index));
    track.addEventListener('scroll',()=>{
     buttons.forEach((button,index)=>{
@@ -108,9 +124,9 @@ function show(){
     e.preventDefault();move(current()+(e.key==='ArrowRight'?1:-1));
    });
   }
-  screen.querySelector('#welcomeLanguage').onchange=e=>{capture();state.language=e.target.value;render(true);screen.querySelector('#welcomeLanguage').focus()};
+  screen.querySelector('#welcomeLanguage').onchange=e=>{stopAutoAdvance();capture();state.language=e.target.value;render(true);screen.querySelector('#welcomeLanguage').focus()};
   screen.querySelector('form').onsubmit=e=>{
-   e.preventDefault();capture();
+   e.preventDefault();stopAutoAdvance();capture();
    root.FiCardMarkets.setPreferences({override:state.override,residence:state.residence});
    write('ficard.analytics.aggregate.v1',state.analytics?'yes':'no');
    root.FiCardAnalytics?.setConsent(state.analytics,false);

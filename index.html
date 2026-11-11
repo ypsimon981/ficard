@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#5B3DF5">
-  <meta name="ficard-version" content="1.0.0">
+  <meta name="ficard-version" content="1.1.0">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
   <meta name="apple-mobile-web-app-title" content="Fi-Card">
@@ -685,7 +685,7 @@ const scanRequest=new URLSearchParams(location.search).get('request')||'';
 const scannerBridge=window.parent!==window&&new URLSearchParams(location.search).get('scanner')==='scandixit'&&!!scanRequest;
 let scanDelivered=false;
 async function returnScanToParent(code,format){if(!scannerBridge||scanDelivered)return;scanDelivered=true;await stopScan();window.parent.postMessage({type:'ficard.scan.result',request:scanRequest,code,format},location.origin);}
-const RELEASE="2026.10.17-release2-web-v1.0.0";
+const RELEASE="2026.10.17-release2-web-v1.1.0";
 function syncSoftwareVersion(){
  const version='v'+RELEASE.split('-v').pop();
  const node=document.querySelector('.softwareVersion .release');

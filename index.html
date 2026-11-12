@@ -403,6 +403,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
         <div class="smartHead"><h2>Carte rapide</h2><small id="smartOrderLabel">Per distanza</small></div>
         <div id="smartCarousel" class="smartCarousel"></div>
       </div>
+      <button class="chip" type="button" id="importCardsHome">Importa</button>
       <div id="homeContentBanner"></div>
       <div class="chips homeFilters">
         <button class="chip active" data-filter="used">Per distanza</button>
@@ -648,7 +649,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
 
 <div id="toast" class="toast" role="status" aria-live="polite"></div>
 <div id="imageImportModal" class="modal"><div class="sheet imageImportSheet"><div id="imageImportBusy" class="imageImportBusyOverlay" role="status" aria-live="polite"><div class="imageImportSpinner" aria-hidden="true"></div><strong id="imageImportBusyText">Analisi in corso…</strong><small>Fi-Card sta cercando il codice e riconoscendo il marchio. Può richiedere qualche secondo.</small></div><div class="sheetHead"><h2>Importa immagini</h2><button class="close" data-close="imageImportModal">×</button></div><p id="imageImportStatus" role="status" aria-live="polite"></p><div id="imageImportResults"></div><div id="imageBrandRequestSettings" class="panel"></div><button class="primary" id="saveImages" disabled>Salva carte selezionate</button><div id="fileReader" hidden></div></div></div>
-<div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2 id="backupModalTitle">Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><div id="importCardsGrid" class="cards transferCardsGrid" hidden></div><div class="panel" style="margin:10px 0"><label class="hint" for="backupAliasToggle"><input type="checkbox" id="backupAliasToggle"> Vuoi assegnare un alias alle carte importate?</label><div id="backupAliasBox" hidden style="margin-top:10px"><label for="backupAlias">Alias per le carte importate</label><input id="backupAlias" class="field" type="text" maxlength="60" placeholder="Es. Marco, Famiglia"><p class="hint">Verrà applicato alle carte aggiunte, anche se il file contiene già un alias. Le carte già presenti non cambiano.</p></div></div><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint" id="backupModeHelp">Unisci conserva le carte esistenti. Sostituisci salva prima una copia di sicurezza scaricabile.</p></div></div>
+<div id="backupModal" class="modal"><div class="sheet"><div class="sheetHead"><h2 id="backupModalTitle">Ripristina backup</h2><button class="close" data-close="backupModal">×</button></div><p id="backupSummary"></p><div id="importCardsGrid" class="cards transferCardsGrid" hidden></div><div class="panel" style="margin:10px 0"><label class="hint" for="backupAliasToggle"><input type="checkbox" id="backupAliasToggle"> Vuoi assegnare un alias alle carte importate?</label><div id="backupAliasBox" hidden style="margin-top:10px"><label for="backupAlias">Alias per le carte importate</label><input id="backupAlias" class="field" type="text" maxlength="60" placeholder="Es. Marco, Famiglia"><p class="hint">Verrà applicato alle carte aggiunte, anche se il file contiene già un alias. Le carte già presenti non cambiano.</p></div></div><button class="primary" id="mergeBackup">Unisci alle mie carte</button><button class="secondary" id="replaceBackup">Sostituisci le mie carte</button><p class="hint" id="backupModeHelp">Importa aggiunge le carte spuntate. Sostituisci ripristina tutto il file dopo aver salvato una copia di sicurezza.</p></div></div>
 
 <div id="lotteryModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="lotteryHeading"><div class="sheet">
   <div class="grab"></div><div class="sheetHead"><h2 id="lotteryHeading">Lotteria degli scontrini</h2><button type="button" class="close" id="lotteryClose" aria-label="Chiudi">×</button></div>
@@ -1800,6 +1801,7 @@ function transferTileContent(card){
  const logo=brand.logo?'<span class="shareMiniLogo" aria-hidden="true">'+brandLogoHtml(brand,"sharing")+'</span>':"";
  return label+subtitle+logo;
 }
+const importSelection=new Set();
 function renderImportPreview(incoming,shared){
  const grid=document.getElementById("importCardsGrid");
  const summary=document.getElementById("backupSummary");
@@ -1807,21 +1809,45 @@ function renderImportPreview(incoming,shared){
  document.getElementById("backupModalTitle").textContent=shared?"Importa carte ricevute":"Ripristina backup";
  grid.hidden=false;
  const existing=new Set(cards.map(cardIdentity));
- const toImport=new Set();
+ const eligible=new Set();
+ importSelection.clear();
+ let lotteryPresent=!!window.FiCardLottery?.read();
  for(const card of incoming){
+  if(window.FiCardLottery?.isLotteryCard(card)&&!window.FiCardLottery.isDemo(card)){
+   if(!lotteryPresent)eligible.add(card);
+   lotteryPresent=true;
+   continue;
+  }
   const key=cardIdentity(card);
-  if(!existing.has(key))toImport.add(card);
+  if(!existing.has(key))eligible.add(card);
   existing.add(key);
  }
- grid.innerHTML=sortTransferCards(incoming).map(card=>{
-  const status=toImport.has(card)?'<span class="importDuplicate" aria-label="Da importare">✓</span>':'';
-  return '<div class="shareMini" style="'+transferTileStyle(card)+'">'+transferTileContent(card)+status+'</div>';
+ const ordered=sortTransferCards(incoming);
+ const duplicates=incoming.length-eligible.size;
+ const duplicateLabel=duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"";
+ function updateSelection(){
+  const count=importSelection.size;
+  summary.textContent=(count===1?"1 carta selezionata":count+" carte selezionate")+duplicateLabel;
+  merge.textContent=count===1?"Importa 1 carta":count?"Importa "+count+" carte":"Importa selezionate";
+  merge.disabled=!count;
+ }
+ for(const card of eligible)importSelection.add(card);
+ grid.innerHTML=ordered.map((card,index)=>{
+  const style=' style="'+transferTileStyle(card)+'"';
+  const content=transferTileContent(card);
+  return eligible.has(card)
+   ?'<button class="shareMini" type="button" data-import-index="'+index+'" aria-pressed="true" aria-label="'+esc(cardDisplayName(card))+'"'+style+'>'+content+'<b class="shareTick" aria-hidden="true">✓</b></button>'
+   :'<div class="shareMini"'+style+'>'+content+'</div>';
  }).join("");
- const missing=toImport.size;
- const duplicates=incoming.length-missing;
- const missingLabel=missing===1?"1 carta da aggiungere":missing+" carte da aggiungere";
- summary.textContent=(missing?"✓ ":"")+missingLabel+(duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"");
- merge.disabled=!missing;
+ for(const button of grid.querySelectorAll("[data-import-index]")){
+  const card=ordered[Number(button.dataset.importIndex)];
+  button.onclick=()=>{
+   if(importSelection.has(card))importSelection.delete(card);else importSelection.add(card);
+   button.setAttribute("aria-pressed",String(importSelection.has(card)));
+   updateSelection();
+  };
+ }
+ updateSelection();
 }
 function openCardSharing(){
  shareSelection.clear();
@@ -1853,7 +1879,7 @@ function chooseImportFile(mode){
  document.getElementById("importFile").click();
 }
 document.getElementById("importData").onclick=()=>chooseImportFile("backup");
-document.getElementById("importSharedCards").onclick=()=>chooseImportFile("shared");
+document.getElementById("importSharedCards").onclick=document.getElementById("importCardsHome").onclick=()=>chooseImportFile("shared");
 document.getElementById("importSharedFromPicker").onclick=()=>{
  hideModal("shareCardsModal");
  chooseImportFile("shared");
@@ -1861,7 +1887,7 @@ document.getElementById("importSharedFromPicker").onclick=()=>{
 document.getElementById("importFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>50000000)throw Error("Backup troppo grande");const data=JSON.parse(await file.text());pendingBackup=validateBackup(data);const shared=importMode==="shared"||data?.kind==="shared-cards";document.getElementById("replaceBackup").hidden=shared;document.getElementById("backupModeHelp").hidden=shared;document.getElementById("mergeBackup").textContent=shared?"Importa solo le carte mancanti":"Unisci alle mie carte";document.getElementById("backupAliasToggle").checked=false;document.getElementById("backupAliasBox").hidden=true;document.getElementById("backupAlias").value="";renderImportPreview(pendingBackup,shared);showModal("backupModal")}catch(err){toast(err.message||"Backup non valido")}e.target.value=""};
 document.getElementById("backupAliasToggle").onchange=e=>{document.getElementById("backupAliasBox").hidden=!e.target.checked;if(e.target.checked)document.getElementById("backupAlias").focus()};
 function chosenBackupAlias(){if(!document.getElementById("backupAliasToggle").checked)return null;const alias=document.getElementById("backupAlias").value.trim().slice(0,60);if(!alias){toast("Scrivi un alias oppure disattiva l’opzione");document.getElementById("backupAlias").focus();return false}return alias}
-document.getElementById("mergeBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;const existing=new Set(cards.map(c=>c.id));const added=mergeCards(pendingBackup,alias);if(added)window.FiCardAnalytics?.track("backup_merged","profile");save();renderAll();hideModal("backupModal");toast(added+" carte aggiunte; duplicati ignorati");if(added)maybeOfferGps(cards.filter(c=>!existing.has(c.id)))};
+document.getElementById("mergeBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;const existing=new Set(cards.map(c=>c.id));if(!importSelection.size)return;const added=mergeCards(pendingBackup.filter(card=>importSelection.has(card)),alias);if(added)window.FiCardAnalytics?.track("backup_merged","profile");save();renderAll();hideModal("backupModal");toast(added===1?"1 carta aggiunta":added+" carte aggiunte");if(added)maybeOfferGps(cards.filter(c=>!existing.has(c.id)))};
 document.getElementById("replaceBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;const unique=uniqueBackupCards(pendingBackup);if(!confirm("Sostituire le "+cards.length+" carte attuali con le "+unique.length+" carte del backup?"))return;downloadBackup(cards,"fi-card-prima-del-ripristino.json");cards=unique.map(c=>alias?{...c,alias}:c);save();renderAll();hideModal("backupModal");toast("Backup ripristinato")};
 document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tutte le carte e i punti vendita salvati?")){window.FiCardAnalytics?.setConsent(false);cards=[];await saveQueue;try{[KEY,...LEGACY_KEYS,"ficard.cards.local-newer"].forEach(k=>localStorage.removeItem(k));window.FiCardLottery?.clear()}catch(e){}try{await idbSet("cards",[])}catch(e){}renderAll();toast("Dati locali cancellati")}};
 

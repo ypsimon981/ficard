@@ -631,8 +631,8 @@ body.appShell .bottom::after{
 .bottom #addFab svg{width:42px;height:36px}
 body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset-bottom,0px),var(--safe-area-inset-bottom,0px)))}
 #homeView #cardGrid{
- width:calc(100% + 12px);max-width:none;margin-inline:-6px;
- padding-inline:0;column-gap:6px;
+ width:100%;max-width:100%;margin-inline:0;
+ padding-inline:3px;column-gap:6px;
 }
 #homeView #cardGrid.usageGrid{column-gap:6px}
 .topActions .navIcon{display:grid;place-items:center}

@@ -1,5 +1,5 @@
 const APP_VERSION="1.1.0";
-const CACHE="ficard-v"+APP_VERSION+"-share11";
+const CACHE="ficard-v"+APP_VERSION+"-share12";
 const CORE=[
   "./pharmacy.svg",
   "./ficard-onboarding.js?v=1.1.0-welcome4",

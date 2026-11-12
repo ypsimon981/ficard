@@ -365,7 +365,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     .lotteryCodePreview .num{overflow-wrap:anywhere}
   </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.215">
-<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0-share3">
+<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0-share4">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -1799,7 +1799,7 @@ function openCardSharing(){
   const label='<span class="shareMiniName">'+esc(card.name)+'</span>';
   const subtitle=alias?'<span class="shareMiniAlias">'+esc(alias)+'</span>':'';
   const brand=brandFor(card);
-  const logo=brand.logo?'<span class="shareMiniLogo" aria-hidden="true">'+brandLogoHtml(brand,"wallet")+'</span>':"";
+  const logo=brand.logo?'<span class="shareMiniLogo" aria-hidden="true">'+brandLogoHtml(brand,"sharing")+'</span>':"";
   return '<button class="shareMini" type="button" aria-pressed="false" aria-label="'+esc(cardDisplayName(card))+'" style="--card-color:'+esc(card.color)+';--card-ink:'+cardInk(card.color)+'">'+label+subtitle+logo+'<b class="shareTick" aria-hidden="true">✓</b></button>';
  }).join("")||'<p>Non hai ancora carte da condividere.</p>';
  [...grid.querySelectorAll("button")].forEach((button,index)=>button.onclick=()=>{
@@ -1830,7 +1830,7 @@ document.getElementById("clearData").onclick=async()=>{if(confirm("Cancellare tu
 document.getElementById("refreshBtn").onclick=async()=>{toast("Aggiorno Fi-Card…");try{await window.FiCardCatalog?.sync();if("caches" in window){const keys=await caches.keys();await Promise.all(keys.filter(k=>k.startsWith("ficard-v")).map(k=>caches.delete(k)))}if("serviceWorker" in navigator){const reg=await navigator.serviceWorker.getRegistration("./");if(reg)await reg.update()}}catch(e){}const u=new URL(location.href);u.searchParams.set("release",RELEASE);u.searchParams.set("_refresh",Date.now());location.replace(u.toString())};
 if("serviceWorker" in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});
 let pendingBackup=[],imageDrafts=[],imageImportBusy=false;
-function brandLogoHtml(b,variant='default'){if(b.health)return healthSkinHtml();let logo=b.logo||'';if(variant==='wallet'&&/(^|\/)conad\.svg$/i.test(logo))logo=logo.replace(/conad\.svg$/i,'conad-light.svg');if(variant==='wallet'&&/(^|\/)mediaworld\.svg$/i.test(logo))logo=logo.replace(/mediaworld\.svg$/i,'mediaworld-light.svg');const remote=!logo&&b.domain?'https://www.google.com/s2/favicons?domain='+encodeURIComponent(b.domain)+'&sz=256':'';const src=logo||remote;if(!src)return esc(b.mark);const studioStyle=b.studioRevision?'width:'+b.logoScale+'%!important;max-width:'+b.logoScale+'%!important;height:65%!important;max-height:65%!important;filter:none!important;border-radius:0!important;':'';const klass='brandLogo'+(b.studioRevision?' studioLogo':'')+(remote?' brandLogoRemote':'');return '<img class="'+klass+'" style="background:'+esc(b.logoBg||'transparent')+';'+studioStyle+'" src="'+esc(src)+'" alt="'+esc(b.name)+'" data-fallback="'+esc(b.mark)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline\'"><span class="brandLogoFallback" style="display:none">'+esc(b.mark)+'</span>'}
+function brandLogoHtml(b,variant='default'){if(b.health)return healthSkinHtml();let logo=b.logo||'';if(variant==='wallet'&&/(^|\/)conad\.svg$/i.test(logo))logo=logo.replace(/conad\.svg$/i,'conad-light.svg');if(variant==='wallet'&&/(^|\/)mediaworld\.svg$/i.test(logo))logo=logo.replace(/mediaworld\.svg$/i,'mediaworld-light.svg');const remote=!logo&&b.domain?'https://www.google.com/s2/favicons?domain='+encodeURIComponent(b.domain)+'&sz=256':'';const src=logo||remote;if(!src)return esc(b.mark);const studioStyle=b.studioRevision&&variant!=='sharing'?'width:'+b.logoScale+'%!important;max-width:'+b.logoScale+'%!important;height:65%!important;max-height:65%!important;filter:none!important;border-radius:0!important;':'';const klass='brandLogo'+(b.studioRevision?' studioLogo':'')+(remote?' brandLogoRemote':'');return '<img class="'+klass+'" style="background:'+esc(b.logoBg||'transparent')+';'+studioStyle+'" src="'+esc(src)+'" alt="'+esc(b.name)+'" data-fallback="'+esc(b.mark)+'" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'inline\'"><span class="brandLogoFallback" style="display:none">'+esc(b.mark)+'</span>'}
 function cardInk(color){const hex=/^#[0-9a-f]{6}$/i.test(color)?color:'#5B3DF5';const rgb=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:((v+.055)/1.055)**2.4);return .2126*rgb[0]+.7152*rgb[1]+.0722*rgb[2]>.179?'#172033':'#FFFFFF'}
 function catalogOptions(selected=''){return '<option value="">Carta personalizzata</option>'+Object.entries(BRANDS).sort((a,b)=>a[1].name.localeCompare(b[1].name,'it')).map(([k,b])=>'<option value="'+esc(k)+'" '+(selected===k?'selected':'')+'>'+esc(b.name)+'</option>').join('')}
 let imageImportDefaults=null;

@@ -365,7 +365,7 @@ body.scannerBridge #addModal .sheet{width:100%;max-width:none;max-height:100dvh;
     .lotteryCodePreview .num{overflow-wrap:anywhere}
   </style>
 <link rel="stylesheet" href="./ficard-theme.css?v=0.9.215">
-<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0-share5">
+<link rel="stylesheet" href="./ficard-polish.css?v=1.1.0-share6">
 <style>
 .usageGrid .advertisingCard{border:1.5px solid rgba(91,61,245,.4);background:#E4F8F3!important;color:#4324BC!important;box-shadow:0 3px 10px rgba(31,41,55,.06)}
 .advertisingContent{height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:26px 8px 8px;text-align:center;overflow:hidden}
@@ -444,7 +444,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
           <div class="cardSetSharing">
             <svg class="cardSetGraphic" viewBox="0 0 280 84" aria-hidden="true"><g fill="#E8E2FF" stroke="#5B3DF5" stroke-width="2"><rect x="18" y="9" width="68" height="44" rx="7"/><rect x="27" y="18" width="68" height="44" rx="7"/><rect x="36" y="27" width="68" height="44" rx="7" fill="#5B3DF5"/></g><path d="M121 42h38m-9-9 9 9-9 9" fill="none" stroke="#5B3DF5" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><rect x="176" y="27" width="68" height="44" rx="7" fill="#E8E2FF" stroke="#5B3DF5" stroke-width="2"/><rect x="192" y="9" width="68" height="44" rx="7" fill="#D7FAF3" stroke="#159D89" stroke-width="2"/><path d="m214 31 7 7 13-14" fill="none" stroke="#159D89" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/><g stroke="#fff" stroke-width="2"><path d="M49 41v17m5-17v17m4-17v17m6-17v17m4-17v17m7-17v17m5-17v17m5-17v17"/></g></svg>
             <section id="cardSharingMessages" tabindex="-1"></section>
-            <button class="secondary" id="shareBackup">Scegli le carte</button>
+            <button class="secondary" id="shareBackup">Scegli le carte</button><button class="secondary" id="importSharedCards">Importa</button>
             <strong class="sharingTagline">Per familiari e amici</strong>
             <p class="hint">Scambia le carte con chi fa la spesa con te. Fi-Card aggiunge solo le carte mancanti.</p>
           </div>
@@ -575,7 +575,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
   <button class="nav" id="shareSelectedNav" type="button"><span class="navIcon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="2.5"/><circle cx="19" cy="5" r="2.5"/><circle cx="19" cy="19" r="2.5"/><path d="m7 11 9-5M7 13l9 5"/></svg></span><span class="navLabel">Condividi</span></button>
 </nav>
 
-<div id="shareCardsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shareCardsTitle"><div class="sheet"><div class="sheetHead"><h2 id="shareCardsTitle">Scegli le carte</h2><button class="close" data-close="shareCardsModal" aria-label="Indietro">×</button></div><div id="shareCardsGrid" class="cards transferCardsGrid"></div><button class="primary" id="sendSelectedCards" disabled>Condividi</button></div></div>
+<div id="shareCardsModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="shareCardsTitle"><div class="sheet"><div class="sheetHead"><h2 id="shareCardsTitle">Scegli le carte</h2><button class="close" data-close="shareCardsModal" aria-label="Indietro">×</button></div><button class="secondary" id="importSharedFromPicker">Importa</button><div id="shareCardsGrid" class="cards transferCardsGrid"></div><button class="primary" id="sendSelectedCards" disabled>Condividi</button></div></div>
 <div id="gpsIntroModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="gpsIntroTitle"><div class="sheet"><div class="sheetHead"><h2 id="gpsIntroTitle">La carta pronta alla cassa</h2></div><div id="gpsIntroCard" class="gpsIntroCard"></div><p id="gpsIntroCopy"></p><button class="primary" id="activateGps">Attiva posizione</button><button class="secondary" data-close="gpsIntroModal">Continua senza posizione</button></div></div>
 <div id="addModal" class="modal"><div class="sheet addCardSheet">
   <div class="grab"></div><div class="sheetHead"><h2>Aggiungi una carta</h2><button class="close" data-close="addModal">×</button></div>
@@ -1805,25 +1805,21 @@ function renderImportPreview(incoming,shared){
  const summary=document.getElementById("backupSummary");
  const merge=document.getElementById("mergeBackup");
  document.getElementById("backupModalTitle").textContent=shared?"Importa carte ricevute":"Ripristina backup";
- grid.hidden=!shared;
- merge.disabled=false;
- if(!shared){
-  grid.replaceChildren();
-  summary.textContent=incoming.length+" carte nel backup. Hai "+cards.length+" carte su questo dispositivo.";
-  return;
- }
+ grid.hidden=false;
  const existing=new Set(cards.map(cardIdentity));
- const missing=[];
- for(const card of incoming){
+ let duplicates=0;
+ grid.innerHTML=sortTransferCards(incoming).map(card=>{
   const key=cardIdentity(card);
-  if(existing.has(key))continue;
-  missing.push(card);existing.add(key);
- }
- const duplicates=incoming.length-missing.length;
- const missingLabel=missing.length===1?"1 carta da aggiungere":missing.length+" carte da aggiungere";
- summary.textContent=missingLabel+(duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"");
- grid.innerHTML=sortTransferCards(missing).map(card=>'<div class="shareMini" style="'+transferTileStyle(card)+'">'+transferTileContent(card)+'</div>').join("");
- merge.disabled=!missing.length;
+  const duplicate=existing.has(key);
+  if(duplicate)duplicates++;
+  existing.add(key);
+  const status=duplicate?'<span class="importDuplicate" aria-label="Già presente o ripetuta nel file">✓</span>':'';
+  return '<div class="shareMini" style="'+transferTileStyle(card)+'">'+transferTileContent(card)+status+'</div>';
+ }).join("");
+ const missing=incoming.length-duplicates;
+ const missingLabel=missing===1?"1 carta da aggiungere":missing+" carte da aggiungere";
+ summary.textContent=missingLabel+(duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"")+(duplicates?" (✓)":"");
+ merge.disabled=!missing;
 }
 function openCardSharing(){
  shareSelection.clear();
@@ -1849,8 +1845,18 @@ document.getElementById("sendSelectedCards").onclick=async()=>{
  send.disabled=true;
  try{await shareBackup(selected,false,true)}finally{send.disabled=false}
 };
-document.getElementById("importData").onclick=()=>document.getElementById("importFile").click();
-document.getElementById("importFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>50000000)throw Error("Backup troppo grande");const data=JSON.parse(await file.text());pendingBackup=validateBackup(data);const shared=data?.kind==="shared-cards";document.getElementById("replaceBackup").hidden=shared;document.getElementById("backupModeHelp").hidden=shared;document.getElementById("mergeBackup").textContent=shared?"Importa solo le carte mancanti":"Unisci alle mie carte";document.getElementById("backupAliasToggle").checked=false;document.getElementById("backupAliasBox").hidden=true;document.getElementById("backupAlias").value="";renderImportPreview(pendingBackup,shared);showModal("backupModal")}catch(err){toast(err.message||"Backup non valido")}e.target.value=""};
+let importMode="backup";
+function chooseImportFile(mode){
+ importMode=mode;
+ document.getElementById("importFile").click();
+}
+document.getElementById("importData").onclick=()=>chooseImportFile("backup");
+document.getElementById("importSharedCards").onclick=()=>chooseImportFile("shared");
+document.getElementById("importSharedFromPicker").onclick=()=>{
+ hideModal("shareCardsModal");
+ chooseImportFile("shared");
+};
+document.getElementById("importFile").onchange=async e=>{const file=e.target.files?.[0];if(!file)return;try{if(file.size>50000000)throw Error("Backup troppo grande");const data=JSON.parse(await file.text());pendingBackup=validateBackup(data);const shared=importMode==="shared"||data?.kind==="shared-cards";document.getElementById("replaceBackup").hidden=shared;document.getElementById("backupModeHelp").hidden=shared;document.getElementById("mergeBackup").textContent=shared?"Importa solo le carte mancanti":"Unisci alle mie carte";document.getElementById("backupAliasToggle").checked=false;document.getElementById("backupAliasBox").hidden=true;document.getElementById("backupAlias").value="";renderImportPreview(pendingBackup,shared);showModal("backupModal")}catch(err){toast(err.message||"Backup non valido")}e.target.value=""};
 document.getElementById("backupAliasToggle").onchange=e=>{document.getElementById("backupAliasBox").hidden=!e.target.checked;if(e.target.checked)document.getElementById("backupAlias").focus()};
 function chosenBackupAlias(){if(!document.getElementById("backupAliasToggle").checked)return null;const alias=document.getElementById("backupAlias").value.trim().slice(0,60);if(!alias){toast("Scrivi un alias oppure disattiva l’opzione");document.getElementById("backupAlias").focus();return false}return alias}
 document.getElementById("mergeBackup").onclick=()=>{const alias=chosenBackupAlias();if(alias===false)return;const existing=new Set(cards.map(c=>c.id));const added=mergeCards(pendingBackup,alias);if(added)window.FiCardAnalytics?.track("backup_merged","profile");save();renderAll();hideModal("backupModal");toast(added+" carte aggiunte; duplicati ignorati");if(added)maybeOfferGps(cards.filter(c=>!existing.has(c.id)))};

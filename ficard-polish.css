@@ -754,3 +754,5 @@ body:has(#detailModal.show,#fullBarcode.show,#shareCardsModal.show) .bottom{visi
 .welcomeDots button::before{content:"";width:6px;height:6px;border-radius:9px;background:#ffffff63}
 .welcomeDots button[aria-current=true]::before{width:15px;background:#71ead8}
 .welcomeActions{margin-top:6px}
+
+.importDuplicate{position:absolute;z-index:2;top:4px;right:5px;display:grid;place-items:center;width:18px;height:18px;border-radius:50%;background:#168244;color:#fff;font-size:12px}

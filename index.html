@@ -1807,18 +1807,20 @@ function renderImportPreview(incoming,shared){
  document.getElementById("backupModalTitle").textContent=shared?"Importa carte ricevute":"Ripristina backup";
  grid.hidden=false;
  const existing=new Set(cards.map(cardIdentity));
- let duplicates=0;
- grid.innerHTML=sortTransferCards(incoming).map(card=>{
+ const toImport=new Set();
+ for(const card of incoming){
   const key=cardIdentity(card);
-  const duplicate=existing.has(key);
-  if(duplicate)duplicates++;
+  if(!existing.has(key))toImport.add(card);
   existing.add(key);
-  const status=duplicate?'<span class="importDuplicate" aria-label="Già presente o ripetuta nel file">✓</span>':'';
+ }
+ grid.innerHTML=sortTransferCards(incoming).map(card=>{
+  const status=toImport.has(card)?'<span class="importDuplicate" aria-label="Da importare">✓</span>':'';
   return '<div class="shareMini" style="'+transferTileStyle(card)+'">'+transferTileContent(card)+status+'</div>';
  }).join("");
- const missing=incoming.length-duplicates;
+ const missing=toImport.size;
+ const duplicates=incoming.length-missing;
  const missingLabel=missing===1?"1 carta da aggiungere":missing+" carte da aggiungere";
- summary.textContent=missingLabel+(duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"")+(duplicates?" (✓)":"");
+ summary.textContent=(missing?"✓ ":"")+missingLabel+(duplicates===1?" · 1 duplicato":duplicates?" · "+duplicates+" duplicati":"");
  merge.disabled=!missing;
 }
 function openCardSharing(){

@@ -1,8 +1,8 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),path=require('node:path');
 const read=f=>fs.readFileSync(path.join(__dirname,'..',f),'utf8');
-test('header keeps position, theme and settings and software version lives in settings',()=>{
+test('header exposes import and GPS, with theme and version in settings',()=>{
  const html=read('index.html'),header=html.match(/<header class="top">([\s\S]*?)<\/header>/)[1];
- assert.match(header,/id="gpsToggle"[\s\S]*id="themeBtn"[\s\S]*data-view="profile"/);assert.doesNotMatch(header,/id="refreshBtn"/);assert.match(html,/id="refreshBtn"/);
+ assert.match(header,/id="importCardsHome"[\s\S]*id="gpsToggle"[\s\S]*data-view="profile"/);assert.doesNotMatch(header,/id="themeBtn"/);assert.match(html,/<section id="profileView"[^>]*>\s*<div class="panel themeSetting">[\s\S]*?id="themeBtn"/);assert.doesNotMatch(header,/id="refreshBtn"/);assert.match(html,/id="refreshBtn"/);
  assert.doesNotMatch(header,/gridBtn|installBtn|class="release"/);
  assert.doesNotMatch(html,/getElementById\(['"](?:gridBtn|installBtn)['"]\)/);
  const displayed=html.match(/softwareVersion[\s\S]*?class="release">v(\d+\.\d+\.\d+)</);

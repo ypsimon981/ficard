@@ -638,7 +638,7 @@ body.appShell .app>main>.view{padding-bottom:calc(71px + max(env(safe-area-inset
 .topActions .navIcon{display:grid;place-items:center}
 .topActions .iconbtn svg{width:21px;height:21px;fill:none;stroke:currentColor;stroke-width:1.8}
 #gpsToggle[aria-pressed="true"] .gpsSlash{display:none}
-#shareCardsGrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-block:10px}
+#shareCardsGrid,#importCardsGrid:not([hidden]){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-block:10px}
 .shareMini{
  position:relative;display:grid;align-content:center;gap:3px;
  box-sizing:border-box;width:100%;min-width:0;height:72px;min-height:72px;

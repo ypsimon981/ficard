@@ -988,11 +988,21 @@ function inferredBrandKey(c){
  return ""
 }
 function safeCustomLogo(value){
- if(typeof value!=='string'||value.length>180000||!/^data:image\/webp;base64,[A-Za-z0-9+/]+={0,2}$/.test(value))return '';
+ if(typeof value!=='string'||value.length>240000)return '';
+ const match=/^data:image\/(webp|png);base64,([A-Za-z0-9+/]+={0,2})$/.exec(value);
+ if(!match)return '';
  try{
-  const bytes=atob(value.split(',')[1]);
-  return bytes.startsWith('RIFF')&&bytes.slice(8,12)==='WEBP'?value:'';
+  const bytes=atob(match[2]);
+  if(match[1]==='webp')return value.length<=180000&&bytes.startsWith('RIFF')&&bytes.slice(8,12)==='WEBP'?value:'';
+  return bytes.startsWith('\x89PNG\r\n\x1a\n')&&bytes.slice(12,16)==='IHDR'&&bytes.slice(16,24)==='\0\0\x01\0\0\0\0\xa0'?value:'';
  }catch{return ''}
+}
+function encodeCustomLogo(canvas){
+ try{
+  const webp=safeCustomLogo(canvas.toDataURL('image/webp',.82));
+  if(webp)return webp;
+ }catch{}
+ try{return safeCustomLogo(canvas.toDataURL('image/png'))}catch{return ''}
 }
 function logoEditor(host,initial,available){
  const ui=document.createElement('section');
@@ -1035,14 +1045,19 @@ function logoEditor(host,initial,available){
   if(selected.size>20000000)return toast(error);
   const url=URL.createObjectURL(selected);
   try{
-   const next=new Image();next.src=url;await next.decode();
+   const next=new Image();
+   await new Promise((resolve,reject)=>{
+    next.onload=resolve;
+    next.onerror=reject;
+    next.src=url;
+   });
    image=next;scale.value=100;horizontal.value=vertical.value=0;
    paint();crop.hidden=false;
   }catch{toast(error)}finally{URL.revokeObjectURL(url)}
  };
  for(const control of [scale,horizontal,vertical])control.oninput=paint;
  commit.onclick=()=>{
-  const next=safeCustomLogo(canvas.toDataURL('image/webp',.82));
+  const next=encodeCustomLogo(canvas);
   if(!next)return toast(error);
   value=next;crop.hidden=true;refresh();
  };

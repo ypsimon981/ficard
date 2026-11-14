@@ -24,3 +24,13 @@ test('a camera session reports only its first terminal outcome',()=>{
  context.finishCardScan('scan_cancelled');
  assert.deepEqual(events,[['scan_success','home']]);
 });
+
+test('logo editor accepts a PNG fallback when the browser cannot encode WebP',()=>{
+ const context=vm.createContext({atob});
+ vm.runInContext(html.slice(html.indexOf('function safeCustomLogo'),html.indexOf('function logoEditor')),context);
+ const png=width=>'data:image/png;base64,'+Buffer.from('89504e470d0a1a0a0000000d49484452'+width+'000000a0','hex').toString('base64');
+ const valid=png('00000100');
+ assert.equal(context.encodeCustomLogo({toDataURL:()=>valid}),valid);
+ assert.equal(context.encodeCustomLogo({toDataURL:type=>{if(type==='image/webp')throw Error();return valid}}),valid);
+ assert.equal(context.safeCustomLogo(png('00001000')),'');
+});

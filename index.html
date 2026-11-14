@@ -619,6 +619,11 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
     <label for="addAlias">Alias (facoltativo)</label><input id="addAlias" class="field" maxlength="60" placeholder="Es. Simone, Famiglia, Doppi punti">
     <label for="addCode">Numero / contenuto barcode *</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123" required maxlength="4096">
     <div class="row"><div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div><div><label>Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px"></div></div>
+    <div id="addCodePreview" hidden>
+      <p class="hint">Verifica che il codice corrisponda a quello della tessera.</p>
+      <div class="barcodeBox"><canvas id="addPreviewCanvas" aria-hidden="true"></canvas><div class="num" id="addPreviewValue" style="overflow-wrap:anywhere;white-space:pre-wrap"></div></div>
+      <div class="row"><button type="button" class="secondary" id="rescanCard">Riscansiona</button><button type="button" class="secondary" id="correctCardCode">Correggi codice</button></div>
+    </div>
     <div id="brandRequestSettings" class="panel"></div><button class="primary" id="saveCard">Salva carta</button>
     <p class="hint">La carta resta sul tuo telefono: non viene inviata ai server.</p>
   </section>
@@ -1424,14 +1429,14 @@ function inferManualFormat(text){if(validGs1Checksum(text)){if(text.length===13)
 function codeFormatOptions(selected='',automatic=false){return (automatic?'<option value="">Automatico</option>':'')+['QR_CODE','CODE128','EAN13','EAN8','UPCA','UPCE','CODE39','CODE93','ITF','CODABAR','DATA_MATRIX','AZTEC','PDF417','RSS14','RSS_EXPANDED'].map(f=>'<option value="'+f+'" '+(selected===f?'selected':'')+'>'+formatLabel(f)+'</option>').join('')}
 function formatLabel(f){return {QR_CODE:"QR Code",AZTEC:"Aztec",CODABAR:"Codabar",CODE39:"Code 39",CODE93:"Code 93",CODE128:"Code 128",DATA_MATRIX:"Data Matrix",ITF:"ITF",EAN13:"EAN-13",EAN8:"EAN-8",PDF417:"PDF417",UPCA:"UPC-A",UPCE:"UPC-E",RSS14:"GS1 DataBar",RSS_EXPANDED:"GS1 DataBar Expanded"}[f]||f||"Automatico"}
 function bwipBcid(f){return {QR_CODE:"qrcode",AZTEC:"azteccode",CODABAR:"rationalizedCodabar",CODE39:"code39",CODE93:"code93",CODE128:"code128",DATA_MATRIX:"datamatrix",ITF:"interleaved2of5",EAN13:"ean13",EAN8:"ean8",PDF417:"pdf417",UPCA:"upca",UPCE:"upce",RSS14:"databaromni",RSS_EXPANDED:"databarexpanded"}[f]||"code128"}
-function drawBarcode(id,c){
+function drawBarcode(id,c,preview=false){
  const el=document.getElementById(id);if(!el)return;el.hidden=false;el.parentElement.querySelectorAll(".codeRenderWarning").forEach(w=>w.remove());
  const format=isHealthCard(c)?'CODE39':normalizeFormat(c.format||inferManualFormat(c.code));
  try{
    if(isHealthCard(c)&&!window.FiCardHealth.valid(c.code)){el.hidden=true;const warning=document.createElement('p');warning.className='hint codeRenderWarning';warning.textContent=window.FiCardHealth.error;el.after(warning);return}
    if(window.bwipjs&&el.tagName==="CANVAS"){const is2d=["QR_CODE","AZTEC","DATA_MATRIX","PDF417"].includes(format);el.classList.toggle("matrixCode",is2d);bwipjs.toCanvas(el,{bcid:bwipBcid(format),text:String(c.code),scale:4,...(is2d?{}:{height:22}),includetext:false,paddingwidth:4,paddingheight:4,backgroundcolor:"FFFFFF"});return true}
- }catch(e){const warning=document.createElement('p');warning.className='hint codeRenderWarning';warning.textContent='Contenuto salvato. Questo formato non può rappresentarlo: scegli QR Code in Modifica per visualizzarlo come QR.';el.hidden=true;el.after(warning);return}
- if(!window.bwipjs)toast('Generatore codici non disponibile. Aggiorna Fi-Card quando sei connesso.');
+ }catch(e){const warning=document.createElement('p');warning.className='hint codeRenderWarning';warning.textContent=preview?'Anteprima non disponibile per questo formato. Verifica il codice qui sotto.':'Contenuto salvato. Questo formato non può rappresentarlo: scegli QR Code in Modifica per visualizzarlo come QR.';el.hidden=true;el.after(warning);return}
+ if(!preview&&!window.bwipjs)toast('Generatore codici non disponibile. Aggiorna Fi-Card quando sei connesso.');
 }
 
 let cardWakeLock=null,cardWakePending=false;
@@ -1695,8 +1700,19 @@ function showModal(id){document.getElementById(id).classList.add("show")}functio
 document.querySelectorAll("[data-close]").forEach(b=>b.onclick=()=>hideModal(b.dataset.close));
 document.getElementById('demoAddRealCard').onclick=()=>{hideModal('demoModal');document.getElementById('addFab').click()};
 document.querySelectorAll(".modal").forEach(m=>m.addEventListener("click",e=>{if(e.target===m)hideModal(m.id)}));
+function updateAddCodePreview(){
+ const code=document.getElementById('addCode').value;
+ document.getElementById('addCodePreview').hidden=!code;
+ document.getElementById('addPreviewValue').textContent=code;
+ if(!code)return;
+ const kind=document.getElementById('addModal').dataset.cardKind;
+ const brandKey=document.getElementById('addBrand').value,name=document.getElementById('addName').value;
+ const card={code,kind,brandKey,name,format:document.getElementById('addFormat').value||pendingScanFormat};
+ if(isHealthCard(card))card.code=window.FiCardHealth.normalize(code);
+ if(!drawBarcode('addPreviewCanvas',card,true))document.getElementById('addPreviewCanvas').hidden=true;
+}
 function revealAddCardFields(scroll=true){
- const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;
+ const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;updateAddCodePreview();
  if(scroll)requestAnimationFrame(()=>fields.scrollIntoView({behavior:"smooth",block:"start"}))
 }
 function clearNewCardDraft(){
@@ -1728,7 +1744,7 @@ function resetAddCardFlow(){
  if(sheet)sheet.scrollTop=0;stopScan()
 }
 document.getElementById("addFab").onclick=()=>{if(document.body.classList.contains("scanSectionOpen"))go("home");resetAddCardFlow();showModal("addModal")};
-document.getElementById("manualEntryBtn").onclick=()=>revealAddCardFields(true);
+document.getElementById("manualEntryBtn").onclick=()=>{stopScan();revealAddCardFields(true)};
 document.getElementById("healthSettingsAdd").onclick=()=>{
  if(!window.FiCardMarkets?.residentFeature('healthCard'))return;
  resetAddCardFlow();
@@ -1747,9 +1763,13 @@ function toggleCardSearch(open){
 document.getElementById('searchToggle').onclick=()=>toggleCardSearch();
 document.getElementById('search').addEventListener('keydown',e=>{if(e.key==='Escape'){e.preventDefault();toggleCardSearch(false)}});
 
-document.getElementById("addFormat").onchange=e=>{pendingScanFormat=e.target.value?normalizeFormat(e.target.value):null;document.getElementById("detectedFormat").textContent=pendingScanFormat?formatLabel(pendingScanFormat):"Automatico"};
+document.getElementById("addFormat").onchange=e=>{pendingScanFormat=e.target.value?normalizeFormat(e.target.value):null;document.getElementById("detectedFormat").textContent=pendingScanFormat?formatLabel(pendingScanFormat):"Automatico";updateAddCodePreview()};
 for(const id of ['addName','addCode'])document.getElementById(id).addEventListener('input',e=>{e.target.setCustomValidity('');e.target.removeAttribute('aria-invalid')});
-document.getElementById("addCode").addEventListener("input",e=>{const v=e.target.value;pendingScanFormat=null;document.getElementById("addFormat").value='';document.getElementById("detectedFormat").textContent=v?"Automatico: "+formatLabel(inferManualFormat(v)):"Automatico"});
+document.getElementById("addCode").addEventListener("input",updateAddCodePreview);
+document.getElementById("addName").addEventListener("input",updateAddCodePreview);
+document.getElementById("correctCardCode").onclick=()=>{
+ const field=document.getElementById("addCode");field.focus();field.select();
+};
 document.getElementById("addBrand").onchange=e=>{const b=BRANDS[e.target.value];for(const id of ["addName","addCategory","addColor"])document.getElementById(id).disabled=!!b;document.getElementById("brandRequestSettings").hidden=!!b;if(!b)return;document.getElementById("addName").value=b.name;document.getElementById("addColor").value=b.color;document.getElementById("addCategory").value=b.category||"altro"};
 document.querySelectorAll(".chip[data-filter]").forEach(b=>b.onclick=()=>{document.querySelectorAll(".chip[data-filter]").forEach(x=>x.classList.remove("active"));b.classList.add("active");if(b.dataset.filter==="category"&&currentCategory==="all"){const first=Object.keys(CATEGORIES).find(k=>cards.some(c=>categoryFor(c)===k));if(first)currentCategory=first}renderCategoryChips();renderCards()});
 document.querySelectorAll(".nav[data-view]").forEach(b=>b.onclick=()=>go(b.dataset.view));
@@ -1834,10 +1854,12 @@ document.getElementById("saveCard").onclick=()=>{
 };
 
 let scanGeneration=0,scanStarting=false,cardScanActive=false;
-document.getElementById("scanBtn").onclick=async()=>{
+document.getElementById("scanBtn").onclick=()=>startCardScan();
+document.getElementById("rescanCard").onclick=()=>startCardScan(true);
+async function startCardScan(keepDraft=!document.getElementById("cardFormFields").hidden){
  if(scanStarting)return;scanStarting=true;const button=document.getElementById('scanBtn');button.disabled=true;
  const healthDraft=document.getElementById('addModal').dataset.cardKind==='health-it';
- if(qrScanner)await stopScan();clearNewCardDraft();if(healthDraft)configureHealthDraft();const generation=++scanGeneration;let accepted=false,decoder;
+ if(qrScanner)await stopScan();if(!keepDraft)clearNewCardDraft();if(healthDraft)configureHealthDraft();const generation=++scanGeneration;let accepted=false,decoder;
  cardScanActive=true;window.FiCardAnalytics?.track("scan_started","home");
  const wrap=document.getElementById("scanner"),sheet=document.querySelector("#addModal .sheet");wrap.classList.add("show");
  document.getElementById("cardFormFields").hidden=true;if(sheet)sheet.scrollTop=0;document.getElementById("captureHint").textContent="Apertura fotocamera…";
@@ -1856,7 +1878,7 @@ document.getElementById("scanBtn").onclick=async()=>{
      const stopped=stopScan(),afterStop=scanGeneration;stopped.then(()=>{if(afterStop===scanGeneration)revealAddCardFields(true)})
    });
    if(generation!==scanGeneration&&!accepted){try{await decoder.stop();decoder.clear()}catch{}}
- }catch(e){if(generation===scanGeneration){console.warn("Fi-Card scanner:",e);if(scannerBridge)window.parent.postMessage({type:'ficard.scan.camera-error',request:scanRequest},location.origin);await stopScan(window.Html5Qrcode?"scan_camera_error":"scan_failed");const reason=[e?.name,e?.message||String(e)].filter(Boolean).join(": ");document.getElementById("captureHint").textContent="Fotocamera: "+reason;toast(/NotAllowed|Permission|denied/i.test(reason)?"Accesso alla fotocamera negato. Abilitalo nelle impostazioni di Safari.":"Avvio fotocamera non riuscito: "+reason.slice(0,150))}}
+ }catch(e){if(generation===scanGeneration){console.warn("Fi-Card scanner:",e);if(scannerBridge)window.parent.postMessage({type:'ficard.scan.camera-error',request:scanRequest},location.origin);await stopScan(window.Html5Qrcode?"scan_camera_error":"scan_failed");if(keepDraft)revealAddCardFields(false);const reason=[e?.name,e?.message||String(e)].filter(Boolean).join(": ");document.getElementById("captureHint").textContent="Fotocamera: "+reason;toast(/NotAllowed|Permission|denied/i.test(reason)?"Accesso alla fotocamera negato. Abilitalo nelle impostazioni di Safari.":"Avvio fotocamera non riuscito: "+reason.slice(0,150))}}
  finally{scanStarting=false;button.disabled=false}
 };
 function finishCardScan(outcome){

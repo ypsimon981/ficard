@@ -596,6 +596,7 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
     <button type="button" class="manualEntryBtn" id="manualEntryBtn">Inserisci i dati manualmente</button>
     </section>
   <section id="cardFormFields" class="cardFormFields" hidden>
+    <section data-add-step="code">
     <div id="addCodePreview" hidden>
       <strong>Codice acquisito</strong>
       <p class="hint">Verifica che il codice corrisponda a quello della tessera.</p>
@@ -605,7 +606,9 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
     </div>
     <label for="addCode">Numero / contenuto barcode *</label><input id="addCode" class="field" inputmode="text" placeholder="Es. 1234567890123" required maxlength="4096">
     <div><label for="addFormat">Formato codice</label><select id="addFormat" class="field"><option value="">Automatico</option><option value="QR_CODE">QR Code</option><option value="CODE128">Code 128</option><option value="EAN13">EAN-13</option></select><div id="detectedFormat" class="field" style="background:#F3F4F6;color:#6B7280">Automatico</div></div>
-    <div id="addCardDetails" class="formStepHead" tabindex="-1"><b>Completa i dati</b></div>
+    </section>
+    <section data-add-step="brand" hidden>
+    <div id="addCardDetails" class="formStepHead" tabindex="-1"><b>Scegli il marchio</b></div>
     <label for="brandSearch">Cerca marchio</label><input id="brandSearch" class="field" type="search" placeholder="Es. Conad, IKEA, farmacia…"><div id="brandResults" class="brandResults"></div>
     <label for="addBrand">Marchio</label><select id="addBrand" class="field"></select>
     <label>Categoria</label><select id="addCategory" class="field">
@@ -625,8 +628,25 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
     <p class="hint">Nome e contenuto sono obbligatori. Il formato viene riconosciuto automaticamente e puoi cambiarlo.</p>
     <label for="addName">Nome negozio / carta *</label><input id="addName" class="field" placeholder="Es. Esselunga" required maxlength="200">
     <label for="addAlias">Alias (facoltativo)</label><input id="addAlias" class="field" maxlength="60" placeholder="Es. Simone, Famiglia, Doppi punti">
-    <label for="addColor">Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px">
-    <div id="brandRequestSettings" class="panel"></div><button class="primary" id="saveCard">Salva carta</button>
+    <div id="brandRequestSettings" class="panel"></div>
+    <button type="button" class="primary" id="continueCardBrand">Conferma marchio o nome</button>
+    </section>
+    <section data-add-step="color" hidden>
+      <div id="cardColorPreview" class="panel" style="margin-bottom:12px;font-weight:800"></div>
+      <div class="formStepHead"><b>Scegli il colore</b></div>
+      <label for="addColor">Colore</label><input id="addColor" class="field" type="color" value="#5B3DF5" style="height:48px;padding:6px">
+      <button type="button" class="primary" id="confirmCardColor">Conferma colore</button>
+    </section>
+    <section data-add-step="logo" hidden>
+      <div class="formStepHead"><b>Aggiungi un logo?</b></div>
+      <div id="addLogoHost"></div>
+      <button type="button" class="secondary" id="searchCardLogo">Cerca logo PNG</button>
+      <p class="hint" id="cardLogoStatus" role="status"></p>
+      <div id="cardLogoResults" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"></div>
+      <button type="button" class="primary" id="saveCard" hidden>Salva con logo</button>
+      <button type="button" class="secondary" id="saveCardWithoutLogo">Salva senza logo</button>
+    </section>
+    <button type="button" class="secondary" id="backCardStep" hidden>Indietro</button>
     <p class="hint">La carta resta sul tuo telefono: non viene inviata ai server.</p>
   </section>
 </div></div>
@@ -1004,7 +1024,7 @@ function encodeCustomLogo(canvas){
  }catch{}
  try{return safeCustomLogo(canvas.toDataURL('image/png'))}catch{return ''}
 }
-function logoEditor(host,initial,available){
+function logoEditor(host,initial,available,{gallery=false,changed=()=>{}}={}){
  const ui=document.createElement('section');
  ui.dataset.i18nSkip='';
  const copy={
@@ -1027,7 +1047,8 @@ function logoEditor(host,initial,available){
  let value=initial||'',image;
  const refresh=()=>{
   ui.hidden=!available();
-  pick.textContent=value?change:add;
+  pick.textContent=value?change:gallery?window.FiCardI18n?.translateText("Scegli dalla galleria")||"Scegli dalla galleria":add;
+  changed(value);
   if(value)preview.src=value;else preview.removeAttribute('src');
   removeButton.hidden=!value;
  };
@@ -1039,8 +1060,7 @@ function logoEditor(host,initial,available){
  };
  pick.onclick=()=>file.click();
  removeButton.onclick=()=>{value='';crop.hidden=true;refresh()};
- file.onchange=async()=>{
-  const selected=file.files?.[0];file.value='';
+ const load=async selected=>{
   if(!selected)return;
   if(selected.size>20000000)return toast(error);
   const url=URL.createObjectURL(selected);
@@ -1055,14 +1075,16 @@ function logoEditor(host,initial,available){
    paint();crop.hidden=false;
   }catch{toast(error)}finally{URL.revokeObjectURL(url)}
  };
+ file.onchange=()=>{const selected=file.files?.[0];file.value='';return load(selected)};
  for(const control of [scale,horizontal,vertical])control.oninput=paint;
  commit.onclick=()=>{
-  const next=encodeCustomLogo(canvas);
+  let next;
+  try{next=gallery?safeCustomLogo(canvas.toDataURL('image/png')):encodeCustomLogo(canvas)}catch{return toast(error)}
   if(!next)return toast(error);
   value=next;crop.hidden=true;refresh();
  };
  refresh();
- return {refresh,value:()=>available()?value:'',reset:()=>{value='';crop.hidden=true;refresh()}};
+ return {refresh,load,value:()=>available()?value:'',reset:()=>{value='';crop.hidden=true;refresh()}};
 }
 function saveCustomLogo(card,logo){
  const previous=card.customLogo||'';
@@ -1729,7 +1751,7 @@ function updateAddCodePreview(){
  if(!drawBarcode('addPreviewCanvas',card,true))document.getElementById('addPreviewCanvas').hidden=true;
 }
 function revealAddCardFields(scroll=true){
- const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;updateAddCodePreview();
+ const fields=document.getElementById("cardFormFields");if(!fields)return;fields.hidden=false;showAddCardStep("code",false);updateAddCodePreview();
  if(scroll)requestAnimationFrame(()=>fields.scrollIntoView({behavior:"smooth",block:"start"}))
 }
 function clearNewCardDraft(){
@@ -1755,7 +1777,7 @@ function configureHealthDraft(){
 function resetAddCardFlow(){
  delete document.getElementById('addModal').dataset.cardKind;document.getElementById('brandResults').hidden=false;
  for(const id of ['addBrand','brandSearch','addFormat'])document.getElementById(id).disabled=false;
- clearNewCardDraft();
+ clearNewCardDraft();confirmedCardColor='#5B3DF5';showAddCardStep('code',false);
  const fields=document.getElementById("cardFormFields"),sheet=document.querySelector("#addModal .sheet");if(fields)fields.hidden=true;
  const hint=document.getElementById("captureHint");if(hint)hint.textContent="Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.";
  if(sheet)sheet.scrollTop=0;stopScan()
@@ -1784,10 +1806,82 @@ document.getElementById("addFormat").onchange=e=>{pendingScanFormat=e.target.val
 for(const id of ['addName','addCode'])document.getElementById(id).addEventListener('input',e=>{e.target.setCustomValidity('');e.target.removeAttribute('aria-invalid')});
 document.getElementById("addCode").addEventListener("input",updateAddCodePreview);
 document.getElementById("addName").addEventListener("input",updateAddCodePreview);
+let addCardStep='code',confirmedCardColor='#5B3DF5',logoSearchGeneration=0;
+function showAddCardStep(step,scroll=true){
+ if(step!=='logo'){
+  logoSearchGeneration++;
+  document.getElementById('cardLogoResults').replaceChildren();
+  document.getElementById('cardLogoStatus').textContent='';
+  document.getElementById('searchCardLogo').disabled=false;
+ }
+ addCardStep=step;
+ document.getElementById('captureStep').hidden=step!=='code';
+ for(const panel of document.querySelectorAll('[data-add-step]'))panel.hidden=panel.dataset.addStep!==step;
+ document.getElementById('backCardStep').hidden=step==='code';
+ if(step==='color')updateCardColorPreview();
+ if(scroll)document.getElementById('cardFormFields').scrollIntoView({block:'start'});
+}
 document.getElementById("confirmCardCode").onclick=()=>{
- const details=document.getElementById("addCardDetails");
- details.focus({preventScroll:true});
- details.scrollIntoView({block:"start"});
+ const field=document.getElementById('addCode');
+ if(!field.value.trim()||!field.reportValidity())return field.focus();
+ if(document.getElementById('addModal').dataset.cardKind==='health-it')return saveNewCard(false);
+ showAddCardStep('brand');
+ document.getElementById('addCardDetails').focus({preventScroll:true});
+};
+document.getElementById('continueCardBrand').onclick=()=>{
+ if(!validateNewCardFields())return;
+ const brandKey=document.getElementById('addBrand').value,name=document.getElementById('addName').value;
+ if(inferredBrandKey({brandKey,name})||isHealthCard({brandKey,name})||window.FiCardLottery?.isLotteryCard({brandKey,name}))return saveNewCard(false);
+ document.getElementById('addColor').value=confirmedCardColor;
+ showAddCardStep('color');
+};
+function updateCardColorPreview(){
+ const preview=document.getElementById('cardColorPreview'),color=document.getElementById('addColor').value;
+ preview.textContent=document.getElementById('addName').value.trim();
+ preview.style.backgroundColor=color;preview.style.color=cardInk(color);
+}
+document.getElementById('addColor').addEventListener('input',updateCardColorPreview);
+document.getElementById('confirmCardColor').onclick=()=>{
+ confirmedCardColor=document.getElementById('addColor').value;
+ showAddCardStep('logo');
+};
+document.getElementById('backCardStep').onclick=()=>{
+ if(addCardStep==='color')document.getElementById('addColor').value=confirmedCardColor;
+ showAddCardStep({brand:'code',color:'brand',logo:'color'}[addCardStep]||'code');
+};
+document.getElementById('searchCardLogo').onclick=async()=>{
+ const button=document.getElementById('searchCardLogo'),status=document.getElementById('cardLogoStatus'),results=document.getElementById('cardLogoResults');
+ const generation=++logoSearchGeneration;
+ const name=document.getElementById('addName').value.trim();
+ results.replaceChildren();button.disabled=true;status.textContent='Ricerca in corso…';
+ try{
+  const endpoint=new URL('https://commons.wikimedia.org/w/api.php');
+  endpoint.search=new URLSearchParams({origin:'*',action:'query',format:'json',generator:'search',gsrnamespace:'6',gsrlimit:'18',gsrsearch:name+' logo filetype:bitmap filemime:image/png',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'256'});
+  const response=await fetch(endpoint,{credentials:'omit',referrerPolicy:'no-referrer',signal:AbortSignal.timeout(8000)});
+  if(!response.ok)throw Error();
+  const pages=Object.values((await response.json()).query?.pages||{}).sort((a,b)=>a.index-b.index);
+  if(generation!==logoSearchGeneration)return;
+  const seen=new Set();
+  for(const page of pages){
+   const info=page.imageinfo?.[0],src=info?.thumburl||info?.url;
+   if(info?.mime!=='image/png'||!src?.startsWith('https://upload.wikimedia.org/')||seen.has(src))continue;
+   seen.add(src);
+   const choice=document.createElement('button'),img=document.createElement('img');
+   choice.type='button';choice.className='brandResult';img.referrerPolicy='no-referrer';img.src=src;img.alt=page.title.replace(/^File:/,'');img.width=72;img.height=48;img.style.objectFit='contain';
+   choice.append(img);results.append(choice);
+   choice.onclick=async()=>{
+    try{
+     const file=await fetch(src,{credentials:'omit',referrerPolicy:'no-referrer',signal:AbortSignal.timeout(8000)});
+     if(!file.ok)throw Error();
+     const blob=await file.blob();
+     if(generation===logoSearchGeneration)await addLogoEditor.load(blob);
+    }catch{if(generation===logoSearchGeneration)status.textContent='Logo non disponibile. Scegli dalla galleria o salva senza logo.'}
+   };
+   if(seen.size===6)break;
+  }
+  status.textContent=seen.size?'Risultati da Wikimedia Commons':'Nessun logo trovato. Puoi scegliere dalla galleria o salvare senza logo.';
+ }catch{if(generation===logoSearchGeneration)status.textContent='Ricerca non disponibile. Puoi scegliere dalla galleria o salvare senza logo.'}
+ finally{if(generation===logoSearchGeneration)button.disabled=false}
 };
 document.getElementById("correctCardCode").onclick=()=>{
  const field=document.getElementById("addCode");field.focus();field.select();
@@ -1858,7 +1952,9 @@ document.getElementById("pickerSave").onclick=()=>{const c=cards.find(x=>x.id===
 document.getElementById("closeFull").onclick=closeFullScreen;
 document.addEventListener('keydown',e=>{if(!document.getElementById('fullBarcode').classList.contains('show'))return;if(e.key==='Escape'){e.preventDefault();closeFullScreen()}else if(e.key==='Tab'){e.preventDefault();document.getElementById('closeFull').focus()}});
 
-document.getElementById("saveCard").onclick=()=>{
+document.getElementById("saveCard").onclick=()=>saveNewCard(true);
+document.getElementById("saveCardWithoutLogo").onclick=()=>saveNewCard(false);
+function saveNewCard(withLogo){
  if(document.getElementById('addModal').dataset.cardKind==='health-it')configureHealthDraft();
  if(!validateNewCardFields())return;
  const brandKey=document.getElementById("addBrand").value,category=document.getElementById("addCategory").value,name=document.getElementById("addName").value.trim(),code=document.getElementById("addCode").value,format=normalizeFormat(document.getElementById("addFormat").value||pendingScanFormat||(isHealthCard({brandKey,name})?"CODE39":inferManualFormat(code))),color=document.getElementById("addColor").value;
@@ -1872,7 +1968,7 @@ document.getElementById("saveCard").onclick=()=>{
  if(isHealthCard({brandKey,name})){
  if(!window.FiCardHealth.valid(code))return toast(window.FiCardHealth.error);
 }
- const c={id:crypto.randomUUID(),name,alias:document.getElementById("addAlias").value.trim().slice(0,60),brandKey,category,code,format,color,fav:false,locations:[]};normalizeHealthCard(c);if(BRANDS[brandKey])Object.assign(c,{name:BRANDS[brandKey].name,category:BRANDS[brandKey].category,color:BRANDS[brandKey].color});if(addLogoEditor&&!inferredBrandKey(c)&&!isHealthCard(c))saveCustomLogo(c,addLogoEditor.value());cards.unshift(c);save();if(cards.length===1)window.FiCardAnalytics?.once("first_card_added");window.FiCardAnalytics?.track("card_added","home",inferredBrandKey(c));if(!inferredBrandKey(c)&&!isHealthCard(c))window.FiCardBrandRequests?.submit(c);renderAll();hideModal("addModal");["addName","addAlias","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id,false);maybeOfferGps([c])
+ const c={id:crypto.randomUUID(),name,alias:document.getElementById("addAlias").value.trim().slice(0,60),brandKey,category,code,format,color,fav:false,locations:[]};normalizeHealthCard(c);if(BRANDS[brandKey])Object.assign(c,{name:BRANDS[brandKey].name,category:BRANDS[brandKey].category,color:BRANDS[brandKey].color});if(withLogo&&addLogoEditor&&!inferredBrandKey(c)&&!isHealthCard(c))saveCustomLogo(c,addLogoEditor.value());cards.unshift(c);save();if(cards.length===1)window.FiCardAnalytics?.once("first_card_added");window.FiCardAnalytics?.track("card_added","home",inferredBrandKey(c));if(!inferredBrandKey(c)&&!isHealthCard(c))window.FiCardBrandRequests?.submit(c);renderAll();hideModal("addModal");["addName","addAlias","addCode"].forEach(id=>document.getElementById(id).value="");document.getElementById("addBrand").value="";document.getElementById("addCategory").value="altro";document.getElementById("addColor").value="#5B3DF5";pendingScanFormat=null;document.getElementById("addFormat").value="";document.getElementById("detectedFormat").textContent="Automatico";openCard(c.id,false);maybeOfferGps([c])
 };
 
 let scanGeneration=0,scanStarting=false,cardScanActive=false;
@@ -2167,9 +2263,8 @@ async function shareCard(c){
 initCatalog();
 {
  const brand=document.getElementById('addBrand'),name=document.getElementById('addName');
- const host=document.createElement('div');
- name.insertAdjacentElement('afterend',host);
- addLogoEditor=logoEditor(host,'',()=>!brand.value&&!inferredBrandKey({name:name.value})&&!isHealthCard({name:name.value})&&!document.getElementById('addModal').dataset.cardKind);
+ const host=document.getElementById('addLogoHost');
+ addLogoEditor=logoEditor(host,'',()=>!brand.value&&!inferredBrandKey({name:name.value})&&!isHealthCard({name:name.value})&&!document.getElementById('addModal').dataset.cardKind,{gallery:true,changed:value=>{document.getElementById('saveCard').hidden=!value}});
  name.addEventListener('input',addLogoEditor.refresh);
  brand.addEventListener('change',addLogoEditor.refresh);
  document.getElementById('brandResults').addEventListener('click',()=>queueMicrotask(addLogoEditor.refresh));

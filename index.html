@@ -640,9 +640,8 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
     <section data-add-step="logo" hidden>
       <div class="formStepHead"><b>Aggiungi un logo?</b></div>
       <div id="addLogoHost"></div>
-      <button type="button" class="secondary" id="searchCardLogo">Cerca logo PNG</button>
-      <p class="hint" id="cardLogoStatus" role="status"></p>
-      <div id="cardLogoResults" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"></div>
+      <a class="secondary" id="searchCardLogo" href="https://www.google.com/imghp" target="_blank" rel="noopener noreferrer" style="display:block;text-align:center;text-decoration:none">Cerca su Google Immagini ↗</a>
+      <p class="hint">Scarica il logo, poi torna qui e scegli l’immagine dalla galleria.</p>
       <button type="button" class="primary" id="saveCard" hidden>Salva con logo</button>
       <button type="button" class="secondary" id="saveCardWithoutLogo">Salva senza logo</button>
     </section>
@@ -1806,14 +1805,14 @@ document.getElementById("addFormat").onchange=e=>{pendingScanFormat=e.target.val
 for(const id of ['addName','addCode'])document.getElementById(id).addEventListener('input',e=>{e.target.setCustomValidity('');e.target.removeAttribute('aria-invalid')});
 document.getElementById("addCode").addEventListener("input",updateAddCodePreview);
 document.getElementById("addName").addEventListener("input",updateAddCodePreview);
-let addCardStep='code',confirmedCardColor='#5B3DF5',logoSearchGeneration=0;
+let addCardStep='code',confirmedCardColor='#5B3DF5';
+function cardLogoSearchUrl(name){
+ const url=new URL('https://www.google.com/search');
+ url.search=new URLSearchParams({tbm:'isch',q:name.trim()+' logo PNG'});
+ return url.href;
+}
 function showAddCardStep(step,scroll=true){
- if(step!=='logo'){
-  logoSearchGeneration++;
-  document.getElementById('cardLogoResults').replaceChildren();
-  document.getElementById('cardLogoStatus').textContent='';
-  document.getElementById('searchCardLogo').disabled=false;
- }
+ if(step==='logo')document.getElementById('searchCardLogo').href=cardLogoSearchUrl(document.getElementById('addName').value);
  addCardStep=step;
  document.getElementById('captureStep').hidden=step!=='code';
  for(const panel of document.querySelectorAll('[data-add-step]'))panel.hidden=panel.dataset.addStep!==step;
@@ -1848,40 +1847,6 @@ document.getElementById('confirmCardColor').onclick=()=>{
 document.getElementById('backCardStep').onclick=()=>{
  if(addCardStep==='color')document.getElementById('addColor').value=confirmedCardColor;
  showAddCardStep({brand:'code',color:'brand',logo:'color'}[addCardStep]||'code');
-};
-document.getElementById('searchCardLogo').onclick=async()=>{
- const button=document.getElementById('searchCardLogo'),status=document.getElementById('cardLogoStatus'),results=document.getElementById('cardLogoResults');
- const generation=++logoSearchGeneration;
- const name=document.getElementById('addName').value.trim();
- results.replaceChildren();button.disabled=true;status.textContent='Ricerca in corso…';
- try{
-  const endpoint=new URL('https://commons.wikimedia.org/w/api.php');
-  endpoint.search=new URLSearchParams({origin:'*',action:'query',format:'json',generator:'search',gsrnamespace:'6',gsrlimit:'18',gsrsearch:name+' logo filetype:bitmap filemime:image/png',prop:'imageinfo',iiprop:'url|mime',iiurlwidth:'256'});
-  const response=await fetch(endpoint,{credentials:'omit',referrerPolicy:'no-referrer',signal:AbortSignal.timeout(8000)});
-  if(!response.ok)throw Error();
-  const pages=Object.values((await response.json()).query?.pages||{}).sort((a,b)=>a.index-b.index);
-  if(generation!==logoSearchGeneration)return;
-  const seen=new Set();
-  for(const page of pages){
-   const info=page.imageinfo?.[0],src=info?.thumburl||info?.url;
-   if(info?.mime!=='image/png'||!src?.startsWith('https://upload.wikimedia.org/')||seen.has(src))continue;
-   seen.add(src);
-   const choice=document.createElement('button'),img=document.createElement('img');
-   choice.type='button';choice.className='brandResult';img.referrerPolicy='no-referrer';img.src=src;img.alt=page.title.replace(/^File:/,'');img.width=72;img.height=48;img.style.objectFit='contain';
-   choice.append(img);results.append(choice);
-   choice.onclick=async()=>{
-    try{
-     const file=await fetch(src,{credentials:'omit',referrerPolicy:'no-referrer',signal:AbortSignal.timeout(8000)});
-     if(!file.ok)throw Error();
-     const blob=await file.blob();
-     if(generation===logoSearchGeneration)await addLogoEditor.load(blob);
-    }catch{if(generation===logoSearchGeneration)status.textContent='Logo non disponibile. Scegli dalla galleria o salva senza logo.'}
-   };
-   if(seen.size===6)break;
-  }
-  status.textContent=seen.size?'Risultati da Wikimedia Commons':'Nessun logo trovato. Puoi scegliere dalla galleria o salvare senza logo.';
- }catch{if(generation===logoSearchGeneration)status.textContent='Ricerca non disponibile. Puoi scegliere dalla galleria o salvare senza logo.'}
- finally{if(generation===logoSearchGeneration)button.disabled=false}
 };
 document.getElementById("correctCardCode").onclick=()=>{
  const field=document.getElementById("addCode");field.focus();field.select();

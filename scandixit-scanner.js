@@ -53,14 +53,24 @@ function offerCodes(codes){
  resetCandidate();$('ocrConfirm').hidden=false;
  for(const code of codes){const b=document.createElement('button');b.className='secondary';b.textContent=tr('Conferma {code}',{code});b.onclick=async()=>{await stop();resetCandidate();$('codeInput').value=code;showCode(code,'ocr-code');};$('ocrCandidates').append(b);}
 }
-async function accept(code,token,format=''){if(token!==epoch||finishing)return;finishing=true;await stop();$('codeInput').value=code;resetCandidate();showCode(code,'barcode',format);status(reader.readBarcode(code,format)?.productCode?tr('Codice prodotto letto e verificato.'):tr('Codice letto · {format}.',{format}));finishing=false;}
+async function accept(code,token,format=''){if(token!==epoch||finishing)return;finishing=true;finishScan(photoBusy?'scan_image_success':'scan_success');await stop();$('codeInput').value=code;resetCandidate();showCode(code,'barcode',format);status(reader.readBarcode(code,format)?.productCode?tr('Codice prodotto letto e verificato.'):tr('Codice letto · {format}.',{format}));finishing=false;}
+let scanActive=false;
+function startScan(){
+ scanActive=true;
+ root.FiCardAnalytics?.track('scan_started','scandixit');
+}
+function finishScan(outcome){
+ if(!scanActive)return;
+ scanActive=false;
+ root.FiCardAnalytics?.track(outcome,'scandixit');
+}
 let bridgeFrame=null,bridgeRequest='';
 function closeFiCardReader(){if(bridgeFrame){bridgeFrame.remove();bridgeFrame=null;bridgeRequest='';document.body.style.overflow='';}}
 function start(){
  if(photoBusy||bridgeFrame)return;
  if(root.ScanDixitStandalone){startStandalone();return;}
  $('codeResult').classList.remove('show');resetCandidate();
- bridgeRequest=crypto.randomUUID();bridgeFrame=document.createElement('iframe');
+ startScan();bridgeRequest=crypto.randomUUID();bridgeFrame=document.createElement('iframe');
  bridgeFrame.title=tr('Lettore FiCard');bridgeFrame.allow='camera';
  bridgeFrame.style.cssText='position:fixed;inset:0;width:100%;height:100dvh;border:0;z-index:1000;background:#F8F9FC';
  bridgeFrame.src='./?scanner=scandixit&request='+encodeURIComponent(bridgeRequest)+'&reader=1.1.0';
@@ -69,29 +79,30 @@ function start(){
 }
 async function startStandalone(){
  if(starting||camera)return;
- const token=++epoch;finishing=false;barcodeVote=consensus();$('scanFrame').classList.add('show');$('stopCamera').hidden=false;$('startCamera').disabled=true;status(tr('Apertura fotocamera…'));
+ startScan();const token=++epoch;finishing=false;barcodeVote=consensus();$('scanFrame').classList.add('show');$('stopCamera').hidden=false;$('startCamera').disabled=true;status(tr('Apertura fotocamera…'));
  camera=reader.createDecoder('reader');const decoder=camera;
  starting=reader.startLive(decoder,(text,result)=>{const item=reader.readBarcode(text,reader.formatName(result));if(item&&token===epoch&&barcodeVote(item.code))accept(item.code,token,item.format)});
  try{await starting;live=true;status(tr('Inquadra il codice del prodotto.'));if(token!==epoch){try{await decoder.stop();decoder.clear()}catch{}}}
- catch(e){camera=null;$('scanFrame').classList.remove('show');$('stopCamera').hidden=true;status(/NotAllowed|Permission|denied/i.test(String(e))?tr('Accesso fotocamera negato: usa una foto o abilita il permesso del browser.'):tr('Fotocamera non disponibile: usa una foto o inserisci il codice.'));}
+ catch(e){if(token===epoch)finishScan('scan_camera_error');camera=null;$('scanFrame').classList.remove('show');$('stopCamera').hidden=true;status(/NotAllowed|Permission|denied/i.test(String(e))?tr('Accesso fotocamera negato: usa una foto o abilita il permesso del browser.'):tr('Fotocamera non disponibile: usa una foto o inserisci il codice.'));}
  finally{starting=null;$('startCamera').disabled=false;}
 }
 window.addEventListener('message',event=>{
  if(!bridgeFrame||event.origin!==location.origin||event.source!==bridgeFrame.contentWindow||event.data?.request!==bridgeRequest)return;
- if(event.data.type==='ficard.scan.cancel'){closeFiCardReader();status(tr('Fotocamera chiusa.'));return;}
+ if(event.data.type==='ficard.scan.cancel'){finishScan('scan_cancelled');closeFiCardReader();status(tr('Fotocamera chiusa.'));return;}
+ if(event.data.type==='ficard.scan.camera-error'){finishScan('scan_camera_error');return;}
  if(event.data.type!=='ficard.scan.result')return;
  const item=reader.readBarcode(event.data.code,event.data.format);if(!item)return;
- closeFiCardReader();$('codeInput').value=item.code;showCode(item.code,'barcode',item.format);status(tr('Codice letto dal lettore FiCard.'));
+ finishScan(event.data.method==='image'?'scan_image_success':'scan_success');closeFiCardReader();$('codeInput').value=item.code;showCode(item.code,'barcode',item.format);status(tr('Codice letto dal lettore FiCard.'));
 });
 async function stop(){
- closeFiCardReader();
+ finishScan('scan_cancelled');closeFiCardReader();
  ++epoch;live=false;clearTimeout(timer);const pending=starting,current=camera;camera=null;
  if(pending)await pending.catch(()=>{});
  if(current){try{if(current.isScanning)await current.stop();}catch(e){}try{current.clear();}catch(e){}}
  $('scanFrame').classList.remove('show');$('startCamera').disabled=photoBusy;$('stopCamera').hidden=true;$('torch').hidden=true;$('zoomControl').hidden=true;
 }
 async function fromFile(file,label=false){
- if(!file||photoBusy)return;photoBusy=true;await stop();const token=epoch;$('codeResult').classList.remove('show');resetCandidate();$('cancelScan').hidden=false;$('barcodePhoto').disabled=$('labelPhoto').disabled=true;status(tr('Analizzo la foto: prima le barre, poi le cifre…'));$('ocrStatus').textContent=tr('Analisi in corso…');
+ if(!file||photoBusy)return;photoBusy=true;await stop();startScan();const token=epoch;$('codeResult').classList.remove('show');resetCandidate();$('cancelScan').hidden=false;$('barcodePhoto').disabled=$('labelPhoto').disabled=true;status(tr('Analizzo la foto: prima le barre, poi le cifre…'));$('ocrStatus').textContent=tr('Analisi in corso…');
  const url=URL.createObjectURL(file);let decoder;
  try{const img=new Image();img.src=url;await img.decode();if(token!==epoch)return;const original=canvasFrom(img);decoder=reader.createDecoder('photoReader');
   try{const found=await reader.scanFile(decoder,file,()=>token===epoch);if(token!==epoch)return;
@@ -109,7 +120,7 @@ async function fromFile(file,label=false){
   if(codes.size){offerCodes([...codes]);status(tr('Cifre recuperate con OCR. Verifica e conferma il codice.'));$('ocrStatus').textContent=tr('Codice possibile trovato: confermalo sotto lo scanner.');}
   else{status(tr('Nessun codice valido trovato. Prova una foto più nitida o inserisci le cifre.'));$('ocrStatus').textContent=bestText?tr('Testo letto: verifica marca e modello prima di cercare.'):tr('Nessun testo leggibile: riprova con una foto più nitida.');if(label)setTab('ocr');}
  }catch(e){if(token===epoch){status(tr('Lettura non riuscita: riprova con una foto JPEG/PNG o inserisci il codice.'));$('ocrStatus').textContent=tr('OCR non disponibile o immagine non leggibile. Puoi inserire il testo a mano.');}}
- finally{URL.revokeObjectURL(url);try{decoder?.clear();}catch(e){}photoBusy=false;$('startCamera').disabled=false;$('barcodePhoto').disabled=$('labelPhoto').disabled=false;$('cancelScan').hidden=true;}
+ finally{if(token===epoch)finishScan('scan_image_failed');URL.revokeObjectURL(url);try{decoder?.clear();}catch(e){}photoBusy=false;$('startCamera').disabled=false;$('barcodePhoto').disabled=$('labelPhoto').disabled=false;$('cancelScan').hidden=true;}
 }
 $('startCamera').addEventListener('click',start);$('stopCamera').addEventListener('click',()=>{stop();resetCandidate();status(tr('Fotocamera chiusa.'));});
 $('cancelScan').addEventListener('click',()=>{stop();resetCandidate();status(tr('Analisi annullata.'));});

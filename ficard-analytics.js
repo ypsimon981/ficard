@@ -3,12 +3,14 @@
 'use strict';
 const VERSION='0.9.211',PREFERENCE='ficard.analytics.aggregate.v1',LEGACY='ficard.analytics.consent.v1',INSTALL_SEEN='ficard.analytics.install-observed.v1';
 const CATALOG_CACHE='ficard.catalog.cache.v1',CATALOG_VERSION='ficard.catalog.version.v1',CATALOG_CHECK_MS=15*60*1000;
+const RELEASE_EVENTS=new Set(['onboarding_started', 'onboarding_completed', 'first_card_added', 'first_cards_imported', 'gps_permission_denied', 'gps_permission_granted', 'gps_permission_granted_later', 'gps_preference_disabled', 'gps_position_unavailable', 'gps_position_timeout', 'gps_position_acquired', 'scan_success', 'scan_cancelled', 'scan_camera_error', 'card_open_suggested', 'health_code_shown', 'gps_disabled','scan_failed','scan_image_success','scan_image_failed','lottery_code_shown','lottery_suggestion_open','custom_logo_added','custom_logo_replaced','custom_logo_removed']);
 const PAGES=new Set(['home','map','scandixit','profile']);
 const EVENTS=new Set(['install_observed','analytics_disabled','analytics_enabled','app_open','page_view','card_added','card_open','code_shown','favorite_toggled','fullscreen_open','scan_started','navigation_started','location_association_started','backup_created','card_share_started','promo_impression','promo_click','share_started','share_completed','backup_merged','gps_card_suggested','gps_code_shown']);
 const STARTUP_OUTCOMES=new Set(['found','no_card','gps_denied','gps_unavailable','timeout','empty','error']);
 const STARTUP_BUCKETS=['lt1','1to2','2to3','3to5','over5'];
 for(const outcome of STARTUP_OUTCOMES)EVENTS.add('startup_'+outcome);
 for(const bucket of STARTUP_BUCKETS)EVENTS.add('arrival_time_'+bucket);
+for(const event of RELEASE_EVENTS)EVENTS.add(event);
 let startupReported=false,arrivalReported=false;
 const BRAND_EVENTS=new Set(['card_added','card_open','code_shown']);
 let controllers=new Set(),recent=new Map(),lastOpen=0,hiddenAt=0,memoryChoice=null,installPending=false,lastCatalogCheck=0,catalogBusy=false;
@@ -55,16 +57,35 @@ async function syncCatalog(force=false){
 }
 function sendCount(event,page=currentPage(),brandKey='',force=false){
  try{
-  if(root.FiCardOnboarding?.pending()||(!force&&!enabled())||root.navigator?.onLine===false||root.parent!==root)return Promise.resolve(false);if(!EVENTS.has(event)||!PAGES.has(page))return Promise.resolve(false);
+  if((root.FiCardOnboarding?.pending()&&event!=='onboarding_started')||(!force&&!enabled())||root.navigator?.onLine===false||(root.parent!==root&&page!=='scandixit'))return Promise.resolve(false);if(!EVENTS.has(event)||!PAGES.has(page))return Promise.resolve(false);
   const promo=event.startsWith('promo_');if(promo&&!/^(banner|fourth|last|scandixit):tip[0-5]$/.test(brandKey))return Promise.resolve(false);
   let brand=null;if(promo)brand=brandKey;else if(BRAND_EVENTS.has(event))brand=knownBrand(brandKey);else if(brandKey)return Promise.resolve(false);
-  const c=config();if(!c)return Promise.resolve(false);const key=event+':'+page+':'+(brand||''),now=Date.now();const noDebounce=event==='code_shown'||event==='gps_code_shown'||event==='gps_card_suggested'||event==='card_added'||event==='install_observed'||event==='analytics_disabled'||event==='analytics_enabled';
+  const c=config();if(!c)return Promise.resolve(false);const key=event+':'+page+':'+(brand||''),now=Date.now();const noDebounce=RELEASE_EVENTS.has(event)||event==='scan_started'||event==='code_shown'||event==='gps_code_shown'||event==='gps_card_suggested'||event==='card_added'||event==='install_observed'||event==='analytics_disabled'||event==='analytics_enabled';
   if(!noDebounce&&now-(recent.get(key)||0)<2000)return Promise.resolve(false);if(controllers.size>=40)return Promise.resolve(false);recent.set(key,now);
   const controller=new AbortController();controllers.add(controller);const timer=root.setTimeout(()=>controller.abort(),5000);const payload={p_event:event,p_page:page,p_brand:brand};
   return apiFetch('/rest/v1/rpc/ficard_count_usage',{method:'POST',headers:{'Content-Type':'application/json',Prefer:'return=minimal'},body:JSON.stringify(payload),signal:controller.signal}).then(r=>r.ok).catch(()=>false).finally(()=>{root.clearTimeout(timer);controllers.delete(controller)});
  }catch{return Promise.resolve(false)}
 }
 function track(event,page=currentPage(),brandKey=''){return sendCount(event,page,brandKey,false)}
+function once(event){
+ if(root.parent!==root||!ONCE_EVENTS.has(event))return;
+ try{
+  const key='ficard.analytics.once.'+event;
+  if(root.localStorage.getItem(key))return;
+  root.localStorage.setItem(key,'yes');
+  if(ONCE_EVENTS.has(event))trackCode(event,'home');
+ }catch{}
+}
+function gpsPermission(state){
+ try{
+  const key='ficard.analytics.gps-permission';
+  const previous=root.localStorage.getItem(key);
+  if(previous===state)return;
+  root.localStorage.setItem(key,state);
+  track('gps_permission_'+state);
+  if(previous==='denied'&&state==='granted')track('gps_permission_granted_later');
+ }catch{}
+}
 function startupOutcome(outcome){
  if(startupReported||!STARTUP_OUTCOMES.has(outcome))return Promise.resolve(false);
  startupReported=true;
@@ -81,9 +102,10 @@ function opened(){if(Date.now()-lastOpen<180000)return;lastOpen=Date.now();obser
 function setConsent(value,reportChoice=false){const previous=enabled(),next=!!value;if(previous===next){const check=root.document?.getElementById('analyticsConsent');if(check)check.checked=next;return}controllers.forEach(c=>c.abort());controllers.clear();recent.clear();if(reportChoice&&previous&&!next)sendCount('analytics_disabled',currentPage(),'',true);memoryChoice=next;try{if(!next)root.localStorage.removeItem(CODE_QUEUE);root.localStorage.setItem(PREFERENCE,next?'yes':'no')}catch{}removeLegacyID();if(next){if(reportChoice)sendCount('analytics_enabled',currentPage(),'',true);lastOpen=0;opened()}const check=root.document?.getElementById('analyticsConsent');if(check)check.checked=enabled()}
 const COPY=Object.fromEntries(Object.entries(root.FiCardLocales||{}).map(([lang,data])=>[lang,data.analytics]));
 function render(){const box=root.document?.getElementById('launchSettings');if(!box)return;let language=root.FiCardI18n?.language?.();if(!language){try{language=root.localStorage.getItem('ficard.language.v2')||root.navigator?.language}catch{}}const text=COPY[String(language||'en').split('-')[0]]||COPY.en;if(!text)return;box.setAttribute('aria-label',text[0]);box.innerHTML='<h3 style="font-size:16px">'+text[0]+'</h3><label style="display:flex;gap:10px;align-items:center;font-size:14px;color:var(--text)"><input id="analyticsConsent" type="checkbox" style="width:20px;height:20px;flex:none">'+text[1]+'</label><p class="hint">'+text[2]+'</p><div class="reviewActions"><a class="reviewAction reviewMail" href="./privacy.html" target="_blank" rel="noopener">'+text[3]+'</a><a class="reviewAction reviewMail" href="mailto:info@fi-card.app?subject=Supporto%20Fi-Card">'+text[4]+'</a></div>';const check=root.document.getElementById('analyticsConsent');check.checked=enabled();check.addEventListener('change',()=>setConsent(check.checked,true))}
-function trackGenericUi(event){const target=event.target?.closest?.('button,a,input');if(!target)return;if(target.matches('[data-toggle-fav]'))track('favorite_toggled');else if(target.id==='fullBtn')track('fullscreen_open');else if(['scanBtn','imageScanBtn','importImagesProfile'].includes(target.id))track('scan_started');else if(target.matches('[data-navigate],[data-nav-loc]'))track('navigation_started');else if(['assocBtn','mapAssocBtn','pickerSave'].includes(target.id))track('location_association_started');else if(target.id==='exportData')track('backup_created','profile');else if(target.id==='shareBtn')track('card_share_started')}
+function trackGenericUi(event){const target=event.target?.closest?.('button,a,input');if(!target)return;if(target.matches('[data-toggle-fav]'))track('favorite_toggled');else if(target.id==='fullBtn')track('fullscreen_open');else if(target.matches('[data-navigate],[data-nav-loc]'))track('navigation_started');else if(['assocBtn','mapAssocBtn','pickerSave'].includes(target.id))track('location_association_started');else if(target.id==='exportData')track('backup_created','profile');else if(target.id==='shareBtn')track('card_share_started')}
 const CODE_QUEUE='ficard.analytics.code-queue.v1';
-const CODE_EVENTS=new Set(['code_shown','gps_card_suggested','gps_code_shown']);
+const ONCE_EVENTS=new Set(['onboarding_started','onboarding_completed','first_card_added','first_cards_imported']);
+const CODE_EVENTS=new Set(['code_shown','gps_card_suggested','gps_code_shown',...ONCE_EVENTS]);
 function queuedCodes(){try{return JSON.parse(root.localStorage.getItem(CODE_QUEUE)||'[]')}catch{return []}}
 function trackCode(event,page,brandKey=''){
  if(!enabled()||root.parent!==root||!CODE_EVENTS.has(event)||!PAGES.has(page))return;
@@ -115,7 +137,7 @@ function codeShown(brandKey,fromSuggestion){
  if(fromSuggestion)trackCode('gps_code_shown',page);
 }
 function init(){removeLegacyID();applyCachedCatalog();render();syncCatalog(false);if(enabled()){opened();flushCodes()}root.document?.addEventListener('click',trackGenericUi,true);root.document?.addEventListener('visibilitychange',()=>{if(root.document.hidden)hiddenAt=Date.now();else{syncCatalog(false);if(hiddenAt&&Date.now()-hiddenAt>=180000){hiddenAt=0;opened()}}});root.addEventListener?.('online',()=>{syncCatalog(true);flushCodes()});root.addEventListener?.('storage',e=>{if(e.key===PREFERENCE){memoryChoice=null;if(!enabled()){controllers.forEach(c=>c.abort());controllers.clear();recent.clear()}render()}})}
-root.FiCardAnalytics={track,setConsent,enabled,startupOutcome,arrivalLatency,codeShown,gpsSuggested:()=>trackCode('gps_card_suggested','home')};root.FiCardCatalog={sync:()=>syncCatalog(true),market,version:()=>{try{return Number(root.localStorage.getItem(CATALOG_VERSION)||0)}catch{return 0}}};
+root.FiCardAnalytics={track,once,gpsPermission,setConsent,enabled,startupOutcome,arrivalLatency,codeShown,gpsSuggested:()=>trackCode('gps_card_suggested','home')};root.FiCardCatalog={sync:()=>syncCatalog(true),market,version:()=>{try{return Number(root.localStorage.getItem(CATALOG_VERSION)||0)}catch{return 0}}};
 function start(){if(root.FiCardOnboarding?.pending())root.FiCardOnboarding.ready.then(init);else init()}
 if(root.document?.readyState==='loading')root.document.addEventListener('DOMContentLoaded',start,{once:true});else start();
 })(typeof window==='undefined'?globalThis:window);

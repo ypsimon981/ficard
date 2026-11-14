@@ -27,7 +27,7 @@ if(Capacitor.isNativePlatform()){
     const message=code==='OS-PLUG-GLOC-0003'?'Permesso di posizione negato. Abilitalo nelle impostazioni del telefono.':
      ['OS-PLUG-GLOC-0007','OS-PLUG-GLOC-0009','OS-PLUG-GLOC-0016','OS-PLUG-GLOC-0017'].includes(code)?'Posizione disattivata. Attiva la localizzazione e riprova La mia posizione.':
      code==='OS-PLUG-GLOC-0010'?'Tempo GPS scaduto. Riprova La mia posizione.':'Posizione non disponibile. Controlla che la localizzazione sia attiva.';
-    throw Object.assign(new Error(window.FiCardI18n?.translateText(message)||message),{code:code==='OS-PLUG-GLOC-0003'?1:code==='OS-PLUG-GLOC-0010'?3:2});
+    throw Object.assign(new Error(window.FiCardI18n?.translateText(message)||message),{code:code==='OS-PLUG-GLOC-0003'?1:code==='OS-PLUG-GLOC-0010'?3:['OS-PLUG-GLOC-0007','OS-PLUG-GLOC-0009','OS-PLUG-GLOC-0016','OS-PLUG-GLOC-0017'].includes(code)?4:2});
    }
   },
   async saveFile(blob,name){

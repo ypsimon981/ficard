@@ -33,7 +33,7 @@ function showEditor(){
  if(root.document.getElementById('detailModal')?.classList.contains('show'))root.document.getElementById('detailModal').classList.add('lotteryBehind');
  modal.classList.add('show');
 }
-function showCode(){
+function showCode(fromSuggestion=false){
  if(!available())return;
  const c=read();if(!c){showEditor();return}
  const modal=root.document.getElementById('lotteryModal');if(!modal)return;
@@ -41,7 +41,10 @@ function showCode(){
  root.document.getElementById('lotteryEditor').hidden=true;
  root.document.getElementById('lotteryViewer').hidden=false;
  root.document.getElementById('lotteryNum').textContent=c.code;
- root.drawBarcode?.('lotteryCanvas',c);
+ if(root.drawBarcode?.('lotteryCanvas',c)){
+  root.FiCardAnalytics?.track('lottery_code_shown');
+  if(fromSuggestion)root.FiCardAnalytics?.track('lottery_suggestion_open');
+ }
  modal.classList.add('lotteryViewing');
  if(root.document.getElementById('detailModal')?.classList.contains('show'))root.document.getElementById('detailModal').classList.add('lotteryBehind');
  modal.classList.add('show');
@@ -71,7 +74,7 @@ function init(){
  const d=root.document;if(!d.getElementById('lotteryModal'))return;
  d.getElementById('lotterySettingsAdd')?.addEventListener('click',()=>read()?showCode():showEditor());
  d.getElementById('lotteryAddFromCard')?.addEventListener('click',()=>{root.hideModal?.('addModal');showEditor()});
- d.addEventListener('click',e=>{if(e.target.closest('[data-lottery-open]')){e.preventDefault();showCode()}});
+ d.addEventListener('click',e=>{if(e.target.closest('[data-lottery-open]')){e.preventDefault();showCode(!!e.target.closest('.lotteryReminder'))}});
  d.getElementById('lotteryClose').onclick=close;
  d.getElementById('lotteryModal').addEventListener('click',e=>{if(e.target.id==='lotteryModal')close()});
  d.getElementById('lotteryEdit').onclick=showEditor;

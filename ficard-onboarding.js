@@ -28,7 +28,7 @@ function settings(){
  row.setAttribute('data-i18n-skip','');
  row.innerHTML='<label class="onboardingCheck"><input id="gpsEnabled" type="checkbox"><span>'+esc(c.gps)+'</span></label><p class="hint">'+esc(c.gpsHelp)+'</p>';
  const check=row.querySelector('input');check.checked=gps;
- check.onchange=()=>setGps(check.checked);
+ check.onchange=()=>{if(!check.checked)root.FiCardAnalytics?.track('gps_preference_disabled','profile');setGps(check.checked)};
  const residence=root.document.getElementById('marketResidence');
  if(residence){let help=root.document.getElementById('residenceHelp');if(!help){help=root.document.createElement('p');help.id='residenceHelp';help.className='hint';help.setAttribute('data-i18n-skip','');residence.after(help)}help.textContent=c.residenceHelp}
 }
@@ -44,6 +44,7 @@ const welcomeFeatures=[
 ];
 function show(){
  settings();if(!waiting){if(!embedded)runWelcomeAction(true);return}
+ root.FiCardAnalytics?.once('onboarding_started');
  clearTimeout(root.ficardStartupTimer);
  const markets=root.FiCardMarkets.read();
  const italian=()=>state.language==='it';
@@ -133,7 +134,11 @@ function show(){
    write(COMPLETE,'yes');
    write(GPS,gps?'yes':'no');
    const action=e.submitter?.value;
-   if(action==='add'||action==='import')write('ficard.onboarding.action',action);
+   if(action==='add'||action==='import'){
+    write('ficard.onboarding.action',action);
+    waiting=false;
+    root.FiCardAnalytics?.once('onboarding_completed');
+   }
    // Language changes reload the canonical HTML, as in the existing settings selector.
    if(state.language!==language()){
     write('ficard.language.v2',state.language);

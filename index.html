@@ -15,7 +15,7 @@
   <script src="./vendor/JsBarcode.all.min.js"></script>
   <script src="./vendor/bwip-js-min.js"></script>
   <script src="./vendor/html5-qrcode.min.js"></script>
-  <script src="./ficard-reader.js?v=1.1.2"></script>
+  <script src="./ficard-reader.js?v=1.2-scanner"></script>
   <script src="./locales/it.js?v=1.0.0"></script>
 <script src="./locales/en.js?v=1.0.0"></script>
 <script src="./locales/fr.js?v=1.0.0"></script>
@@ -102,13 +102,15 @@
 .addCardScanner{margin:10px 0 6px;min-height:0;border-radius:20px;background:#0B0D10;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08)}
 .addCardScanner.show{min-height:240px}
 .addCardScanner #reader{width:100%;min-height:240px;border:0!important}
-.addCardScanner #reader video{display:block!important;width:100%!important;max-height:38dvh!important;min-height:240px;object-fit:cover;border-radius:20px}
+.addCardScanner #reader video{display:block!important;width:100%!important;height:auto!important;border-radius:20px}
 .addCardScanner #reader__scan_region{min-height:240px}
+#cardScanTorch{display:block;margin:6px auto}
+#cardScanTorch[hidden]{display:none}
 .addCardScanner #reader__dashboard{padding:8px!important;background:#fff}
 .cardFormFields[hidden]{display:none!important}
 .cardFormFields{margin-top:12px;padding-top:14px;border-top:1px solid var(--line)}
 .formStepHead{margin:0 2px 4px}.formStepHead b{display:block;font-size:16px}.formStepHead small{display:block;color:var(--muted);font-size:12px;line-height:1.35;margin-top:3px}
-@media(max-width:350px){.captureActions{gap:8px}.captureAction{min-height:92px;padding:12px 10px}.captureAction b{font-size:14px}.addCardScanner.show,.addCardScanner #reader,.addCardScanner #reader__scan_region{min-height:210px}.addCardScanner #reader video{min-height:210px}}
+@media(max-width:350px){.captureActions{gap:8px}.captureAction{min-height:92px;padding:12px 10px}.captureAction b{font-size:14px}.addCardScanner.show,.addCardScanner #reader,.addCardScanner #reader__scan_region{min-height:210px}}
 
 /* v0.9.63 · Reader loading feedback + larger main-card logo panel */
 .cardItem .cardOpen{padding:7px 7px 14px}
@@ -591,8 +593,8 @@ if(new URLSearchParams(location.search).get('scanner')==='scandixit')window.fini
       <button type="button" class="captureAction captureImport" id="imageScanBtn"><span class="captureIcon" aria-hidden="true"><svg viewBox="0 0 32 32" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="4"/><circle cx="11" cy="12" r="2.3"/><path d="m5 23 7-7 5 5 4-5 7 7"/></svg></span><span><b>Importa immagine</b><small>Foto o screenshot</small></span></button>
     </div>
     <input id="imageFiles" type="file" accept="image/*" multiple hidden>
-    <div id="scanner" class="scanner addCardScanner"><div id="reader"></div></div>
-    <p class="captureHint" id="captureHint">Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.</p>
+    <div id="scanner" class="scanner addCardScanner"><div id="reader"></div><button type="button" class="secondary" id="cardScanTorch" aria-pressed="false" hidden>Torcia</button></div>
+    <p class="captureHint" id="captureHint" role="status">Acquisisci prima il codice. Subito dopo potrai completare marchio e dati della carta.</p>
     <button type="button" class="manualEntryBtn" id="manualEntryBtn">Inserisci i dati manualmente</button>
     </section>
   <section id="cardFormFields" class="cardFormFields" hidden>
@@ -1981,6 +1983,24 @@ function saveNewCard(withLogo){
 };
 
 let scanGeneration=0,scanStarting=false,cardScanActive=false;
+let releaseCardCamera;
+function assistCardScan(video,onRead,isCurrent){
+ const hint=document.getElementById("captureHint");
+ let pass=0;
+ const retry=async()=>{
+  if(!isCurrent())return;
+  if(pass===4)hint.textContent="Allontana leggermente la tessera e tieni fermo il codice nel riquadro.";
+  if(video.readyState>=2&&video.videoWidth&&video.videoHeight){
+   const found=await FiCardReader.scanLiveCrop(video,pass,isCurrent,true);
+   if(isCurrent()&&found?.code)onRead(found.rawText??found.result.decodedText,found.result);
+  }
+  pass++;
+  if(isCurrent())timer=setTimeout(retry,650);
+ };
+ let timer=setTimeout(retry,900);
+ const releaseControls=FiCardReader.cardCameraControls(video,document.getElementById("cardScanTorch"),isCurrent);
+ releaseCardCamera=()=>{clearTimeout(timer);releaseControls()};
+}
 document.getElementById("scanBtn").onclick=()=>startCardScan();
 document.getElementById("rescanCard").onclick=()=>startCardScan(true);
 async function startCardScan(keepDraft=!document.getElementById("cardFormFields").hidden){
@@ -1993,7 +2013,8 @@ async function startCardScan(keepDraft=!document.getElementById("cardFormFields"
  try{
    if(!window.Html5Qrcode)throw Error('Scanner non disponibile');
    decoder=qrScanner=FiCardReader.createDecoder("reader");
-   await FiCardReader.startLive(decoder,(txt,result)=>{
+   const isCurrent=()=>generation===scanGeneration;
+   const onRead=(txt,result)=>{
      if(generation!==scanGeneration||accepted)return;
      if(healthDraft&&!window.FiCardHealth.valid(txt)){toast(window.FiCardHealth.error);return}accepted=true;finishCardScan("scan_success");
      if(scannerBridge){returnScanToParent(txt,FiCardReader.formatName(result));return;}
@@ -2003,9 +2024,17 @@ async function startCardScan(keepDraft=!document.getElementById("cardFormFields"
      toast("Codice letto · "+formatLabel(pendingScanFormat));
      const hint=document.getElementById("captureHint");if(hint)hint.textContent="Codice acquisito. Controllalo prima di completare i dati.";
      const stopped=stopScan(),afterStop=scanGeneration;stopped.then(()=>{if(afterStop===scanGeneration)revealAddCardFields(true)})
-   });
-   if(generation!==scanGeneration&&!accepted){try{await decoder.stop();decoder.clear()}catch{}}
- }catch(e){if(generation===scanGeneration){console.warn("Fi-Card scanner:",e);if(scannerBridge)window.parent.postMessage({type:'ficard.scan.camera-error',request:scanRequest},location.origin);await stopScan(window.Html5Qrcode?"scan_camera_error":"scan_failed");if(keepDraft)revealAddCardFields(false);const reason=[e?.name,e?.message||String(e)].filter(Boolean).join(": ");document.getElementById("captureHint").textContent="Fotocamera: "+reason;toast(/NotAllowed|Permission|denied/i.test(reason)?"Accesso alla fotocamera negato. Abilitalo nelle impostazioni di Safari.":"Avvio fotocamera non riuscito: "+reason.slice(0,150))}}
+   };
+   await FiCardReader.startLive(decoder,onRead,{card:true,isCurrent});
+   if(isCurrent()){
+    document.getElementById("captureHint").textContent="Inquadra tutto il codice a barre.";
+    const video=wrap.querySelector("video");
+    if(video)assistCardScan(video,onRead,isCurrent);
+   }else if(!accepted){
+    try{await decoder.stop()}catch{}
+    try{decoder.clear()}catch{}
+   }
+ }catch(e){if(generation===scanGeneration){console.warn("Fi-Card scanner:",e);if(scannerBridge)window.parent.postMessage({type:'ficard.scan.camera-error',request:scanRequest},location.origin);await stopScan(window.Html5Qrcode?"scan_camera_error":"scan_failed");if(keepDraft)revealAddCardFields(false);const reason=[e?.name,e?.message||String(e)].filter(Boolean).join(": ");document.getElementById("captureHint").textContent="Fotocamera: "+reason;toast(/NotAllowed|Permission|denied/i.test(reason)?"Accesso alla fotocamera negato. Abilitalo nelle impostazioni del dispositivo o del browser.":"Avvio fotocamera non riuscito: "+reason.slice(0,150))}}
  finally{scanStarting=false;button.disabled=false}
 };
 function finishCardScan(outcome){
@@ -2013,7 +2042,7 @@ function finishCardScan(outcome){
  cardScanActive=false;
  window.FiCardAnalytics?.track(outcome,"home");
 }
-async function stopScan(outcome="scan_cancelled"){finishCardScan(outcome);scanGeneration++;const decoder=qrScanner;qrScanner=null;document.getElementById("scanner").classList.remove("show");if(decoder){try{await decoder.stop()}catch(e){}try{await decoder.clear()}catch(e){}}}
+async function stopScan(outcome="scan_cancelled"){finishCardScan(outcome);scanGeneration++;releaseCardCamera?.();releaseCardCamera=null;const decoder=qrScanner;qrScanner=null;document.getElementById("scanner").classList.remove("show");if(decoder){try{await decoder.stop()}catch(e){}try{await decoder.clear()}catch(e){}}}
 
 const reviewAppButton=document.getElementById("reviewApp");
 if(reviewAppButton)reviewAppButton.onclick=()=>{

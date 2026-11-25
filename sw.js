@@ -1,5 +1,5 @@
 const APP_VERSION="1.1.1";
-const CACHE="ficard-v"+APP_VERSION+"-inline-color-spectrum";
+const CACHE="ficard-v"+APP_VERSION+"-card-scanner";
 const CORE=[
   "./pharmacy.svg",
   "./ficard-onboarding.js?v=1.1.1-welcome4",
@@ -175,7 +175,7 @@ const CORE=[
   "./ficard-shared-stores.js?v=1.0.0",
   "./ficard-stores-ui.js?v=1.1.1",
   "./ficard-theme.css?v=0.9.215",
-  "./ficard-reader.js?v=1.1.2",
+  "./ficard-reader.js?v=1.2-scanner",
   "./scandixit-scanner.js?v=1.1.2",
   "./nav-barcode.svg?v=0.9.43",
   "./barcode-crops.js?v=0.9.35",

@@ -31,9 +31,11 @@ function readBarcode(value,format=''){
 function options(){return {formatsToSupport:formatNames.map(k=>root.Html5QrcodeSupportedFormats[k]).filter(n=>n!==undefined),useBarCodeDetectorIfSupported:false,verbose:false};}
 function createDecoder(id){return new root.Html5Qrcode(id,options());}
 function liveConfig(){return {fps:18,qrbox:(w,h)=>({width:Math.max(1,Math.floor(w*.94)),height:Math.max(1,Math.floor(h*.62))})};}
-async function startLive(decoder,onRead){
- const attempts=[null,{facingMode:{ideal:'environment'}},{width:{ideal:1280}}];
+async function startLive(decoder,onRead,{card=false,isCurrent=()=>true}={}){
+ const rear={facingMode:{ideal:'environment'}};
+ const attempts=card?[{...rear,width:{ideal:1280}},null,rear]:[null,rear,{width:{ideal:1280}}];
  for(let i=0;i<attempts.length;i++){
+  if(!isCurrent())return;
   try{return await decoder.start({facingMode:'environment'},{...liveConfig(),...(attempts[i]?{videoConstraints:attempts[i]}:{})},onRead,()=>{});}
   catch(error){
    const reason=String(error?.name||'')+' '+String(error?.message||error);
@@ -41,6 +43,49 @@ async function startLive(decoder,onRead){
    try{await decoder.stop();}catch{}try{decoder.clear();}catch{}
   }
  }
+}
+function cardCameraControls(video,torchButton,isCurrent){
+ const track=video.srcObject?.getVideoTracks?.()[0];
+ const capabilities=track?.getCapabilities?.()||{};
+ const focusModes=capabilities.focusMode||[];
+ let busy=false,torch=false,focusTimer;
+ const setCamera=async(settings)=>{
+  const constraints=track.getConstraints?.()||{};
+  const advanced=(constraints.advanced||[]).map(({torch,focusMode,...previous})=>previous);
+  await track.applyConstraints({...constraints,advanced:[...advanced,settings]});
+ };
+ const apply=async(focusMode,light)=>{
+  if(busy||!isCurrent())return false;
+  busy=true;
+  try{
+   const settings={};
+   if(focusMode)settings.focusMode=focusMode;
+   if(capabilities.torch===true)settings.torch=light;
+   await setCamera(settings);
+   if(!isCurrent())return;
+   torch=track.getSettings?.().torch??light;
+   torchButton.setAttribute('aria-pressed',String(torch));
+   return true;
+  }catch{return false;}finally{busy=false;}
+ };
+ const continuous=focusModes.includes('continuous')?'continuous':null;
+ const singleShot=focusModes.includes('single-shot')?'single-shot':null;
+ torchButton.hidden=capabilities.torch!==true;
+ if(continuous)void apply(continuous,false);
+ torchButton.onclick=()=>apply(continuous,!torch);
+ if(singleShot)video.onclick=async()=>{
+  if(await apply(singleShot,torch)&&continuous&&isCurrent()){
+   clearTimeout(focusTimer);
+   focusTimer=setTimeout(()=>void apply(continuous,torch),900);
+  }
+ };
+ return ()=>{
+  clearTimeout(focusTimer);
+  video.onclick=null;
+  torchButton.onclick=null;
+  torchButton.hidden=true;
+  torchButton.setAttribute('aria-pressed','false');
+ };
 }
 async function setZoom(track,value){
  try{await track.applyConstraints({advanced:[{zoom:Number(value)}]});return track.getSettings().zoom??Number(value);}
@@ -84,7 +129,7 @@ function bandCrop(c){
 async function decodeCanvas(c,decoder){
  const detector=await nativeDetector();if(detector){try{
   const results=await detector.detect(c),found=new Map();
-  for(const r of results){const item=readBarcode(r.rawValue,r.format);if(item)found.set(item.code,item);}
+  for(const r of results){const item=readBarcode(r.rawValue,r.format);if(item&&!found.has(item.code))found.set(item.code,{...item,rawText:r.rawValue});}
   if(found.size>1)return {ambiguous:true};if(found.size){const item=[...found.values()][0];return {...item,result:{decodedText:item.code,result:{format:{formatName:item.format}}}};}
  }catch(e){}}
  const blob=await new Promise(resolve=>c.toBlob(resolve,'image/png'));if(!blob)return null;
@@ -100,15 +145,17 @@ async function imageCandidates(file){
 }
 
 let decoderSerial=0;
-async function scanLiveCrop(video,pass,isCurrent=()=>true){
+async function scanLiveCrop(video,pass,isCurrent=()=>true,card=false){
  // Each job owns its decoder: stopping/restarting cannot reuse an in-flight canvas.
- const full=canvasFrom(video,0,null,false,1600),band=bandCrop(full);
- const fraction=[.75,.5,.35][pass%3];
- const crop=band||{x:full.width*(1-fraction)/2,y:full.height*(1-fraction)/2,w:full.width*fraction,h:full.height*fraction};
- const host=document.createElement('div');host.id='live-crop-'+(++decoderSerial);host.setAttribute('aria-hidden','true');host.style.cssText='position:absolute;left:-10000px;width:1200px';document.body.append(host);
+ const host=document.createElement('div');
  let decoder;
- try{decoder=createDecoder(host.id);
-  const c=canvasFrom(full,pass%2?90:0,crop,pass%3===2,1200);
+ try{
+  const full=canvasFrom(video,0,null,false,1600),band=card&&pass%2===0?null:bandCrop(full);
+  const fraction=[.75,.5,.35][pass%3];
+  const crop=band||(card?{x:0,y:full.height*.1,w:full.width,h:full.height*.8}:{x:full.width*(1-fraction)/2,y:full.height*(1-fraction)/2,w:full.width*fraction,h:full.height*fraction});
+  host.id='live-crop-'+(++decoderSerial);host.setAttribute('aria-hidden','true');host.style.cssText='position:absolute;left:-10000px;width:1200px';document.body.append(host);
+  decoder=createDecoder(host.id);
+  const c=canvasFrom(full,(card?pass%3===2:pass%2)?90:0,crop,card?pass%2===1:pass%3===2,1200);
   if(!isCurrent())return null;
   return await decodeCanvas(c,decoder);
  }catch(e){return null;}finally{try{decoder?.clear();}catch(e){}host.remove();}
@@ -129,6 +176,6 @@ async function scanFile(decoder,file,isCurrent=()=>true){
  }finally{URL.revokeObjectURL(url);}
  throw last||Error('Codice non letto');
 }
-const api={formatNames,formatName,validGTIN,expandUPCE,readBarcode,options,createDecoder,liveConfig,startLive,setZoom,nativeDetector,canvasFrom,bandCrop,decodeCanvas,scanLiveCrop,scanFile};
+const api={formatNames,formatName,validGTIN,expandUPCE,readBarcode,options,createDecoder,liveConfig,startLive,cardCameraControls,setZoom,nativeDetector,canvasFrom,bandCrop,decodeCanvas,scanLiveCrop,scanFile};
 root.FiCardReader=api;if(typeof module!=='undefined')module.exports=api;
 })(typeof window==='undefined'?globalThis:window);
